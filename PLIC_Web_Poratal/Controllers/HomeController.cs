@@ -1509,6 +1509,10 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         conn.Open();
+                        if (true)
+                        {
+
+                        }
 
                         SqlCommand cmd = new SqlCommand("InsertTicket", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -1869,6 +1873,382 @@ namespace PLIC_Web_Poratal.Controllers
             }
 
         }
+
+
+        [HttpPost]
+        public ActionResult CreateTicketServiceRequest(CreateTicketModel createTicketModel)
+        {
+            SqlTransaction _Transaction = null;
+            try
+            {
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        conn.Open();
+                   
+
+                        SqlCommand cmd = new SqlCommand("InsertTicket_test", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlTransaction transaction = conn.BeginTransaction();
+                        cmd.Transaction = transaction;
+                        cmd.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("LoginId"));
+                        cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@Complainer", createTicketModel.Name);
+                        cmd.Parameters.AddWithValue("@ComplainerCell", createTicketModel.Contact);
+
+                        cmd.Parameters.AddWithValue("@Gender", createTicketModel.Gender);
+
+                        cmd.Parameters.AddWithValue("@TicketTypeId", createTicketModel.tickettype);
+                        cmd.Parameters.AddWithValue("@Barcode", createTicketModel.barcode);
+                        cmd.Parameters.AddWithValue("@ticketcategory", createTicketModel.ticketcatagory);
+                        cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
+
+                        cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
+                        cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
+                        cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
+                        cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
+                        cmd.Parameters.AddWithValue("@CnsgNo", createTicketModel.cgnno);
+                        cmd.Parameters.AddWithValue("@Product", createTicketModel.Product);
+                        cmd.Parameters.AddWithValue("@AccountNo", createTicketModel.accountno);
+
+                        cmd.Parameters.AddWithValue("@Agent", createTicketModel.agent);
+                        cmd.Parameters.AddWithValue("@AgentReference", createTicketModel.agentref);
+                        cmd.Parameters.AddWithValue("@BookingDate", createTicketModel.BookingDate);
+                        cmd.Parameters.AddWithValue("@Sender", createTicketModel.sender);
+                        cmd.Parameters.AddWithValue("@SenderCompany", createTicketModel.sendercompany);
+                        cmd.Parameters.AddWithValue("@SenderReference", createTicketModel.senderref);
+                        cmd.Parameters.AddWithValue("@SenderPhone", createTicketModel.senderphone);
+                        cmd.Parameters.AddWithValue("@SenderAddress", createTicketModel.senderaddress);
+                        cmd.Parameters.AddWithValue("@Origin", createTicketModel.Origin);
+                        cmd.Parameters.AddWithValue("@Origin_Desc", createTicketModel.Origin_Desc);
+                        cmd.Parameters.AddWithValue("@Receiver", createTicketModel.receiver);
+                        cmd.Parameters.AddWithValue("@ReceiverCompany", createTicketModel.receivercompany);
+                        cmd.Parameters.AddWithValue("@ReceiverPhone", createTicketModel.receiverphone);
+                        cmd.Parameters.AddWithValue("@ReceiverAddress", createTicketModel.receiveraddress);
+                        cmd.Parameters.AddWithValue("@Destination", createTicketModel.Destination);
+                        cmd.Parameters.AddWithValue("@Destination_Desc", createTicketModel.Destination_Desc);
+                        cmd.Parameters.AddWithValue("@PaymentMode", createTicketModel.Payment_Mode);
+                        cmd.Parameters.AddWithValue("@Weight", createTicketModel.Weight);
+                        cmd.Parameters.AddWithValue("@Pieces", createTicketModel.Quantity);
+                        cmd.Parameters.AddWithValue("@IsClosed", 0);
+                        cmd.Parameters.AddWithValue("@EmailAddress", createTicketModel.Name);
+                        cmd.Parameters.AddWithValue("@Remarks", createTicketModel.Remarks);
+                        cmd.Parameters.AddWithValue("@CreatedOn", DateAndTime.Today);
+
+                        // Add the @ticketExists output parameter
+                        SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                        ticketExistsParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketExistsParam);
+
+                        // Add the @TicketID output parameter
+                        SqlParameter ticketIDParam = new SqlParameter("@TicketID", SqlDbType.Int);
+                        ticketIDParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketIDParam);
+                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                        //ticketExistsParam.Direction = ParameterDirection.Output;
+                        //cmd.Parameters.Add(ticketExistsParam);
+                        // conn.Close();
+                        //conn.Open();
+
+
+                        cmd.ExecuteNonQuery();
+
+
+
+
+                        // Check if the ticket already exists in your database
+                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+
+
+
+                        bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+                        int ticketID = (int)cmd.Parameters["@TicketID"].Value;
+                        //string Complainer = (string)cmd.Parameters["@Complainer"].Value;
+                        //string ComplainerCell = (string)cmd.Parameters["@ComplainerCell"].Value;
+
+                        // Display the appropriate message based on the ticket existence
+                        if (ticketExists)
+                        {
+
+                            // Ticket already exists
+                            return Json(new { success = false, message = "Ticket already Created." });
+                        }
+                        else
+                        {
+                            if (createTicketModel.issendsms == false)
+                            {
+                                int ticketno1 = ticketID; // Replace with your tracking number variable or value
+                                int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                ViewData["TicketUpdateNo"] = ticketupdateno;
+                                transaction.Commit();
+
+                                //ViewData["TicketNo"] = ticketno1;
+                                return Json(new { success = true, data = ticketupdateno, message = "Ticket Created Successfully." });
+                            }
+
+
+                            //string result = "";
+                            //string pattern = @"^92\d{10}$";
+
+                            //string complainerCell = ComplainerCell;
+
+                            //if (Regex.IsMatch(complainerCell, pattern))
+                            //{
+                            //    string strPost = "";
+                            //    // strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + complainerCell + "&Mask=Daewoo-Exp&Message=Test SMS!!! SMS&UniCode=0&ShortCodePrefered=n";
+
+
+                            //    string loginId = "923114814965";
+                            //    string loginPassword = "Zong@123";
+                            //    string complainerCellno = complainerCell; // Replace with the actual recipient's phone number
+                            //    string complainer = Complainer; // Replace with the actual complainer's name
+                            //    string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
+                            //    int ticketId = ticketID; // Replace with the actual ticket ID
+
+                            //    string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
+
+                            //    strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
+
+                            //    // Valid contact number
+
+
+                            //    // Testing API
+
+
+                            //    //strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + complainerCell + "&Mask=Daewoo-Exp&Message=Test &UniCode=0&ShortCodePrefered=n";
+
+                            //    StreamWriter myWriter = null;
+                            //    ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
+                            //    HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
+                            //    objRequest.Method = "POST";
+                            //    objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
+                            //    objRequest.ContentType = "application/x-www-form-urlencoded";
+                            //    try
+                            //    {
+                            //        myWriter = new StreamWriter(objRequest.GetRequestStream());
+                            //        myWriter.Write(strPost);
+                            //    }
+                            //    catch (Exception e)
+                            //    {
+                            //    }
+                            //    finally
+                            //    {
+                            //        myWriter.Close();
+                            //    }
+
+
+
+                            //    try
+                            //    {
+
+                            //        string dataSetJson = HttpContext.Session.GetString("Data1");
+
+                            //        //DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(dataSetJson);
+
+                            //        string myValue = ViewBag.TrackingData;
+
+
+                            //        //DataTable table = dataSet.Tables["Table"];
+                            //        //DataRow row = table.Rows[0];
+
+                            //        //// Retrieve values from the row and store them in variables
+                            //        //int ticketId1 = Convert.ToInt32(row["TicketId"]);
+                            //        //long ConsignmentNo = Convert.ToInt32(row["CnsgNo"]);
+                            //        //string category = row["Category"].ToString();
+                            //        //string issueType = row["IssueType"].ToString();
+                            //        //string Origin = row["Origin"].ToString();
+                            //        //string Destination = row["Destination"].ToString();
+
+
+
+                            //        string subject;
+                            //        subject = "  Care Connect: Ticket: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + " ";
+                            //        //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
+
+                            //        //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
+
+
+                            //        string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Ticked ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td>  </tr>";
+
+                            //        textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td> </tr>";
+                            //        textBody += "</table> ";
+
+
+                            //        textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + createTicketModel.Remarks + "<tr><td> </table> \n" +
+                            //                "</br><table> <tr><td>\n" +
+                            //                "Kindly Login Care Connect Portal URL. https://localhost:44371/ </br></br></td></tr>\n" +
+
+                            //               "<tr><td>\n" +
+                            //               "Best regards,</br> </td></tr>\n" +
+                            //               "<tr><td>\n" +
+                            //               "MIS Department</br> </td></tr>\n" +
+
+                            //               "<tr style=font-size:10px><td>\n" +
+                            //               "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
+                            //               " </table>";
+
+                            //        if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
+                            //        {
+                            //            // Call your send email function
+                            //            SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
+                            //        }
+                            //        else
+                            //        {
+                            //            // Show an alert indicating that one or both email addresses are not valid
+                            //            // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
+                            //            //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
+
+
+                            //            return Json(new { success = false, message = "Email Address is Not Valid." });
+                            //        }
+
+
+
+                            //        //  SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, "Email From Care Connect", EmailTicketModel.remarks);
+
+
+
+
+                            //        //SqlTransaction transaction1 = conn.BeginTransaction();
+                            //        SqlCommand cmd1 = new SqlCommand("sp_Ticket_Email", conn);
+                            //        cmd1.CommandType = CommandType.StoredProcedure;
+                            //        cmd1.Transaction = transaction;
+                            //        cmd1.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                            //        cmd1.Parameters.AddWithValue("@Comment", createTicketModel.Remarks);
+                            //        cmd1.Parameters.AddWithValue("@TicketId", ticketID);
+
+                            //        cmd1.Parameters.AddWithValue("@Activity", "Auto-Email");
+
+                            //        // conn1.Close();
+                            //        //conn1.Open();
+                            //        cmd1.ExecuteNonQuery();
+
+
+
+
+
+                            //        // Make the HTTP request to the SMS API
+                            //        //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("your_sms_api_url_here");
+                            //        //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            //        HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
+
+                            //        // Check the HTTP status code to determine the result
+                            //        if (objResponse.StatusCode == HttpStatusCode.OK)
+                            //        {
+                            //            using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+                            //            {
+                            //                string result1 = sr.ReadToEnd();
+                            //                string[] responseParts = result1.Split('|');
+
+
+                            //                string statusCode = responseParts[0];
+                            //                string message = responseParts[1];
+
+                            //                // Show appropriate message based on the response
+                            //                if (statusCode == "200" || statusCode == "0")
+                            //                {
+                            //                    int ticketno1 = ticketID; // Replace with your tracking number variable or value
+                            //                    ViewData["TicketNo"] = ticketno1;
+                            //                    string issendsms = "1";
+
+
+                            //                    SqlCommand cmd2 = new SqlCommand("sp_Insert_SMS", conn);
+                            //                    cmd2.CommandType = CommandType.StoredProcedure;
+                            //                    cmd2.Transaction = transaction;
+                            //                    cmd2.Parameters.AddWithValue("@issendsms", issendsms);
+                            //                    cmd2.Parameters.AddWithValue("@TicketId", ticketID);
+                            //                    cmd2.Parameters.AddWithValue("@Remarks", SMSmessage);
+                            //                    cmd2.Parameters.AddWithValue("@Message", message);
+                            //                    cmd2.Parameters.AddWithValue("@MobileNo", complainerCell);
+                            //                    cmd2.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //                    cmd2.Parameters.AddWithValue("@ErrorCode", statusCode);
+                            //                    //conn1.Close();
+                            //                    //conn1.Open();
+                            //                    cmd2.ExecuteNonQuery();
+
+
+
+
+                            //                    int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                            //                    ViewData["TicketUpdateNo"] = ticketupdateno;
+                            //                    transaction.Commit();
+
+                            //                    // Ticket inserted successfully
+                            //                    return Json(new { success = true, data = ticketupdateno, message = "Ticket has been Created Successfully." });
+
+
+
+                            //                }
+                            //                else
+                            //                {
+
+                            //                    int ticketno1 = ticketID; // Replace with your tracking number variable or value
+                            //                    ViewData["TicketNo"] = ticketno1;
+                            //                    string issendsms = "0";
+
+                            //                    SqlCommand cmd3 = new SqlCommand("sp_Insert_SMS", conn);
+                            //                    cmd1.CommandType = CommandType.StoredProcedure;
+
+                            //                    cmd3.Parameters.AddWithValue("@issendsms", issendsms);
+                            //                    cmd3.Parameters.AddWithValue("@TicketId", ticketID);
+                            //                    cmd3.Parameters.AddWithValue("@Message", message);
+                            //                    cmd3.Parameters.AddWithValue("@MobileNo", complainerCell);
+                            //                    cmd3.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //                    cmd3.Parameters.AddWithValue("@ErrorCode", statusCode);
+                            //                    cmd3.ExecuteNonQuery();
+                            //                    int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                            //                    ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                            //                    // Ticket inserted successfully
+                            //                    return Json(new { success = false, data = ticketupdateno, message = $"Ticket Created Successfully!! SMS not sent. Error: {message}" });
+
+                            //                }
+                            //            }
+                            //        }
+
+                            //        else
+                            //        {
+
+
+                            //        }
+                            //        objResponse.Close();
+                            //    }
+                            //    catch (WebException ex)
+                            //    {
+                            //        transaction.Rollback();
+                            //        Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
+                            //        return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
+                            //    }
+                            //    finally
+                            //    {
+                            //        conn.Close();
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    return Json(new { success = false, message = "Invalid Mobile No." });
+                            //}
+                            int ticketno = ticketID; // Replace with your tracking number variable or value
+                            ViewData["TicketNo"] = ticketno;
+                            return Json(new { success = true, data = ticketno, message = "Ticket created successfully." });
+                        }
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
+            }
+
+        }
+
 
 
         [HttpPost]

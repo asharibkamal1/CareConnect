@@ -71,6 +71,7 @@
 
                 <div id="subcategoryContainer">
                 </div>
+                <span class="text-danger" id="subcategoryDropdownError" style="display: none;">Please select Sub Category.</span>
             </div>
 
          @*    <div class="col-md-3 col-sm-3">
@@ -374,6 +375,14 @@
             } else {
                 $('#categoryDropdownError').hide();
             }
+            if (ticketsubcatagory === '0') {
+                $('#subcategoryDropdownError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#subcategoryDropdownError').hide();
+            }
+
+            
             // if (TicketPriority === '') {
             //     $('#priorityError').show();
             //     return false; // Prevent form submission if barcode is not selected
@@ -431,7 +440,7 @@
             //const checkbox = document.getElementById("chksendsms");
 
             // Get the value (true or false) from the checkbox
-            const isChecked = true;
+            const isChecked = false;
             debugger
             var ticketData = {
 
@@ -477,7 +486,7 @@
             };
             debugger
             $.ajax({
-                url: '/Home/CreateTicket',
+                url: '/Home/CreateTicketServiceRequest',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -491,24 +500,24 @@
                         // var ticketno = $('#tracking').val();
 
                         // Construct the URL with the tracking number as a query parameter
-                        var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                     //   var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
 
                         // Redirect to the new URL same tab
-                        window.location.href = url;
+                       // window.location.href = url;
 
                         // Open the new view in a new window/tab
                         //window.open(url, '_blank');
-                        $('#TicketTypeDropdown').val(''),
+                        // $('#TicketTypeDropdown').val(''),
                             $('#categoryDropdown').val(''),
-                            $('#PriorityDropdown').val(''),
-                            $('#CityDropdown').val(''),
-                            $('#BarcodeDropdown').val(''),
-                            $('#ddgender').val(''),
+                            // $('#PriorityDropdown').val(''),
+                            // $('#CityDropdown').val(''),
+                            // $('#BarcodeDropdown').val(''),
+                            // $('#ddgender').val(''),
 
-                            $('#chksendsms').val(''),
-                            $('#txtname').val(''),
-                            $('#txtcontactno').val(''),
+                            // $('#chksendsms').val(''),
+                            // $('#txtname').val(''),
+                            // $('#txtcontactno').val(''),
                             $('#txtremarks').val('')
                     }
                     else {
