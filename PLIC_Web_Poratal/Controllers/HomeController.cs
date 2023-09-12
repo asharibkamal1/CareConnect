@@ -1582,14 +1582,7 @@ namespace PLIC_Web_Poratal.Controllers
                         // Check if the ticket already exists in your database
                         //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
 
-                        if (true)
-                        {
-
-                        }
-                        if (true)
-                        {
-
-                        }
+                    
 
 
                         bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
