@@ -282,6 +282,12 @@
                                             <p>Search Ticket</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a asp-action="ServiceRequest" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fas fa-dot-circle"></i>
+                                            <p>Create Service Request Ticket</p>
+                                        </a>
+                                    </li>
                                 </ul>
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                     <li class="nav-item">
