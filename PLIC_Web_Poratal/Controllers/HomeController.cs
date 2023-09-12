@@ -1264,7 +1264,65 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
+        public IActionResult ServiceRequest()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
 
+                    {
+                        conn1.Open();
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
+                        command.CommandType = CommandType.StoredProcedure;
+                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                        //dataAdapter.Fill(dataSet);
+                        dataAdapter1.Fill(dataSet1);
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            TicketCatType = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        //return PartialView("_TicketSearchCatagory", model);
+                        return View("~/Views/Home/ServiceRequest.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
         public IActionResult Report()
         {
             // HttpContext.Session.Clear();
