@@ -1,0 +1,437 @@
+﻿@model PLIC_Web_Poratal.Models.SystemUser
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Add System User";
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+@if (ViewBag.message == "OK")
+{
+    <script type="text/javascript" style="color:green">
+        swal({
+            text: "Successfully Registered",
+            icon: "success",
+        });
+        //}).then((value) => {
+        //    window.location.href = "/Admin/Menu";
+
+        //});
+
+    </script>
+
+}
+else if (ViewBag.message == "Failed")
+{
+    <script type="text/javascript" style="color:green">
+        swal({
+            title: "Registration Failed",
+            text: "User name and mobile number already exist.",
+            icon: "error",
+        });
+        //}).then((value) => {
+        //    window.location.href = "/Admin/Menu";
+
+        //});
+
+    </script>
+}
+<div class="container-fluid ">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <!-- jquery validation -->
+            <div class="card">
+                <div class="card-header" style="background-color: #0565B7;color:white">
+                    <h3 class="card-title">Registration Form</h3>
+                    <a class="float-right" asp-action="Menu" asp-controller="Admin">
+                        <i class="fa" style="color:white">Back</i>
+                    </a>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form asp-action="AddSysUser" method="post" onsubmit="return submitForm(this);">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">User Name</label>
+                                    <input asp-for="UserName" id="username" class="form-control" autocomplete="off" autofocus maxlength="20" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input asp-for="FullName" class="form-control" id="fullname" autocomplete="off" maxlength="30" oninput="this.value = this.value.toUpperCase()" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>CNIC</label>
+                                    <input asp-for="CNIC" class="form-control" id="cnic" autocomplete="off" />
+                                    <span asp-validation-for="CNIC" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Mobile No</label>
+                                    <input asp-for="PhoneNo" class="form-control" id="phoneno" autocomplete="off" />
+                                    <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Designation</label>
+                                    <input asp-for="Designation" class="form-control" autocomplete="off" maxlength="20" oninput="this.value = this.value.toUpperCase()" />
+                                    <span asp-validation-for="Designation" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Super Admin</label>
+                                    <div class="form-check" style="margin-top:10px">
+                                        <input class="form-check-input" type="checkbox" value="" id="isSuperAdmin">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Super Admin
+                                        </label>
+
+                                    </div>
+                                    @*<div>
+                                            <label>Super Admin</label>
+                                        </div>
+
+                                        <div style="margin-left:20px">
+                                            <input class="form-check-input" type="checkbox" value="" id="isSuperAdmin">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                Super Admin
+                                            </label>
+                                        </div>*@
+                                    @*<label>Super Admin</label>
+                                        <input class="form-check-input" type="checkbox" value="" id="isSuperAdmin">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Super Admin
+                                        </label>*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label>Circle</label>
+                                    <select asp-for="circleId" id="circle" class="form-control" style="width: 100%;">
+                                    </select>
+                                    <div class="form-check" style="margin-top:5px">
+                                        <input class="form-check-input" type="checkbox" value="" id="isCircle">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Is Circle
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label>Region</label>
+                                    <select asp-for="RegionId" id="region" class="form-control" style="width: 100%;">
+                                    </select>
+                                    <div class="form-check" style="margin-top:5px">
+                                        <input class="form-check-input" type="checkbox" value="" id="isRegion">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Is Region
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label>Field Unit</label>
+                                    <select asp-for="FieldUnitId" id="fieldunit" class="form-control" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Levels</label>
+                                    <select asp-for="Level" class="form-control" style="width: 100%;">
+                                        <option selected="selected"></option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                    <span asp-validation-for="Level" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Group(Optional)</label>
+                                    <select asp-for="GroupId" class="form-control" style="width: 100%;">
+                                        <option selected="selected"></option>
+                                        @foreach (Group group in Model.groups) {
+                                            <option value="@group.GroupID">@group.GroupDescription</option>
+                                        }
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-danger float-right">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+        integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+        crossorigin="anonymous">
+</script>
+
+<script>
+    $('#cnic').mask('00000-0000000-0', { placeholder: "_____-_______-_      Please Enter Your CNIC" });
+    $('#phoneno').mask('00000000000', { placeholder: "Please Enter Mobile Number" });
+
+    $("#isCircle").change(function () {
+        if (this.checked) {
+            $("#region").prop("disabled", true);
+            $("#fieldunit").prop("disabled", true);
+            $("#isRegion").prop("disabled", true);
+            $("#region").val("");
+            $("#fieldunit").val("");
+        }
+        else {
+            $("#region").prop("disabled", false);
+            $("#fieldunit").prop("disabled", false);
+            $("#isRegion").prop("disabled", false);
+        }
+
+    })
+
+    $("#isRegion").change(function () {
+        if (this.checked) {
+            $("#fieldunit").prop("disabled", true);
+            $("#isCircle").prop("disabled", true);
+            $("#fieldunit").val("");
+        }
+        else {
+            $("#fieldunit").prop("disabled", false);
+            $("#isCircle").prop("disabled", false);
+        }
+
+    })
+
+    $("#isSuperAdmin").change(function () {
+        if (this.checked) {
+            $("#fieldunit").prop("disabled", true);
+            $("#circle").prop("disabled", true);
+            $("#region").prop("disabled", true);
+            $("#isCircle").prop("disabled", true);
+            $("#isRegion").prop("disabled", true);
+            $("#circle").val("");
+            $("#region").val("");
+            $("#fieldunit").val("");
+        }
+        else {
+            $.ajax({
+                url: "/Admin/GetCircles/",
+                type: "POST",
+                /*data: JSON.parse(JSON.stringify({ circleId })),*/
+                success: function (res) {
+                    debugger;
+                    if (res.length > 0) {
+                        var s = '<option selected="selected"></option>';
+                        for (var i = 0; i < res.length; i++) {
+                            s += '<option value="' + res[i].circleId + '">' + res[i].circlelName + '</option>';
+                        }
+                        $("#circle").html(s);
+                    }
+                    else {
+                        swal("Region not found.", {
+                            icon: "info",
+                        });
+                        $("#circle").html('');
+                        //$("#fieldUnitName").val("");
+                        //$("#fieldUnitId").val("");
+                        return false;
+                    }
+                },
+                error: function (err) { }
+            });
+
+            $("#fieldunit").prop("disabled", false);
+            $("#circle").prop("disabled", false);
+            $("#region").prop("disabled", false);
+            $("#isCircle").prop("disabled", false);
+            $("#isRegion").prop("disabled", false);
+        }
+    });
+    //-------------------------------------------------------------------------------------
+    $(document).ready(function () {
+        debugger
+
+        $('#isSuperAdmin').prop('checked', true);
+        $('#isCircle').prop('disabled', true);
+        $("#circle").prop("disabled", true);
+        $("#region").prop("disabled", true);
+        $("#fieldunit").prop("disabled", true);
+        $("#isRegion").prop("disabled", true);
+
+        //$.ajax({
+        //    url: "/Admin/GetCircles/",
+        //    type: "POST",
+        //    /*data: JSON.parse(JSON.stringify({ circleId })),*/
+        //    success: function (res) {
+        //        debugger;
+        //        if (res.length > 0) {
+        //            var s = '<option selected="selected"></option>';
+        //            for (var i = 0; i < res.length; i++) {
+        //                s += '<option value="' + res[i].circleId + '">' + res[i].circlelName + '</option>';
+        //            }
+        //            $("#circle").html(s);
+        //        }
+        //        else {
+        //            swal("Region not found.", {
+        //                icon: "info",
+        //            });
+        //            $("#circle").html('');
+        //            //$("#fieldUnitName").val("");
+        //            //$("#fieldUnitId").val("");
+        //            return false;
+        //        }
+        //    },
+        //    error: function (err) { }
+        //});
+
+
+    });
+
+    //-------------------------------------------------------------------------------------
+    $("#circle").change(function () {
+        debugger;
+        var circleId = $("#circle").val();
+        if (circleId == "") {
+            swal("Please select circle.", {
+                icon: "info",
+            });
+            return false;
+        }
+        $.ajax({
+            url: "/Admin/GetRegions/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ circleId })),
+            success: function (res) {
+                debugger;
+                if (res.length > 0) {
+                    var s = '<option selected="selected"></option>';
+                    for (var i = 0; i < res.length; i++) {
+                        s += '<option value="' + res[i].regionId + '">' + res[i].regionName + '</option>';
+                    }
+                    $("#region").html(s);
+                }
+                else {
+                    swal("Region not found.", {
+                        icon: "info",
+                    });
+                    $("#region").html('');
+                    //$("#fieldUnitName").val("");
+                    //$("#fieldUnitId").val("");
+                    return false;
+                }
+            },
+            error: function (err) { }
+        });
+    });
+
+    //-----------------------------------------------------------------------------------
+    $("#region").change(function () {
+        debugger;
+        var regionId = $("#region").val();
+        if (regionId == "") {
+            swal("Please select region.", {
+                icon: "info",
+            });
+            return false;
+        }
+        $.ajax({
+            url: "/Admin/GetFielUnitList/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ regionId })),
+            success: function (res) {
+                debugger;
+                if (res.length > 0) {
+                    var s = '<option selected="selected"></option>';
+                    for (var i = 0; i < res.length; i++) {
+                        s += '<option value="' + res[i].fieldUnitId + '">' + res[i].fieldUnitName + '</option>';
+                    }
+                    $("#fieldunit").html(s);
+                }
+                else {
+                    swal("Fielunit not found.", {
+                        icon: "info",
+                    });
+                    $("#fieldunit").html('');
+                    //$("#fieldUnitName").val("");
+                    //$("#fieldUnitId").val("");
+                    return false;
+                }
+            },
+            error: function (err) { }
+        });
+    });
+
+    //----------------------------------------------------
+    function submitForm(form) {
+        swal({
+            title: "Are you sure?",
+            text: "The data will be submitted.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(function (isOkay) {
+                if (isOkay) {
+                    form.submit();
+                }
+            });
+        return false;
+    }
+</script>

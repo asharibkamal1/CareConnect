@@ -1,0 +1,162 @@
+﻿@model OTP
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .buttons {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .color-text {
+            color: white;
+        }
+    </style>
+    <title>PLICL</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="Thu, 19 Nov 1900 08:52:00 GMT">
+    <!--Loading bootstrap css-->
+    <link type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,800italic,400,700,800">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,700,300">
+    <link type="text/css" rel="stylesheet"
+          href="vendors/jquery-ui-1.10.3.custom/css/ui-lightness/jquery-ui-1.10.3.custom.css">
+    <link type="text/css" rel="stylesheet" href="~/vendors/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="~/vendors/bootstrap/css/bootstrap.min.css">
+    <!--Loading style vendors-->
+    <link type="text/css" rel="stylesheet" href="~/vendors/animate.css/animate.css">
+    <link type="text/css" rel="stylesheet" href="~/vendors/iCheck/skins/all.css">
+    <!--Loading style-->
+    <link type="text/css" rel="stylesheet" href="~/css/themes/style1/pink-green.css" class="default-style">
+    <link type="text/css" rel="stylesheet" href="~/css/themes/style1/pink-green.css" id="theme-change"
+          class="style-change color-change">
+    <link type="text/css" rel="stylesheet" href="~/css/style-responsive.css">
+    <link rel="shortcut icon" href="~/images/favicon.ico">
+</head>
+<body style="background-color: #0565B7;height:89%;">
+    @*id="signin-page"*@
+    <div class="page-form">
+        <form asp-action="VerifyCustomerOTP" asp-controller="Account" method="post">
+            <div class="header-content"><h1>Login to PLIC</h1><img /></div>
+            <div class="body-content">
+
+                <div asp-validation-summary="All"></div>
+                <div class="form-group">
+                    <div class="input-icon right">
+                        <i class="fa fa-user"></i>
+                        @Html.TextBoxFor(m => m.otp, new { placeholder = "Enter the code recieved on your mobile number", @class = "form-control" })
+
+                        <div>
+                        </div>
+
+                        @*<p class="error">
+                                @Html.ValidationSummary()
+                            </p>*@
+                        <div style="height:8px"></div>
+                        <div class="form-group pull-right" style="">
+
+                            <button type="submit" value="Login" class="btn btn-danger buttons">
+                                <!--asp-controller="Home" asp-action="Index">-->
+                               Next
+                            </button>
+                            <div class="buttons" style="width:5px"></div>
+
+                            <button id="OTPSended" type="button" class="btn btn-danger" onclick="location.href = '@Url.Action("ResendOTP", "Account")',OTPResend()">
+                                Resend OTP @ViewBag.MyMessage
+                            </button>
+                            <!--<button type="submit" value="Resend" class="btn btn-success buttons">-->
+                            <!--asp-controller="Home" asp-action="Index">-->
+                            <!--Resend OTP
+                            </button>-->
+                            <!--<div style="width:fit-content; height:20px">-->
+                            <!--@Html.ActionLink(
+                                        "Resend OTP",
+                                        "ResendOTP",
+                                        "Account",
+                                        null,
+                                        new { @class = "color-text" }
+                                        )
+                            </div>-->
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @*@if (ViewBag.Message != null)
+            {
+                <script type="text/javascript">window.onload = function () { alert("@ViewBag.Message") };</script>
+            }*@
+
+    </div>
+
+    @section Scripts{
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
+    }
+
+
+    <script src="~/js/jquery-1.10.2.min.js"></script>
+    <script src="~/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <!--loading bootstrap js-->
+    <script src="~/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/vendors/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js"></script>
+    <script src="~/js/html5shiv.js"></script>
+    <script src="~/js/respond.min.js"></script>
+    <script src="~/vendors/iCheck/icheck.min.js"></script>
+    <script src="~/vendors/iCheck/custom.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!--I Added this file for message-->
+    <script src="~/login/js/notifyMe.js"></script>
+</body>
+</html>
+
+
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    $("#OTPSended").click(function () {
+    //        ResendOTP();
+    //    });
+    //});
+    //function ResendOTP() {
+
+    //    $.ajax({
+    //        async: true,
+    //        type: 'POST',
+    //        datatype: 'JSON',
+    //        contentType: 'application/json; charset=utf-8',
+    //        url: '/Account/ResendOTP1',
+    //        success: function (response) {
+    //            if (response.success == true) {
+    //                toastr.success(response.message, 'Success Alert', new { timeout: 3000 });
+    //            }
+    //            else {
+    //                toastr.info(response.message, 'Information Alert', new { timeout: 3000 });
+    //            }
+    //        },
+    //        error: function () {
+    //            toastr.error('There is Some problem While sending your OTP !', 'Error Alert', new { timeout: 3000 });
+    //        }
+    //    });
+    //}
+
+
+    //function OTPResend() {
+    //    alert("OTP is Resend to Your Number Kindly Check For new Message");
+    //}
+
+</script>
+
+@await Component.InvokeAsync("Notyf")

@@ -1,0 +1,235 @@
+﻿/* Styling for the chatbot icon */
+
+
+
+
+
+.chatbot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    color: #333;
+    margin: 0 auto;
+    max-width: 1200px; /* Set a max-width for responsiveness */
+}
+
+.dashboard {
+    font-size: 28px;
+}
+
+.box {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    min-width: 150px;
+    animation: fadeIn 1s ease-in-out;
+    flex: 1; /* Distribute space equally among boxes */
+}
+
+.box {
+    transition: transform 0.3s ease-in-out;
+}
+
+    .box:hover {
+        transform: scale(1.05); /* You can adjust the scale factor */
+    }
+
+    .box h4,
+    .box .count {
+        transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out; /* Apply transition to opacity and color */
+    }
+
+    .box:hover h4,
+    .box:hover .count {
+        opacity: 0.7; /* You can adjust the opacity value */
+    /*    color: red;*/ /* Change the text color on hover */
+    }
+
+    /* Additional animation */
+    .box h4 {
+        transform: translateY(10px); /* Initial translate position for h4 element */
+    }
+
+    .box:hover h4 {
+        transform: translateY(0); /* Move h4 back to its original position on hover */
+    }
+
+/*@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}*/
+
+
+
+
+.box h4 {
+    margin: 0 0 10px;
+}
+
+.total {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.in-progress {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.overdue {
+    background-color: #2ecc71;
+    color: #fff;
+}
+/* Additional colors */
+.central {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.north {
+    background-color: #9b59b6;
+    color: #fff;
+}
+
+.south {
+    background-color: #1abc9c;
+    color: #fff;
+}
+
+#region-chart {
+    height: 200px;
+}
+
+
+
+#reportTitle {
+    font-size: 28px;
+    color: #333;
+    margin: 20px;
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+    display: inline-block;
+}
+
+/* Add more styling for header, messages, input, and suggested text */
+/* Styling for the chatbot popup */
+/* Styling for the chatbot popup */
+.chatbot-popup {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    width: 300px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.chat-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.close-btn {
+    float: right;
+    cursor: pointer;
+}
+
+.chat-messages {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.user-message {
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.bot-message {
+    background-color: #e5f7fd;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.user-input {
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.suggested-text {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.suggested-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+    .suggested-btn:hover {
+        background-color: #0056b3;
+    }
+
+
+/* Rest of your existing styling */
+
+#user-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    #user-input::placeholder {
+        color: #aaa;
+    }
+
+    /* Add styling for input focus state */
+    #user-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }

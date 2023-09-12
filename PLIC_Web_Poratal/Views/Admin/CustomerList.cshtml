@@ -1,0 +1,202 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.Customer>
+@inject IJsonHelper Json;
+@{
+    Layout = "_UserLayout";
+    //var count = 0;
+    ViewData["Title"] = "Customer List";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Customer List</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@*href="@Url.Action("Menu", "Home")"*@
+
+
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Customer List <a class="btn" href="#" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table id="new_Id" class="stripe row-border order-column text-center" width="100%">
+                <thead>
+
+                    <tr>
+                        <th>Id</th>
+                        <th>CNIC</th>
+                        <th>Mobile No</th>
+
+                        <th hidden>Password</th>
+                        <th>Password</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr id="t1">
+                        <td>@item.id</td>
+                        <td style="overflow: hidden; white-space: nowrap">@item.cnic</td>
+                        <td style="overflow: hidden; white-space: nowrap">@item.phoneno</td>
+                        <td style="overflow: hidden; white-space: nowrap" hidden>@item.password</td>
+                        <td><input value="@item.password" name="password" /></td>
+
+                        <td>
+                            @*<button id="tr1" class="btn btn-sm resolve" style="background-color: #0565B7; color : white;" type="submit">Resolved</button>*@
+                            <button class="btn btn-sm" name="update" style="background-color: #0565B7; color : white;" onclick="ABC(@Json.Serialize(item).ToString(),this)">Update</button>
+                        </td>
+
+                    </tr>
+
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@*Since we have already added the JQuery reference in the Layout page, there is no need to add it again.
+    If you doesn't add the jquery reference before, remember to add it.*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+        integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+        crossorigin="anonymous">
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            //dom: 'lBfrtip',
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            //buttons: [
+            //    {
+            //        extend: "excel",
+            //        text: 'Export To Excel',
+            //        className: "excel",
+            //        exportOptions: {
+            //            /*columns: ':not(:last-child)',*/
+            //            columns: [0, 1, 2, 3]
+
+            //        }
+            //    }
+            //]
+        });
+    });
+  
+
+    function ABC(obj, tr) {
+        debugger
+        AdminPassword = $(tr).parent().prev().find('input[name="password"]').val();
+        obj.password = AdminPassword;
+        swal({
+            title: "Are you sure to update record?",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(tr).parent().find('button[name="update"]').prop('disabled', true);
+                    $.ajax({
+                        url: "/Admin/UpdateCustomerInfo/",
+                        type: "POST",
+                        data: JSON.parse(JSON.stringify({ customer: obj })),
+                        success: function (res) {
+                            if (res == "success") {
+                                swal("Record successfully Update.", {
+                                    icon: "success",
+                                }).then((value) => {
+                                    window.location.href = "/admin/GetCustomerList";
+                                    //window.location.reload();
+                                });
+                            }
+                            else if (res == "UserUnAuthorized") {
+                                location.url = "Account/Admin/"
+                            }
+                        },
+                        error: function (err) { }
+                    });
+                }
+                else {
+                    //window.location.href = "/admin/CustomerList";
+                    return false;
+                }
+            });
+
+        //}
+    }
+</script>
+

@@ -1,0 +1,734 @@
+﻿@model PLIC_Web_Poratal.Models.ViewModel
+
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "CMS Dash-Board";
+    DateTime dt = DateTime.Now;
+}
+
+@*<meta http-equiv="Refresh" content="5">*@
+
+<!-- Content Wrapper. Contains page content -->
+@*<div class="content-wrapper">*@
+<!-- Content Header (Page header) -->
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+            </div><!-- /.col -->
+            <!--<div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard v1</li>
+                </ol>
+            </div>-->
+            <!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-6 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@Model.postLoginComplaint.totalPostcomplaints</h3>
+
+                        <p>Registerd General Complaints</p>
+                    </div>
+                    @*<div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>*@
+                    @*<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-6 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@Model.preLoginComplaint.totalPrecomplaints</h3>
+
+                        <p>Registerd complaints for mobile number update</p>
+                    </div>
+                    @*<div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+
+        </div>
+        <section class="content">
+            <div class="container-fluid">
+                @*<h4 class="display-6">Search by username</h4>*@
+
+                @*<form action="simple-results.html">
+                        <div class="row">
+                            <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Region</label>
+                                        <select class="form-control" id="region" name="region" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fiel Unit</label>
+                                        <select class="form-control" id="fieldunit" name="region" style="width: 100%;">
+                                        </select>
+                                    </div>
+                                </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    <select class="form-control" id="username" name="userName" style="width: 100%;">
+                                        <option selected="selected"></option>
+                                        @foreach (SystemUser systemUser in Model.systemUsers)
+                                        {
+                                            <option value="@systemUser.UserId">@systemUser.UserName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>*@
+
+
+                @if (Model.option == 2)
+                {
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Circle</label>
+                                <select class="form-control" id="circle" name="ciecle" style="width: 100%;">
+                                    <option selected="selected">All</option>
+                                    @foreach (Circle circle in Model.circles)
+                                    {
+                                        <option value="@circle.CircleId">@circle.CirclelName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Region</label>
+                                <div class="d-flex">
+                                    <select class="form-control" id="region" name="region" style="width: 100%;">
+                                        <option selected="selected">All</option>
+                                    </select>
+                                    &nbsp;&nbsp;
+                                    <button id="btnGo" type="submit" class="btn btn-danger container-fluid" disabled>Complaints Summary</button>
+                                    &nbsp;&nbsp;
+                                    <button id="btnUserPerformance" type="submit" class="btn btn-danger container-fluid" disabled>User Performance</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                }
+                else if (Model.option == 1)
+                {
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Region</label>
+                                <select class="form-control" id="region" name="region" style="width: 100%;">
+                                    <option selected="selected">All</option>
+                                    @foreach (Region region in Model.regions)
+                                    {
+                                        <option value="@region.regionId">@region.regionName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <div class="d-flex">
+                                    <select class="form-control" id="username" name="userName" style="width: 100%;">
+                                        <option selected="selected">All</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>From Date</label>
+                                <div class="d-flex">
+                                    <input type="date" id="fromDate" name="fDate" style="height:38px" class="container-fluid" value="2022-01-01" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>To Date</label>
+                                <div class="d-flex">
+                                    <input type="date" id="toDate" name="tDate" class="container-fluid" asp-for="Date" />
+                                    &nbsp;&nbsp;
+                                    <button id="btnSubmit" type="submit" class="btn btn-danger">Go</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3><label id="resolvedPostComplaints">@Model.postLoginComplaint2.totalResolvedPostcomplaints</label></h3>
+                                    <p>Resolved General Complaints</p>
+                                </div>
+                                @*<div class="icon">
+                                        <i class="ion ion-bag"></i>
+                                    </div>*@
+                                @*<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-6 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3><label id="resolvedPreComplaints">@Model.preLoginComplaint1.totalRsolvedPrecomplaints</label></h3>
+                                    <p>Resolved complaints for mobile number update</p>
+                                </div>
+                                @*<div class="icon">
+                                        <i class="ion ion-stats-bars"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+
+                }
+
+                <!------------------------------------------------------------------------------- -->
+                <!-- Main content -->
+
+                <div id="ComplaintsSummaryReporte">
+                    <div class="row ">
+                        <div class="col-12 text-right">
+                            @*<a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>*@
+                            <button class="btn-download btn " onclick="printContent()"><i class="fa fa-print"></i>&nbsp;Print</button>
+                        </div>
+                    </div>
+
+                    <div class="invoice p-3 mb-3 " id="reporte1">
+
+                        <!-- title row -->
+                        <div class="col-6">
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-12 center-block text-center">
+                                <h5><b>Date: <label id="dateTime"> @Model.Date.ToString("dd-MM-yyyy hh:mm:ss") </label> </b></h5>
+                            </div>
+
+
+                        </div>
+                        <!-- info row -->
+                        <div class="row ">
+
+                            <div class="col-sm-12 center-block text-center">
+                                <h4><b>PLIC CMS Dash-Board</b></h4>
+                            </div>
+
+
+                        </div>
+                        <div class="row ">
+
+                            <div class="col-sm-12 center-block text-center">
+                                <h6>
+                                    <b>
+                                        <label id="CircleWise">
+                                            @if (Model.circle!=null)
+                                            {
+                                                @Model.circle.CirclelName
+                                            }
+                                            else
+                                            {
+                                                <span>All</span>
+                                            }
+
+                                        </label> Circle
+                                    </b>
+                                </h6>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <h5>
+                                    <b>
+                                        Region : <label id="RegionWise">
+                                            @if (Model.region!=null)
+                                            {
+                                                @Model.region.regionName
+                                            }
+                                            else
+                                            {
+                                                <span>All</span>
+                                            }
+
+                                        </label>
+                                    </b>
+                                </h5>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <h5><b>Totle UnResolved Complaints: <label id="totalUnResolvedComplaints">@Model.postLoginComplaint1.totalUnResolvedPostcomplaints</label> </b></h5>
+                            </div>
+
+
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10 ">
+
+                                <h5><b>Resolved Within Last 30 Days: <label id="totalResolvedComplaints">@Model.postLoginComplaint1.totalResolvedComplaints</label></b></h5>
+                            </div>
+
+
+                        </div>
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-8 table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Complaints Category</th>
+                                            <th>
+                                                Pending for more than 60 days
+                                                (Unresolved)
+                                            </th>
+                                            <th>
+                                                Pending for more than 30 days
+                                                (Unresolved)
+                                            </th>
+                                            <th>
+                                                Pending for more than 15 days
+                                                (Unresolved)
+                                            </th>
+                                            <th>Received in last 15 days</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="complaintSummary">
+                                        @foreach (ComplaintsSummary complaintsSummary in Model.complaintsSummaries)
+                                        {
+                                            <tr>
+                                                <td>@complaintsSummary.complaintOrigin</td>
+                                                <td>@complaintsSummary.morethan60days</td>
+                                                <td>@complaintsSummary.morethan30days</td>
+                                                <td>@complaintsSummary.morethan15days</td>
+                                                <td>@complaintsSummary.atleast15days</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-8 ">
+                                <hr />
+                                <h6><b>Generated By : <label id="userName">@ViewBag.AdminName </label> </b></h6>
+                            </div>
+
+
+                        </div>
+                        <!-- /.row -->
+                        <!-- this row will not appear when printing -->
+
+                    </div>
+                    <!-- /.invoice -->
+                    <!------------------------------------------------------------------------------- -->
+
+
+
+                </div>
+
+                <!------------------------------------------------------------------------------- -->
+                <!-- Main userPreformance view -->
+
+                <div id="UserPerformanceView" hidden>
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            @*<a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>*@
+                            <button class="btn-download btn " onclick="printContent1()"><i class="fa fa-print"></i>&nbsp;Print</button>
+                        </div>
+                    </div>
+
+                    <div class="invoice p-3 mb-3 " id="userPerformanceReporte">
+
+                        <!-- title row -->
+                        <div class="col-6 ">
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-12 center-block text-center">
+                                <h5><b>Date: <label id="dateTime1"> </label> </b></h5>
+                            </div>
+
+
+                        </div>
+                        <!-- info row -->
+                        <div class="row ">
+
+                            <div class="col-sm-12 center-block text-center">
+                                <h4><b>PLIC CMS Dash-Board (User Preformance)</b></h4>
+                            </div>
+
+
+                        </div>
+                        <div class="row ">
+
+                            <div class="col-sm-12 center-block text-center">
+                                <h6><b><label id="CircleWise1"> </label> Circle</b></h6>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <h5><b>Region : <label id="RegionWise1"> </label> </b></h5>
+                            </div>
+
+
+                        </div>
+
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-8 table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>User Name</th>
+                                            <th>
+                                                Pending for more than 60 days
+                                                (Unresolved)
+                                            </th>
+                                            <th>
+                                                Pending for more than 30 days
+                                                (Unresolved)
+                                            </th>
+                                            <th>
+                                                Pending for more than 15 days
+                                                (Unresolved)
+                                            </th>
+                                            <th>Received in last 15 days</th>
+                                            <th>Total Pending</th>
+                                            <th>Resolved within last 30 days</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="userperformanceSummary">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-8 ">
+                                <hr />
+                                <h6><b>Generated By : <label id="userName1"> </label> </b></h6>
+                            </div>
+
+
+                        </div>
+                        <!-- /.row -->
+                        <!-- this row will not appear when printing -->
+
+                    </div>
+                    <!-- /.invoice -->
+                    <!------------------------------------------------------------------------------- -->
+
+
+                </div>
+
+        </section>
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+@*</div>*@
+<!-- /.content-wrapper -->
+
+<script type="text/javascript">
+    function printContent() {
+
+        /* var restorepage = location.url = "Admin/AdminDashboard/";*/
+        var printcontent = document.querySelector("#reporte1").innerHTML;
+        document.body.innerHTML = printcontent;
+        document.body.innerHTML
+        window.print();
+        window.location.reload();
+
+    }
+
+    function printContent1() {
+        debugger
+        var restorepage = document.body.innerHTML;
+        var printcontent = document.querySelector("#userPerformanceReporte").innerHTML;
+        document.body.innerHTML = printcontent;
+        document.body.innerHTML
+        window.print();
+        /*document.body.innerHTML = restorepage;*/
+        window.location.reload();
+    }
+</script>
+
+<script>
+    //-----------------------------------------
+    /* document.getElementById('fromDate').value = moment().format('YYYY-MM-DD');*/
+    /* document.getElementById('toDate').value = moment().format('YYYY-MM-DD');*/
+    //----------------------------------------
+    $("#username1").change(function () {
+        debugger;
+        var userId = $("#username1").val();
+        $.ajax({
+            url: "/Admin/GetTotalRsolvedComplaints/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ userId })),
+            success: function (res) {
+                debugger;
+                $("#resolvedPostComplaints").text(res.postLoginComplaint.totalResolvedPostcomplaints);
+                $("#resolvedPreComplaints").text(res.preLoginComplaint.totalRsolvedPrecomplaints);
+            },
+            error: function (err) { }
+        });
+    });
+
+    //-------------------------------------------------------------------------------------
+    $("#circle").change(function () {
+        debugger;
+        var circleId = $("#circle").val();
+        $("#username").val("");
+        ////$("#btnGo").prop('disabled', true);
+        ////$("#btnUserPerformance").prop('disabled', true);
+        if (circleId == "") {
+            //swal("Please select circle.", {
+            //    icon: "info",
+            //});
+            return false;
+        }
+        $.ajax({
+            url: "/Admin/GetRegions/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ circleId })),
+            success: function (res) {
+                debugger;
+                if (res.length > 0) {
+                    var s = '<option selected="selected">All</option>';
+                    for (var i = 0; i < res.length; i++) {
+                        s += '<option value="' + res[i].regionId + '">' + res[i].regionName + '</option>';
+                    }
+                    $("#region").html(s);
+                }
+                else {
+                    //swal("Region not found.", {
+                    //    icon: "info",
+                    //});
+                    $("#region").html('<option selected="selected">All</option>');
+                    //$("#fieldUnitName").val("");
+                    //$("#fieldUnitId").val("");
+                    return false;
+                }
+            },
+            error: function (err) { }
+        });
+    });
+
+
+    //-----------------------------------------------------------------------------------
+    $("#region").change(function () {
+        debugger;
+        var regionId = $("#region").val();
+        $("#username").val("");
+        $("#btnGo").prop('disabled', false);
+        $("#btnUserPerformance").prop('disabled', false);
+        if (regionId == "") {
+            //swal("Please select region.", {
+            //    icon: "info",
+            //});
+            return false;
+        }
+        $.ajax({
+            url: "/Admin/GetAdminUsers/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ regionId })),
+            success: function (res) {
+                debugger;
+                if (res.length > 0) {
+                    var s = '<option selected="selected">Select All</option>';
+                    for (var i = 0; i < res.length; i++) {
+                        s += '<option value="' + res[i].userId + '">' + res[i].userName + '</option>';
+                    }
+                    $("#username").html(s);
+                }
+                else {
+                    //swal("Admin not found.", {
+                    //    icon: "info",
+                    //});
+                    $("#username").html('');
+                    //$("#fieldUnitName").val("");
+                    //$("#fieldUnitId").val("");
+                    return false;
+                }
+            },
+            error: function (err) { }
+        });
+    });
+
+    $("#btnSubmit").click(function (event) {
+        debugger
+        var formData = {
+            circleId: $("#circle").val(),
+            regionId: $("#region").val(),
+            userId: $("#username").val(),
+            fromDate: $("#fromDate").val(),
+            toDate: $("#toDate").val()
+        }
+
+        $.ajax({
+            url: "/Admin/GetTotalRsolvedComplaints/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ viewDataModel: formData })),
+            success: function (res) {
+                debugger;
+
+                $("#resolvedPostComplaints").text(res.postLoginComplaint.totalResolvedPostcomplaints);
+                $("#resolvedPreComplaints").text(res.preLoginComplaint.totalRsolvedPrecomplaints);
+
+            },
+            error: function (err) { }
+        });
+    });
+
+    $("#btnGo").click(function (event) {
+        debugger
+        var formData = {
+            circleId: $("#circle").val(),
+            regionId: $("#region").val(),
+        }
+
+        $("#CircleWise").text($("#circle option:selected").text());
+        $("#RegionWise").text($("#region option:selected").text());
+        $("#UserPerformanceView").prop('hidden', true);
+
+        $.ajax({
+            url: "/Admin/GetCompalintsSummaryReporte/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ viewDataModel: formData })),
+            success: function (res) {
+                debugger;
+
+                $("#totalUnResolvedComplaints").text(res.postLoginComplaint.totalUnResolvedPostcomplaints);
+                $("#totalResolvedComplaints").text(res.postLoginComplaint.totalResolvedComplaints);
+                $("#userName").text(res.userName);
+                $("#dateTime").text(res.dateTime);
+
+
+                var s = "";
+                if (res.complaintsSummaries != null) {
+                    for (var i = 0; i < res.complaintsSummaries.length; i++) {
+                        s += "<tr><td>" + res.complaintsSummaries[i].complaintOrigin + "</td><td>" + res.complaintsSummaries[i].morethan60days + "</td><td>" + res.complaintsSummaries[i].morethan30days + "</td><td>" + res.complaintsSummaries[i].morethan15days + "</td><td>" + res.complaintsSummaries[i].atleast15days + "</td></tr>";
+                    }
+                    $("#complaintSummary").html(s);
+                    $("#ComplaintsSummaryReporte").prop('hidden', false);
+                }
+                else {
+                    $("#complaintSummary").html(s);
+                    $("#ComplaintsSummaryReporte").prop('hidden', false);
+                }
+
+            },
+            error: function (err) { }
+        });
+
+
+    });
+
+    $("#btnUserPerformance").click(function (event) {
+        debugger
+        var formData = {
+            circleId: $("#circle").val(),
+            regionId: $("#region").val(),
+        }
+
+        $("#CircleWise1").text($("#circle option:selected").text());
+        $("#RegionWise1").text($("#region option:selected").text());
+        $("#ComplaintsSummaryReporte").prop('hidden', true);
+
+        $.ajax({
+            url: "/Admin/GetUserPerformanceSummary/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ viewDataModel: formData })),
+            success: function (res) {
+                debugger;
+
+                //$("#totalUnResolvedComplaints").text(res.postLoginComplaint.totalUnResolvedPostcomplaints);
+                //$("#totalResolvedComplaints").text(res.postLoginComplaint.totalResolvedComplaints);
+                $("#userName1").text(res.userName);
+                $("#dateTime1").text(res.dateTime);
+
+
+                var s = "";
+                if (res.userPerformanceSummaries != null) {
+                    for (var i = 0; i < res.userPerformanceSummaries.length; i++) {
+                        s += "<tr><td>" + res.userPerformanceSummaries[i].userName + "</td><td>" + res.userPerformanceSummaries[i].morethan60days + "</td><td>" + res.userPerformanceSummaries[i].morethan30days + "</td><td>" + res.userPerformanceSummaries[i].morethan15days + "</td><td>" + res.userPerformanceSummaries[i].recievedin15days + "</td><td>" + res.userPerformanceSummaries[i].totalpending + "</td><td>" + res.userPerformanceSummaries[i].resolvedin30days + "</td></tr>";
+                    }
+                    $("#userperformanceSummary").html(s);
+                    $("#UserPerformanceView").prop('hidden', false);
+                }
+                else {
+                    $("#userperformanceSummary").html(s);
+                    $("#UserPerformanceView").prop('hidden', false);
+                }
+
+
+            },
+            error: function (err) { }
+        });
+
+
+    });
+
+</script>

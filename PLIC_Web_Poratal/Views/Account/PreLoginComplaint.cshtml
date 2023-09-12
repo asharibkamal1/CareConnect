@@ -1,0 +1,189 @@
+﻿@model PLIC_Web_Poratal.Models.PreLoginComplaint
+@{
+
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en" style="height: auto;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mobile Number Compliant</title>
+    <link rel="shortcut icon" href="/login/img/p_logo_dark3.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <script type="text/javascript">
+        var onloadCallback = function () {
+            grecaptcha.render('dcaptcha', {
+                'sitekey': '6LeEXbAgAAAAAGRw2f1tVL4jJhqnePyIEGUCKVx-',
+                'callback': function (response) {
+                    $('#txtcaptcha').val('set');
+                }
+            });
+        };
+    </script>
+</head>
+<body style="background-color: #0565B7;">
+    @if (ViewBag.message == "OK")
+    {
+        <script type="text/javascript" style="color:green">
+            swal("Your request has been submitted successfully.  \n You will be notified shortly.", {
+                icon: "success",
+            }).then((value) => {
+                window.location.href = "/Account/Login2";
+
+            });
+
+        </script>
+    }
+    else if (ViewBag.message == "Faild")
+    {
+        <script type="text/javascript" style="color:green">
+            swal("CNIC or Mobile Number are not in a correct formate.", {
+                icon: "error"
+            });
+
+        </script>
+    }
+    else if (ViewBag.message == "DataExist")
+    {
+        <script type="text/javascript" style="color:green">
+            swal("Mobile number you have enter is already exist.", {
+                icon: "error",
+            }).then((value) => {
+                window.location.href = "/Account/Login2";
+            });
+
+        </script>
+    }
+    else if (ViewBag.message == "ComplaintExist")
+    {
+        <script type="text/javascript" style="color:green">
+            swal("Complaint already registered against entered mobile number.", {
+                icon: "error",
+            //}).then((value) => {
+            //    window.location.href = "/Account/Login2";
+            });
+
+        </script>
+    }
+
+    <div class="container-fluid " style="margin-top:100px">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <!-- jquery validation -->
+                <div class="card">
+                    <div class="card-header" style="background-color: indianred; color: white">
+                        @*<h2 class="card-title">Request For Mobile Number Correction</h2>*@
+                        <h2 class="card-title">Request Form</h2>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form asp-action="PreLoginComplaint">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">CNIC </label>
+                                <input asp-for="cnic" id="cnic" class="form-control" autofocus autocomplete="off" readonly />
+                                <span asp-validation-for="cnic" class="text-danger"></span>
+                            </div>
+                            @*<div class="form-group">
+                                    <label for="exampleInputEmail1">Policy No </label>
+                                    <select asp-for="policyNo" class="form-control" id="policyNo" style="width: 100%;">
+
+                                    </select>
+                                    <span asp-validation-for="policyNo" class="text-danger"></span>
+                                </div>*@
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Mobile Number</label>
+                                <input asp-for="mobileNumber" id="mobileno" class="form-control" autocomplete="off" />
+                                <span asp-validation-for="mobileNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Region</label>
+                                <select asp-for="region" class="form-control" style="width: 100%;">
+                                    <option selected="selected"></option>
+                                    @foreach (Region region in Model.regions)
+                                    {
+                                        <option value="@region.regionId">@region.regionName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="region" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <div id="dcaptcha"></div>
+                                <input id="txtcaptcha" type="text" style="display:none" required />
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-danger">Submit</button>
+                            <a class="btn btn-dark" href="@Url.Action("Login","Account")" style="float:right;">Close</a>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+            integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+            crossorigin="anonymous">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cnic').mask('00000-0000000-0', { placeholder: "_____-_______-_      Please Enter Your CNIC" });
+            $('#mobileno').mask('00000000000', { placeholder: "Please Enter Correct Mobile Number e.g(03000000000) " })
+        });
+
+                    //$("#cnic").focusout(function () {
+                    //    debugger;
+                    //    var cnicNo = $("#cnic").val();
+                    //    if (cnicNo == "" || cnicNo.length != 15) {
+                    //        swal("Please enter CNIC number in correct formate.", {
+                    //            icon: "info",
+                    //        });
+                    //        return false;
+                    //    }
+                    //    $.ajax({
+                    //        url: "/Account/GetPolicyNo/",
+                    //        type: "POST",
+                    //        data: JSON.parse(JSON.stringify({ cnicNo })),
+                    //        success: function (res) {
+                    //            debugger;
+                    //            if (res.length > 0) {
+                    //                var s = '<option selected="selected"></option>';
+                    //                for (var i = 0; i < res.length; i++) {
+                    //                    s += '<option value="' + res[i].policy + '">' + res[i].policy + '</option>';
+                    //                }
+                    //                $("#policyNo").html(s);
+                    //            }
+                    //            else {
+                    //                swal("Policy number against CNIC not found.", {
+                    //                    icon: "info",
+                    //                });
+                    //                $("#policyNo").html('');
+                    //                $("#fieldUnitName").val("");
+                    //                $("#fieldUnitId").val("");
+                    //                return false;
+                    //            }
+                    //        },
+                    //        error: function (err) { }
+                    //    });
+                    //});
+    </script>
+</body>
+
+</html>
+

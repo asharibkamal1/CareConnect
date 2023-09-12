@@ -1,0 +1,18 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+    <br />
+    <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">City:</label>
+        </div>
+        <div class="col-md-3 col-sm-3">
+            <select class="form-control" id="citysubdropdown" name="city ">
+                @foreach (System.Data.DataRow catRow in Model.CityDS.Tables[0].Rows)
+                {
+                    <option value="@catRow["City_ID"]">@catRow["City_Name"]</option>
+                }
+            </select>
+            <span class="text-danger" id="cityDropdownError" style="display: none;">Please select City</span>
+            <br />
+        </div>
+
+    </div>

@@ -1,0 +1,274 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.CustomerPostComplaints>
+
+@{
+    ViewData["Title"] = "Customer Complaints";
+}
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Customer Complaints</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+    </style>
+</head>
+
+@if (@ViewBag.message == "OK")
+{
+    <script type="text/javascript" style="color:green">
+        swal("Your complaint has been closed successfully.", {
+            icon: "success",
+        });
+    </script>
+}
+
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Complaint List<a class="btn" href="@Url.Action("Menu","Home")" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table type="1" id="tb_customerComplaint" class="table table-striped" width="100%">
+                <thead>
+                    <tr>
+                        <th>Complaint Id</th>
+                        <th>Entry Date</th>
+                        <th>Resolved Date</th>
+                        <th>My Comment</th>
+                        <th>Admin Comment</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        @*<th>Reopen Comment</th>*@
+                        <th>Reopen Complaint</th>
+
+
+                    </tr>
+                </thead>
+
+
+                @foreach (var item in Model)
+                {
+
+
+
+                    <tr>
+                        <td>
+                            @item.complaint_Id
+                        </td>
+
+
+                        <td>@item.complaintDate.ToString("dd/MM/yyyy")</td>
+                        @if (item.resolvedDate.ToString("yyyy-MM-dd") == "1900-01-01")
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+
+                            <td>@item.resolvedDate.ToString("dd/MM/yyyy")</td>
+                        }
+                        <td>@item.comments</td>
+                        <td>@item.adminComments</td>
+                        @if (item.isResolved)
+                        {
+                            <td>Resolved</td>
+
+                            <td>
+                                @if (item.isClosed)
+                                {
+                                    <button class="btn-dark btn-sm" disabled>Closed</button>
+                                }
+                                else
+                                {
+                                    @using (Html.BeginForm("SetCustomerComplaintStatus", "Home", new { complaintId = item.complaintId }))
+                                    {
+                                        <button class="btn btn-sm closeComplaint" style="background-color: #0565B7;color:white">Close</button>
+                                    }
+                                }
+
+                            </td>
+
+                            @if (item.isClosed == false@*&& item.isReopend==false*@)
+                            {
+                            @*<td><textarea name="reOpenCommints" maxlength="150"></textarea></td>*@
+                            <td>
+                                <button class="btn btn-sm reopenComplaint" style="background-color: #0565B7;color:white" onclick="ABC(@Json.Serialize(item).ToString(),this)">Reopen</button>
+                            </td>
+                            }
+                            else
+                            {
+                            @*<td><textarea name="reOpenCommints" maxlength="150" disabled></textarea></td>*@
+                            <td>
+                                <button class="btn btn-sm reopenComplaint" style="background-color: #0565B7;color:white" disabled onclick="ABC(@Json.Serialize(item).ToString(),this)">Reopen</button>
+                            </td>
+                            }
+
+                        }
+                        else
+                        {
+                            <td>
+                                UnResolved
+                            </td>
+                            <td><input type="button" class="btn-primary btn-sm" value="Close" disabled /></td>
+                            @*<td><textarea name="reOpenCommints" maxlength="150" disabled></textarea></td>*@
+                            <td>
+                                <button class="btn btn-sm reopenComplaint" style="background-color: #0565B7;color:white" disabled onclick="ABC(@Json.Serialize(item).ToString(),this)">Reopen</button>
+                            </td>
+                        }
+
+
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#tb_customerComplaint').DataTable({
+            scrollY: '60vh',
+            scrollX: '60vh',
+        });
+    });
+
+    //for Fixed Header
+    $(window).scroll(function () {
+        var sticky = $('.sticky'),
+            scroll = $(window).scrollTop();
+
+        if (scroll >= 100) sticky.addClass('fixed');
+        else sticky.removeClass('fixed');
+    });
+
+    $('.closeComplaint').click(function () {
+        debugger
+        var btnRef = this;
+        swal({
+            title: "Are you sure?",
+            text: "This complaint will be closed.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(function (isOkay) {
+                debugger
+                if (isOkay) {
+                    $(btnRef).parent().submit();
+                }
+            });
+        return false;
+    });
+
+    function ABC(obj, tr) {
+        debugger;
+        //var tr = $(this).closest('tr');
+        //var srNo = srNo;
+        /*var reopenComments = $(tr).parent().prev().find('textarea[name="reOpenCommints"]').val();*/
+
+        /*obj.reopenComments = reopenComments;*/
+        swal({
+            title: "Are you sure to Reopne?",
+            text: "Enter Reopen Comments",
+            icon: "warning",
+            buttons: true,
+            content: 'input',
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                debugger
+                if (willDelete) {
+
+
+                    obj.reopenComments = willDelete;
+                    $.ajax({
+                        url: "/Home/ReopenComplaint/",
+                        type: "POST",
+                        data: JSON.parse(JSON.stringify({ customerPostComplaints: obj })),
+                        success: function (res) {
+                            if (res == "success") {
+                                swal("Complaint successfully reopened.", {
+                                    icon: "success",
+                                }).then((value) => {
+                                    window.location.href = "/Home/GetPostComplaintList";
+                                    //window.location.reload();
+                                });
+
+                            }
+                            else if (res == "UserUnAuthorized") {
+                                location.url = "Account/Admin/"
+                            }
+                        },
+                        error: function (err) { }
+                    });
+
+                } else {
+                    if (willDelete == "") {
+                        swal("Please enter reopen comments", {
+                            icon: "info",
+                        });
+                        return false;
+                    }
+                    /* window.location.href = "/Home/GetPostComplaintList";*/
+                }
+            });
+    }
+</script>
+
+
+

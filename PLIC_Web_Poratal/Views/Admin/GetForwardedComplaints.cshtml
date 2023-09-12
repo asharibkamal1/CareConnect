@@ -1,0 +1,335 @@
+﻿@model PLIC_Web_Poratal.Models.CompliantViewModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Forwarded Complaints";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@*href="@Url.Action("Menu", "Home")"*@
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Forwarded Complaints List <a class="btn" href="#" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table id="new_Id" class="stripe row-border order-column text-center" width="100%">
+                <thead>
+                    <tr>
+                        @*<th>Sr. No</th>*@
+                        <th>Complaint Id</th>
+                        <th>Forwarded Date</th>
+                        <th>Policy No</th>
+                        <th>Phone No</th>
+                        <th>Region</th>
+                        <th>Field Unit</th>
+                        <th>Complaint Type</th>
+                        <th>Forwarded Comments</th>
+                        <th>Initiator Name</th>
+                        @*<th>Forwarded By</th>*@
+                        <th style="overflow: hidden; white-space: nowrap">Forworded To</th>
+                        <th>Action</th>
+                        <th>Admin Comments</th>
+                        <th>Resolution Date</th>
+                        <th>Resolve</th>
+                        <th>View Attachment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (PostComplaint postComplaint in Model.postComplaints)
+                    {
+                        @if (postComplaint.policyNo.ToString() != null && postComplaint.policyNo.ToString() != "")
+                        {
+                            <tr>
+                                @*<td>@Counter</td>*@
+                                <td>@postComplaint.complaintId</td>
+                                <td style="overflow: hidden; white-space: nowrap">@postComplaint.entryDate.ToString("MM-dd-yyyy")</td>
+                                <td style="overflow: hidden; white-space: nowrap">@postComplaint.policyNo</td>
+                                <td>@postComplaint.phoneNo</td>
+                                <td>@postComplaint.region</td>
+                                <td>@postComplaint.fieldUnit</td>
+                                <td>@postComplaint.complaintType</td>
+                                <td class="col-auto">@postComplaint.comments</td>
+                                @if (postComplaint.adminName != "")
+                                {
+                                    <td style="overflow: hidden; white-space: nowrap">@postComplaint.adminName</td>
+                                }
+                                else
+                                {
+                                    <td style="overflow: hidden; white-space: nowrap">Customer</td>
+                                }
+                                @*<td>--</td>*@
+                                <td style="overflow: hidden; white-space: nowrap">
+                                    <select class="form-control" id="" name="forwardOption" style="width: 100%;">
+                                        @if (postComplaint.groupId != 0)
+                                        {
+                                            @*<option selected value="@postComplaint.groupId">123</option>*@
+                                        }
+                                        else
+                                        {
+                                            <option selected="selected"></option>
+                                        }
+
+                                        @foreach (Group group in Model.groups)
+                                        {
+                                            @if (group.GroupID == postComplaint.groupId)
+                                            {
+                                                <option value="@group.GroupID">@group.GroupDescription</option>
+                                            }
+                                        }
+
+                                        @foreach (Group group in Model.groups)
+                                        {
+                                            @if (group.GroupID != postComplaint.groupId)
+                                            {
+                                                <option value="@group.GroupID">@group.GroupDescription</option>
+                                            }
+                                        }
+
+
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm" name="forwarded" style="background-color: #0565B7; color : white;" onclick="ForwardTo(@Json.Serialize(postComplaint).ToString(),this)">Forward</button>
+                                </td>
+
+                                <td><textarea name="adminCommints" maxlength="100"></textarea></td>
+                                <td><input type="date" name="reDate" /></td>
+                                <td>
+                                    @if (postComplaint.isForward == true)
+                                    {
+
+                                        <button class="btn btn-sm" name="resolve" style="background-color: #0565B7; color : white;" onclick="ABC(@Json.Serialize(postComplaint).ToString(),this)" disabled>Resolve</button>
+                                    }
+                                    else
+                                    {
+
+                                        <button class="btn btn-sm" name="resolve" style="background-color: #0565B7; color : white;" onclick="ABC(@Json.Serialize(postComplaint).ToString(),this)">Resolve</button>
+                                    }
+
+                                </td>
+                                <td align="center">
+                                    @if (postComplaint.documentCount != 0)
+                                    {
+                                        @*@using (Html.BeginForm("GetComplaintDetail", "Admin", new { complaintId = postComplaint.complaintId }))
+                                            {
+                                                <button class="btn btn-sm" style="background-color: #0565B7; color : white">View</button>
+                                            }*@
+                                        @Html.ActionLink("View", "GetComplaintDetail", new { complaintId = postComplaint.complaintId })
+                                    }
+
+                                </td>
+                            </tr>
+                            //Counter = Counter + 1;
+                        }
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            dom: 'lBfrtip',
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            buttons: [
+                {
+                    extend: "excel",
+                    text: 'Export To Excel',
+                    className: "excel",
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    }
+                }
+            ]
+        });
+    });
+
+    ////for Fixed Header
+    //$(window).scroll(function () {
+    //    var sticky = $('.sticky'),
+    //        scroll = $(window).scrolltop();
+
+    //    if (scroll >= 100) sticky.addclass('fixed');
+    //    else sticky.removeclass('fixed');
+    //});
+
+    function ABC(obj, tr) {
+        debugger;
+        //var tr = $(this).closest('tr');
+        //var srNo = srNo;
+        var resolveDate = $(tr).parent().prev().find('input[name="reDate"]').val();
+        var adminComments = $(tr).parent().prev().prev().find('textarea[name="adminCommints"]').val();
+        if (adminComments == "" || resolveDate == "") {
+            swal("Please Enter Comments And Select Resolve Date.", {
+                icon: "info",
+            });
+            return false;
+        }
+        obj.resolveDate = resolveDate;
+        obj.adminComments = adminComments;
+        swal({
+            title: "Are you sure to resolve?",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    debugger
+                    $(tr).parent().find('button[name="resolve"]').prop('disabled', true);
+                    $.ajax({
+                        url: "/Admin/ResolvedPostComplaint/",
+                        type: "POST",
+                        data: JSON.parse(JSON.stringify({ postComplaint: obj })),
+                        success: function (res) {
+                            if (res == "success") {
+                                swal("Complaint successfully Resolved.", {
+                                    icon: "success",
+                                }).then((value) => {
+                                    window.location.href = "/Admin/GetForwardedComplaints";
+                                    /*window.location.reload();*/
+                                });
+                            }
+                            else if (res == "UserUnAuthorized") {
+                                location.url = "Account/Admin/"
+                            }
+                        },
+                        error: function (err) { }
+                    });
+                } else {
+                    //window.location.reload();
+                    window.location.href = "/Admin/GetForwardedComplaints";
+                }
+            });
+    }
+
+    function ForwardTo(obj, tr) {
+        debugger
+        var forwardTO = $(tr).parent().prev().find('select[name="forwardOption"]').val();
+        var adminComments = $(tr).parent().next().find('textarea[name="adminCommints"]').val();
+
+        if (forwardTO == "" || adminComments == "") {
+            swal("Please select forward option and enter comments.", {
+                icon: "info",
+            });
+            return false;
+        }
+        obj.groupNewId = forwardTO;
+        obj.adminComments = adminComments;
+        swal({
+            title: "Are you sure to forward this complaint?",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    debugger
+                    $(tr).parent().find('button[name="forwarded"]').prop('disabled', true);
+                    $.ajax({
+                        url: "/Admin/AddForwordedComplaint/",
+                        type: "POST",
+                        data: JSON.parse(JSON.stringify({ postComplaint: obj })),
+                        success: function (res) {
+                            if (res == "success") {
+                                swal("Complaint successfully forwarded.", {
+                                    icon: "success",
+                                }).then((value) => {
+                                    window.location.href = "/Admin/GetForwardedComplaints";
+                                    /*window.location.reload();*/
+                                });
+                            }
+                            else if (res == "failed") {
+                                swal("Complaint is allready forworded to selected group.", {
+                                    icon: "info",
+                                });
+                                $(tr).parent().find('button[name="forwarded"]').prop('disabled', false);
+                                return false;
+                            }
+                            else if (res == "UserUnAuthorized") {
+                                location.url = "Account/Admin/"
+                            }
+                        },
+                        error: function (err) { }
+                    });
+                } else {
+                    //window.location.reload();
+                    window.location.href = "/Admin/GetForwardedComplaints";
+                }
+            });
+    }
+</script>

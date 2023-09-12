@@ -1,0 +1,165 @@
+﻿@model CustomerSignUp
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en" style="height: auto;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer Registration Form</title>
+    <link rel="shortcut icon" href="/login/img/p_logo_dark3.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    @*<link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    @*<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @*<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>*@
+    @*<script type="text/javascript">
+            var onloadCallback = function () {
+                grecaptcha.render('dcaptcha', {
+                    'sitekey': '6LeEXbAgAAAAAGRw2f1tVL4jJhqnePyIEGUCKVx-',
+                    'callback': function (response) {
+                        $('#txtcaptcha').val('set');
+                    }
+                });
+            };
+        </script>*@
+</head>
+<body style="background-color: #0565B7;">
+    @if (ViewBag.message == "CNIC")
+    {
+        <script type="text/javascript" style="color:green">
+            Swal.fire({
+                icon: 'info',
+                html: 'Your CNIC number is incorrect or do not exist.<br>Please visit nearest field office.<br><a href="https://plic.com.pk/contact" target="_blank" style="font-size:13px;">Click to find nearest field offices</a>'
+            }).then((value) => {
+                window.location.href = "/Account/Login2";
+
+            });
+
+        </script>
+
+    }
+    else if (ViewBag.message == "MobileNo")
+    {
+        <script type="text/javascript" style="color:green">
+            Swal.fire({
+                icon: 'info',
+                html: 'Your Mobile number is incorrect or do not exist.<br>' +
+                    'Please click on make request button to register your number.&nbsp;&nbsp;<a href="/Account/PreLoginComplaint" class="btn btn-sm" style="background-color: #0565B7;color:white;font-size:12px;">Make Request</a>',
+                /*showConfirmButton: false*/
+            }).then((value) => {
+                window.location.href = "/Account/Login2";
+
+            });
+
+        </script>
+    }
+    else if (ViewBag.message == "InCorrectFormate")
+    {
+        <script type="text/javascript" style="color:green">
+            swal.fire({
+                icon: "error",
+                text: "CNIC or Mobile Number are not in a correct formate.",
+            }).then((value) => {
+                window.location.href = "/Account/Login2";
+
+            });
+
+        </script>
+    }
+    else if (ViewBag.message == "Error")
+    {
+        <script type="text/javascript" style="color:green">
+            swal.fire({
+                icon: "error",
+                text: "Oop! Some things went wrong.",
+            });
+
+        </script>
+    }
+
+
+    <div class="container-fluid " style="margin-top:100px">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <!-- jquery validation -->
+                <div class="card">
+                    <div class="card-header text-center" style="background-color: #343a40">
+                        <img src="~/images/avatar/PLIL_Logo_01.png" class="img-fluid" alt="Responsive image">
+                    </div>
+                    <div class="card-header" style="background-color: indianred; color: white">
+                        @*<h2 class="card-title">Request For Mobile Number Correction</h2>*@
+                        <h2 class="card-title">Customer SignUp</h2>
+                        <a href="@Url.Action("Login","Account")" style="float:right;"><i class="fa-solid fa-xmark" style="color:black"></i></a>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form asp-action="CustomerSignUp">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">CNIC </label>
+                                <input asp-for="CNIC" id="cnic" class="form-control" autocomplete="off" />
+                                <span asp-validation-for="CNIC" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Mobile Number</label>
+                                <input asp-for="MobileNo" id="mobileno" class="form-control" autocomplete="off" />
+                                <span asp-validation-for="MobileNo" class="text-danger"></span>
+                            </div>
+                            @*<div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input type="password" asp-for="Password" id="password" placeholder="Password" class="form-control" aria-describedby="passwordHelpBlock" autocomplete="off" maxlength="8" />
+                                    <small id="passwordHelpBlock" class="form-text text-muted">
+                                        Your password must be 8 characters long, contain letters and numbers.
+                                    </small>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Confirm Password</label>
+                                    <input type="password" asp-for="ConfirmPassword" id="confirmpassword" placeholder="Confirm Password" class="form-control" autocomplete="off" maxlength="8" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>*@
+
+                            @*<div class="form-group">
+                                    <div id="dcaptcha"></div>
+                                    <input id="txtcaptcha" type="text" style="display:none" required />
+                                </div>*@
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-danger" style="float:right;">Send OTP</button>
+
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+            integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+            crossorigin="anonymous">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cnic').mask('00000-0000000-0', { placeholder: "_____-_______-_      Please Enter Your CNIC" });
+            $('#mobileno').mask('00000000000', { placeholder: "Please Enter Correct Mobile Number" })
+        });
+    </script>
+</body>
+
+</html>

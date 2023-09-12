@@ -1,0 +1,172 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.PreComplaint>
+@inject IJsonHelper Json;
+@{
+    Layout = "_UserLayout";
+    //var count = 0;
+    ViewData["Title"] = "Resolved Mobile Number Complaints";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@*href="@Url.Action("Menu", "Home")"*@
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Resolved Mobile Number Complaints List <a class="btn" href="#" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table id="new_Id" class="stripe row-border order-column text-center" width="100%">
+                <thead>
+
+                    <tr>
+                        @*<th>Sr. No</th>*@
+                        <th>Complaint Id</th>
+                        <th>Entry Date</th>
+                        <th>CNIC</th>
+                        @*<th>Policy No</th>*@
+                        @*<th>Old Phone No</th>*@
+                        <th>New Phone No</th>
+                        <th>Region</th>
+                        <th>Resolved Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr id="t1">
+                        @*<td>@Counter</td>*@
+                        <td>@item.complaintId</td>
+                        <td style="overflow: hidden; white-space: nowrap">@item.entryDate.ToString("MM-dd-yyyy")</td>
+                        <td style="overflow: hidden; white-space: nowrap">@item.cnic</td>
+                        @*<td style="overflow: hidden; white-space: nowrap">@item.policyNo</td>*@
+                        @*<td>@item.oldPhoneNo</td>*@
+                        <td>@item.newPhoneNo</td>
+                        <td>@item.region</td>
+                        <td style="overflow: hidden; white-space: nowrap">@item.resolveDate.ToString("MM-dd-yyyy")</td>
+                    </tr>
+                        //Counter = Counter + 1;
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@*Since we have already added the JQuery reference in the Layout page, there is no need to add it again.
+    If you doesn't add the jquery reference before, remember to add it.*@
+
+
+<script>
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            dom: 'lBfrtip',
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            buttons: [
+                {
+                    extend: "excel",
+                    text: 'Export To Excel',
+                    className: "excel"
+                }
+            ]
+        });
+    });
+
+    //for Fixed Header
+    $(window).scroll(function () {
+        var sticky = $('.sticky'),
+            scroll = $(window).scrollTop();
+
+        if (scroll >= 100) sticky.addClass('fixed');
+        else sticky.removeClass('fixed');
+    });
+
+    //$(function () {
+    //    $(".resolve").click(function () {
+    //        var tr = $(this).closest('tr');
+    //        var srNo = $(tr).find("td").eq(0).text();
+    //        var resolveDate = tr.find('input[name="reDate"]').val();
+    //        $.ajax({
+    //            url: "/Admin/ResolvedPreComplaint/",
+    //            type: "POST",
+    //            data: { srNo, resolveDate },
+    //            success: function (res) { },
+    //            error: function (err) { }
+    //        })
+    //    })
+    //})
+
+</script>

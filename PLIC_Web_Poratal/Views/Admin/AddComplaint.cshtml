@@ -1,0 +1,364 @@
+﻿@model PLIC_Web_Poratal.Models.PostLoginComplaint
+
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Add Complaint";
+}
+
+
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+@if (ViewBag.message == "OK")
+{
+    <script type="text/javascript" style="color:green">
+        swal("Your Complaint has been register successfully", {
+            icon: "success",
+        
+        }).then((value) => {
+            window.location.href = "/Admin/AddComplaint";
+
+        });
+
+    </script>
+}
+else if (ViewBag.message == "ComplaintExist")
+{
+    <script type="text/javascript" style="color:green">
+        swal("Complaint has already registered for mobile number update.", {
+            icon: "error",
+        }).then((value) => {
+            window.location.href = "/Admin/AddComplaint";
+        });
+    </script>
+}
+
+<div class="container-fluid ">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <!-- jquery validation -->
+            <div class="card">
+                <div class="card-header" style="background-color: #0565B7;color:white">
+                    <h3 class="card-title">Complaint Form</h3>
+                    <a class="float-right" asp-action="Menu" asp-controller="Admin">
+                        <i class="fa" style="color:white">Back</i>
+                    </a>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form enctype="multipart/form-data" asp-action="AddComplaint" onsubmit="return submitForm(this);">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">CNIC</label>
+                            <input asp-for="cnicNo" id="cnic" name="cnicNo" class="form-control" maxlength="30" autofocus />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Policy No</label>
+                            <select asp-for="policyNo" class="form-control" id="policyNo" name="policyNo" style="width: 100%;">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="policyNo" class="form-control" id="other2" hidden />
+                            <span asp-validation-for="policyNo" class="text-danger"></span>
+                        </div>
+                        @*<div class="form-group">
+                                <label for="exampleInputPassword1">Field Unit</label>
+                                <input asp-for="fieldUnit" id="mobileno" class="form-control" autocomplete="off" maxlength="25" oninput="this.value = this.value.toUpperCase()" />
+                                <span asp-validation-for="fieldUnit" class="text-danger"></span>
+                            </div>*@
+                        <div class="form-group">
+                            <label>Field Unit</label>
+                            <div class="form-group">
+                                <input asp-for="fieldUnit" class="form-control" id="fieldUnitName" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="fieldUnitId" class="form-control" id="fieldUnitId" hidden />
+                            <span asp-validation-for="fieldUnitId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <div class="form-group">
+                                <input asp-for="mobileNumber" class="form-control" id="mobileNumber" />
+                                <span asp-validation-for="mobileNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Complaint Type</label>
+                            <select class="form-control" id="complainType1" style="width: 100%;">
+                                <option selected="selected"></option>
+                                @* <option value="Policy Issuance">Policy Issuance</option>*@
+                                <option value="Premium Payment">Premium Payment</option>
+                                <option value="Loan">Loan</option>
+                                <option value="Revivel">Revivel</option>
+                                <option value="Mobile Number Update">Mobile Number Update</option>
+                                <option value="Surrender Value Claim">Surrender Value Claim</option>
+                                <option value="Death Claim">Death Claim</option>
+                                <option value="Maturity Claim">Maturity Claim</option>
+                                <option value="First-Term Maturity Claim">First-Term Maturity Claim</option>
+                                <option value="Second-Term Maturity Claim">Second-Term Maturity Claim</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="complaintType" class="form-control" id="other" hidden maxlength="100" />
+                            <span asp-validation-for="complaintType" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for="newMobileNumber" class="form-control" id="newMobileNumber" placeholder="Enter new mobile number" hidden maxlength="100" />
+                            <span asp-validation-for="newMobileNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Complaint Origin</label>
+                            <select asp-for="complaintOrigin" class="form-control" id="complaintOrigin" style="width: 100%;">
+                                <option selected="selected"></option>
+                                @* <option value="Policy Issuance">Policy Issuance</option>*@
+                                <option value="Through Telephonic">Through Telephonic</option>
+                                <option value="Walk in Customer">Walk in Customer</option>
+                                <option value="Wafaqi Mohtasib">Wafaqi Mohtasib</option>
+                                <option value="SECP">SECP</option>
+                                <option value="Others">Others</option>
+
+                            </select>
+                            <span asp-validation-for="complaintOrigin" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Comments</label>
+                            <textarea asp-for="comments" class="form-control" rows="3" placeholder="Enter ..." style="width: 100%;"></textarea>
+                            <span asp-validation-for="comments" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Document (Optional)</label>
+                            <div class="custom-file">
+                                <input asp-for="documents" class="form-control custom-file-input" multiple />
+                                <label class="custom-file-label">Choose File...</label>
+                            </div>
+                            <span id="documentsSizeError" class="text-danger" hidden>Document size must not be more than 25 MB</span>
+                        </div>
+                    </div>
+
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-danger float-right" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+        integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+        crossorigin="anonymous">
+</script>
+
+
+<script>
+    var nameField = document.getElementById("complainType1");
+    var firstNameInput = document.getElementById("other");
+
+    //var nameField1 = document.getElementById("complainType2");
+    //var firstNameInput = document.getElementById("other1");
+
+    var policyNo = document.getElementById("policyNo");
+
+    nameField.addEventListener("change", function () {
+        //Update this to your logic...
+        if (nameField.value === "Others") {
+            other.hidden = false;
+            //other.value = nameField.value;
+            other.value = "";
+            newMobileNumber.value = "";
+            newMobileNumber.hidden = true;
+            document.getElementById("btnSubmit").disabled = false;
+        }
+        else if (nameField.value === "Mobile Number Update") {
+            newMobileNumber.hidden = false;
+            newMobileNumber.value = "";
+            other.value = nameField.value;
+            other.hidden = true;
+            document.getElementById("btnSubmit").disabled = true;
+            
+        }
+        else if (nameField.value != "Others" && nameField.value != "Mobile Number Update") {
+            other.hidden = true;
+            other.value = nameField.value;
+            newMobileNumber.hidden = true;
+            document.getElementById("btnSubmit").disabled = false;
+        }
+    });
+
+
+    policyNo.addEventListener("change", function () {
+        other2.value = policyNo.value;
+    });
+
+    $('#cnic').mask('00000-0000000-0', { placeholder: "_____-_______-_      Please Enter Your CNIC" });
+    $('#mobileNumber').mask('00000000000', { placeholder: "Please Enter Mobile Number" });
+    $('#newMobileNumber').mask('00000000000');
+
+    $("#cnic").focusout(function () {
+        debugger;
+        var cnicNo = $("#cnic").val();
+        if (cnicNo == "" || cnicNo.length != 15) {
+            swal("Please enter CNIC number in correct formate.", {
+                icon: "info",
+            });
+            return false;
+        }
+        $.ajax({
+            url: "/Admin/GetPolicyNo/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ cnicNo })),
+            success: function (res) {
+                debugger;
+                if (res.length > 0) {
+                    var s = '<option selected="selected"></option>';
+                    for (var i = 0; i < res.length; i++) {
+                        s += '<option value="' + res[i].policy + '">' + res[i].policy + '</option>';
+                    }
+                    $("#policyNo").html(s);
+                }
+                else {
+                    swal("Policy number against CNIC not found.", {
+                        icon: "info",
+                    });
+                    $("#policyNo").html('');
+                    $("#fieldUnitName").val("");
+                    $("#fieldUnitId").val("");
+                    return false;
+                }
+            },
+            error: function (err) { }
+        });
+    });
+
+    $("#policyNo").change(function () {
+        debugger;
+        var policyNo = $("#policyNo").val();
+        if (policyNo == "") {
+            swal("Please select policy number.", {
+                icon: "info",
+            });
+            return false;
+        }
+        $.ajax({
+            url: "/Admin/GetFiedUnitAndMobileNumber/",
+            type: "POST",
+            data: JSON.parse(JSON.stringify({ policyNo })),
+            success: function (res) {
+                debugger;
+                $("#mobileNumber").val(res.mobileNumber);
+                if (res.fieldUnitName != "") {
+                    $("#fieldUnitName").val(res.fieldUnitName);
+                    $("#fieldUnitId").val(res.fieldUnitId);
+
+                }
+                else {
+                    swal("Field unit not found Or may be have Null value", {
+                        icon: "info",
+                    });
+                    return false;
+                }
+            },
+            error: function (err) { }
+        });
+    });
+
+    function submitForm(form) {
+        debugger;
+        swal({
+            title: "Are you sure?",
+            text: "This complaint will be submitted",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(function (isOkay) {
+                if (isOkay) {
+                    form.submit();
+                }
+            });
+        return false;
+    }
+
+    $("#newMobileNumber").focusout(function () {
+        debugger;
+        var mobileNumber = $("#mobileNumber").val();
+        var newMobileNumber = $("#newMobileNumber").val();
+        if (newMobileNumber == "") {
+            swal("New Mobile Number is Required", {
+                icon: "info",
+            });
+            document.getElementById("btnSubmit").disabled = true;
+            return false;
+        }
+        else if (newMobileNumber == mobileNumber) {
+            swal("Old mobile number and new mobile number are same.", {
+                icon: "info",
+            });
+            document.getElementById("btnSubmit").disabled = true;
+            return false;
+        }
+        else {
+            document.getElementById("btnSubmit").disabled = false;
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('.custom-file-input').on("change", function () {
+            //var fileName = $(this).val().split("\\").pop();
+            //$(this).next('.custom-file-label').html(fileName);
+            var fileLable = $(this).next('.custom-file-label');
+            var files = $(this)[0].files;
+            var lg = files.length; // get length
+            var items = files;
+            var maxFileSize = 25 * 1024 * 1024;
+            var fileSize = 0;
+            if (lg > 0) {
+                if (files.length > 1) {
+                    fileLable.html(files.length + ' files selected');
+                }
+                else if (files.length == 1) {
+                    fileLable.html(files[0].name);
+                }
+
+                for (var i = 0; i < lg; i++) {
+                    fileSize = fileSize + items[i].size; // get file size
+                }
+                if (fileSize > maxFileSize) {
+                    $('#documentsSizeError').prop('hidden', false);
+                    $('#btnSubmit').prop('disabled', true);
+                }
+                else {
+                    $('#documentsSizeError').prop('hidden', true);
+                    $('#btnSubmit').prop('disabled', false);
+                }
+            }
+            //if (files.length > 1) {
+            //    fileLable.html(files.length + ' files selected');
+            //}
+            //else if (files.length==1)
+            //{
+            //    fileLable.html(files[0].name);
+            //}
+        });
+    });
+</script>
+
+
+
+
+

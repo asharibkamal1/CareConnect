@@ -1,0 +1,254 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.PreComplaint>
+@*@model PLIC_Web_Poratal.Models.CompliantViewModel*@
+@inject IJsonHelper Json;
+@{
+    Layout = "_UserLayout";
+    var count = 0;
+    ViewData["Title"] = "Unresolved Mobile Number Complaints";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@*href="@Url.Action("Menu", "Home")"*@
+<div class="portlet-body">
+    @*<div class="col-lg-12">*@
+    @*@using (Html.BeginForm("menu", "admin"))*@
+    <!--{-->
+    <!-- Your other form elements-->
+    <!--<div id="radio">
+                <input type="radio" name="Isactive" value="Yes" />Unresolve
+                <input type="radio" name="Isactive" value="No" />Resolved
+            </div>
+        }
+    </div>-->
+    <div class="col-lg-12">
+        <p class="policies">Unresolved Mobile Number Complaints List <a class="btn" href="#" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table id="new_Id" class="stripe row-border order-column text-center" width="100%">
+                <thead>
+
+                    <tr>
+                        <th>Complaint Id</th>
+                        <th>Entry Date</th>
+                        <th>Insurant Name</th>
+                        <th>CNIC</th>
+                        @*<th>Policy No</th>*@
+                        @*<th>Old Phone No</th>*@
+                        <th>New Phone No</th>
+                        <th>Region</th>
+                        <th>Resolution Date</th>
+                        <th>Resolve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="t1">
+                            <td>@item.complaintId</td>
+                            <td style="overflow: hidden; white-space: nowrap">@item.entryDate.ToString("MM-dd-yyyy")</td>
+                            <td style="overflow: hidden; white-space: nowrap">@item.insurantName</td>
+                            <td style="overflow: hidden; white-space: nowrap">@item.cnic</td>
+                            @*<td style="overflow: hidden; white-space: nowrap">@item.policyNo</td>*@
+                            @*<td>@item.oldPhoneNo</td>*@
+                            <td>@item.newPhoneNo</td>
+                            <td>@item.region</td>
+                            <td><input type="date" id="input_@count" name="reDate" /></td>
+                            <td>
+                                @*<button id="tr1" class="btn btn-sm resolve" style="background-color: #0565B7; color : white;" type="submit">Resolved</button>*@
+                                <button class="btn btn-sm" name="resolve" style="background-color: #0565B7; color : white;" onclick="ABC(@Json.Serialize(item).ToString(),this)">Resolve</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*Since we have already added the JQuery reference in the Layout page, there is no need to add it again.
+    If you doesn't add the jquery reference before, remember to add it.*@
+
+
+<script>
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            dom: 'lBfrtip',
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            buttons: [
+                {
+                    extend: "excel",
+                    text: 'Export To Excel',
+                    className: "excel",
+                    exportOptions: {
+                        /*columns: ':not(:last-child)',*/
+                        columns: [0, 1, 2, 3, 4, 5]
+
+                    }
+                }
+            ]
+        });
+        //debugger
+        //    $("input[name='Isactive']").change(function () {
+        //        $(this).closest("form").submit();
+        //    });
+
+    });
+
+    //for Fixed Header
+    $(window).scroll(function () {
+        var sticky = $('.sticky'),
+            scroll = $(window).scrollTop();
+
+        if (scroll >= 100) sticky.addClass('fixed');
+        else sticky.removeClass('fixed');
+    });
+
+    //$(function () {
+    //    $(".resolve").click(function () {
+    //        var tr = $(this).closest('tr');
+    //        var srNo = $(tr).find("td").eq(0).text();
+    //        var resolveDate = tr.find('input[name="reDate"]').val();
+    //        $.ajax({
+    //            url: "/Admin/ResolvedPreComplaint/",
+    //            type: "POST",
+    //            data: { srNo, resolveDate },
+    //            success: function (res) { },
+    //            error: function (err) { }
+    //        })
+    //    })
+    //})
+    function ABC(obj, tr) {
+        debugger
+        //var tr = $(this).closest('tr');
+        //var srNo = srNo;
+
+        resolveDate = $(tr).parent().prev().find('input[name="reDate"]').val();
+        obj.resolveDate = resolveDate;
+        obj.oldPhoneNo;
+        obj.newPhoneNo
+        //if (obj.oldPhoneNo == obj.newPhoneNo) {
+        //    swal({
+        //        title: "You Can Not Update.",
+        //        text:" Old Phone Number and New Phone Number are Same",
+        //        icon: "info",
+        //    });
+        //    return false;
+        //}
+        //else {
+        if (resolveDate == "") {
+            swal("Please Select Resolve Date.", {
+                icon: "info",
+            });
+            return false;
+        }
+        swal({
+            title: "Are you sure to resolve?",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(tr).parent().find('button[name="resolve"]').prop('disabled', true);
+                    $.ajax({
+                        url: "/Admin/ResolvedPreComplaint/",
+                        type: "POST",
+                        data: JSON.parse(JSON.stringify({ preComplaint: obj })),
+                        success: function (res) {
+                            if (res == "success") {
+                                swal("Complaint successfully Resolved.", {
+                                    icon: "success",
+                                }).then((value) => {
+                                    window.location.href = "/Admin/PreComplaint";
+                                    //window.location.reload();
+                                });
+                            }
+                            else if (res == "UserUnAuthorized") {
+                                location.url = "Account/Admin/"
+                            }
+                        },
+                        error: function (err) { }
+                    });
+                } else {
+                    window.location.href = "/Admin/PreComplaint";
+                    //window.location.reload();
+                }
+            });
+
+        //}
+    }
+</script>

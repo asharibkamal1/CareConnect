@@ -1,0 +1,282 @@
+﻿@*@model IEnumerable<PLIC_Web_Poratal.Models.SystemUser>*@
+@model PLIC_Web_Poratal.Models.SystemUserViewModel
+@inject IJsonHelper Json;
+@{
+    Layout = "_UserLayout";
+    //var count = 0;
+    ViewData["Title"] = "CMS-Users List";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@*href="@Url.Action("Menu", "Home")"*@
+<div class="portlet-body">
+    @*<div class="col-lg-12">*@
+    @*@using (Html.BeginForm("menu", "admin"))*@
+    <!--{-->
+    <!-- Your other form elements-->
+    <!--<div id="radio">
+                <input type="radio" name="Isactive" value="Yes" />Unresolve
+                <input type="radio" name="Isactive" value="No" />Resolved
+            </div>
+        }
+    </div>-->
+    <div class="col-lg-12">
+        <p class="policies">CMS Users List <a class="btn" href="#" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table id="new_Id" class="stripe row-border order-column text-center" width="100%">
+                <thead>
+
+                    <tr>
+                        <th>Id</th>
+                        <th>User Name</th>
+                        <th>Full Name</th>
+                        <th>Role</th>
+                        <th>Circle</th>
+                        @*<th>Policy No</th>*@
+                        @*<th>Old Phone No</th>*@
+                        <th>Region</th>
+                        <th>Field Unit</th>
+                        <th>Mobile Number</th>
+                        <th>Password</th>
+                        <th>Group</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (SystemUser systemUser in Model.systemUsers)
+                    {
+                    <tr id="t1">
+                        <td>@systemUser.UserId</td>
+                        <td style="overflow: hidden; white-space: nowrap">@systemUser.UserName</td>
+                        <td style="overflow: hidden; white-space: nowrap">@systemUser.FullName</td>
+                        @if (systemUser.SuperAdmin == 0)
+                        {
+                            <td style="overflow: hidden; white-space: nowrap">-</td>
+                        }
+                        else
+                        {
+                            <td style="overflow: hidden; white-space: nowrap">SuperAdmin</td>
+                        }
+
+                        <td style="overflow: hidden; white-space: nowrap">@systemUser.CircleName</td>
+                        @*<td style="overflow: hidden; white-space: nowrap">@item.policyNo</td>*@
+                        @*<td>@item.oldPhoneNo</td>*@
+                        <td>@systemUser.RegionName</td>
+                        <td>@systemUser.FielUnitName</td>
+                        <td><input value="@systemUser.PhoneNo" id="mobileno" name="mobileNumber" onkeypress="return isNumberKey(event)" maxlength="11" /></td>
+                        <td><input value="@systemUser.AdminPassword" name="password" /></td>
+
+                        <td style="overflow: hidden; white-space: nowrap">
+                            <select class="form-control" id="" name="group" style="width: 100%;">
+                                @if (systemUser.GroupId != "0")
+                                {
+                                    @*<option selected value="@postComplaint.groupId">123</option>*@
+                                }
+                                else
+                                {
+                                    <option selected="selected"></option>
+                                }
+
+                                @foreach (Group group in Model.groups)
+                                {
+                                    @if (group.GroupID == Convert.ToInt32(systemUser.GroupId))
+                                    {
+                                        <option value="@group.GroupID">@group.GroupDescription</option>
+                                    }
+                                }
+
+                                @foreach (Group group in Model.groups)
+                                {
+                                    @if (group.GroupID != Convert.ToInt32(systemUser.GroupId))
+                                    {
+                                        <option value="@group.GroupID">@group.GroupDescription</option>
+                                    }
+                                }
+
+
+                            </select>
+                        </td>
+
+                        <td>
+                            @*<button id="tr1" class="btn btn-sm resolve" style="background-color: #0565B7; color : white;" type="submit">Resolved</button>*@
+                            <button class="btn btn-sm" name="update" style="background-color: #0565B7; color : white;" onclick="ABC(@Json.Serialize(systemUser).ToString(),this)">Update</button>
+                        </td>
+
+                    </tr>
+
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@*Since we have already added the JQuery reference in the Layout page, there is no need to add it again.
+    If you doesn't add the jquery reference before, remember to add it.*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+        integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+        crossorigin="anonymous">
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            /* dom: 'lBfrtip',*/
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            //buttons: [
+            //    {
+            //        extend: "excel",
+            //        text: 'Export To Excel',
+            //        className: "excel",
+            //        exportOptions: {
+            //            /*columns: ':not(:last-child)',*/
+            //            columns: [0, 1, 2, 3, 4, 5]
+
+            //        }
+            //    }
+            //]
+        });
+    });
+    /* $('#mobileno').mask('00000000000');*/
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    //for Fixed Header
+    $(window).scroll(function () {
+        var sticky = $('.sticky'),
+            scroll = $(window).scrollTop();
+
+        if (scroll >= 100) sticky.addClass('fixed');
+        else sticky.removeClass('fixed');
+    });
+
+    function ABC(obj, tr) {
+        debugger
+        groupId = $(tr).parent().prev().find('select[name="group"]').val();
+        AdminPassword = $(tr).parent().prev().prev().find('input[name="password"]').val();
+        PhoneNo = $(tr).parent().prev().prev().prev().find('input[name="mobileNumber"]').val();
+
+        obj.groupId = groupId;
+        obj.adminPassword = AdminPassword;
+        obj.phoneNo = PhoneNo;
+        
+
+        swal({
+            title: "Are you sure to update record?",
+            icon: "info",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(tr).parent().find('button[name="update"]').prop('disabled', true);
+                    $.ajax({
+                        url: "/Admin/UpdateSysUserInfo/",
+                        type: "POST",
+                        data: JSON.parse(JSON.stringify({ systemUser: obj })),
+                        success: function (res) {
+                            if (res == "success") {
+                                swal("Record successfully Update.", {
+                                    icon: "success",
+                                }).then((value) => {
+                                    /*window.location.href = "/Home/Menu";*/
+                                    window.location.reload();
+                                });
+                            }
+                            else if (res == "UserUnAuthorized") {
+                                location.url = "Account/Admin/"
+                            }
+                        },
+                        error: function (err) { }
+                    });
+                } else {
+                    window.location.reload();
+                }
+            });
+
+        //}
+    }
+</script>

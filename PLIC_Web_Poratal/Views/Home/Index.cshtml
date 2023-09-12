@@ -1,0 +1,277 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.PremiumVoucher>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+
+
+
+
+
+    <div class="portlet-body">
+        <div class="col-lg-12">
+            <p class="voucher">Renewal Vouchers<a class="btn" href="@Url.Action("Menu","Home")" style="float:right; color:white">Back</a></p>
+            @if (Model.Count() == 0)
+            {
+                <script type="text/javascript">
+                    @*window.onload = function () {
+                         alert("@ViewBag.Message  @ViewBag.pol");
+                     };*@
+                    swal("@ViewBag.Message  @ViewBag.pol \n Please press button to generate voucher", {
+                        icon:"info",
+                    });
+                </script>
+
+                <div class="row p-1">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4 p-2">
+                        <p>Please Press Button To Generate Vouchar</p>
+                    </div>
+                    <div class="col-md-3">
+                        @using (Html.BeginForm("generateVoucher", "Home", new { option = "All_Voucher" }))
+                        {
+                            <button class="btn" style="background-color: #0565B7; color : white">Generate Voucher</button>
+                        }
+                        @*<button class="btn btn-grey">
+                        @Html.ActionLink(
+                       "Generate Vouchar",
+                            "generateVoucher",
+                            "Home",
+                            new { policy = "3434", iid = @ViewBag.id },
+                            null
+                        )
+                    </button>*@
+                    </div>
+                </div>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    if (@ViewBag.sucess= "OK") {
+                         swal("Generated Successfully",{
+                             icon: "success",
+                             timer:3000,
+                         });
+                    }
+                </script>
+                <div class="row  p-1">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4 p-2">
+                        <p>Please Press Button To Regenerate Vouchar</p>
+                    </div>
+                    <div class="col-md-3">
+                        @using (Html.BeginForm("RegenerateVoucher", "Home", new { option = "All_Voucher" }))
+                        {
+                            <button class="btn" style="background-color: #0565B7; color: white ">Regenerate Voucher</button>
+                        }
+                    </div>
+                </div>
+
+                <div class="table-responsive" style="background-color:white">
+                    <table id="new_Id" class="stripe row-border order-column">
+
+                        <thead style="position:sticky">
+                            <tr>
+                                <th scope="col">Sr.No</th>
+                                <th scope="col">View Voucher</th>
+                                <th scope="col">Policy No</th>
+                                <th scope="col">Voucher No</th>
+                                <th scope="col">Ammount</th>
+                                <th scope="col">Due Date</th>
+                                <th scope="col">Is Paid</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Father Name</th>
+                                <th scope="col">Policy TypeCode</th>
+                                <th scope="col">Policy Term</th>
+                                <th scope="col">Premium Mode</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Sum Assured</th>
+                                <th scope="col">Risk Date</th>
+                                <th scope="col">Field Unit</th>
+                                @*<th style="width:fit-content;">Serial No</th>
+                            <th style="width:fit-content">Print Voucher</th>
+                            <th style="width:fit-content">Policy No</th>
+                            <th style="width:fit-content">Voucher No</th>
+                            <th style="width:fit-content">Ammount</th>
+                            <th style="width:fit-content">Due Date</th>
+                            <th style="width:fit-content">Is Paid</th>
+                            <th style="width:fit-content">Name</th>
+                            <th style="width:fit-content">Father Name</th>
+                            <th style="width:fit-content">Policy TypeCode</th>
+                            <th style="width:fit-content">Policy Term</th>
+                            <th style="width:fit-content">Premium Mode</th>
+                            <th style="width:fit-content">Age</th>
+                            <th style="width:fit-content">Sum Assured</th>
+                            <th style="width:fit-content">Risk Date</th>
+                            <th style="width:fit-content">Field Unit</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SerialNo)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink(
+                            // "Print Premium Voucher",
+                            "View Voucher",
+                             "PrintPremiumVoucher",
+                             "Home",
+                             new { VoucherNo = item.VoucherNo.ToString(), iid = item.SerialNo.ToString(), target = "_blank" },
+                             //new { target = "_blank" },
+                             //new { target = "_blank" },
+                             new { @class = "button", target = "_blank" }
+
+                             //new { target = "_blank" }
+
+                             )
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PolicyNumber)
+                                    </td>
+                                    <td style="overflow: hidden; white-space: nowrap">
+                                        @Html.DisplayFor(modelItem => item.VoucherNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Amount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DueDate)
+                                    </td>
+                                    <td>
+                                        @if (item.IsPaid)
+                                        {
+                                            <span>True</span>
+                                        }
+                                        else
+                                        {
+                                            <span>False</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FHName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PolicyTypeCode)
+                                    </td>
+                                    <td style="overflow: hidden; white-space: nowrap">
+                                        @Html.DisplayFor(modelItem => item.PolicyTerm)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PremiumMode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Age)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SumAssured)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RiskDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FieldUnitName)
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+    </div>
+
+
+
+
+    <style>
+        .button {
+            display: block;
+            width: 120px;
+            height: 25px;
+            background: #c20b0b;
+            /*padding: 10px;*/
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            font-size: 18px;
+            /*font-weight: bold;*/
+            line-height: 25px;
+        }
+
+        .newVoucher {
+            background-color: #d93b3b;
+            font-size: medium;
+        }
+
+        .voucher {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 25px;
+            align-content:center;
+            text-align:center;
+            padding: 7px 15px;
+            margin: 0px
+        }
+        th, td {
+            white-space: nowrap;
+        }
+
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+
+        div.container {
+            width: 100%;
+        }
+        .fixed {
+            position: fixed;
+        }
+        .portlet-body {
+            margin-left: 0px;
+        }
+    </style>
+
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            scrollY: '60vh',
+            scrollX: '60vh',
+        });
+    });
+
+    //for Fixed Header
+    $(window).scroll(function () {
+        var sticky = $('.sticky'),
+            scroll = $(window).scrollTop();
+
+        if (scroll >= 100) sticky.addClass('fixed');
+        else sticky.removeClass('fixed');
+    });
+</script>
+
+
+

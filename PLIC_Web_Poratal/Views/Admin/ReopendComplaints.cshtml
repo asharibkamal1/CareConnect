@@ -1,0 +1,157 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.PostComplaint>
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Re-Opend Complaints List";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@*href="@Url.Action("Menu", "Home")"*@
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Reopend Complaints List<a class="btn" href="#" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table id="new_Id" class="stripe row-border order-column text-center" width="100%">
+                <thead>
+                    <tr>
+                        @*<th>Sr. No</th>*@
+                        <th>Complaint Id</th>
+                        <th>Reopend Date</th>
+                        <th>Policy No</th>
+                        @*<th>Phone No</th>
+                            <th>Region</th>
+                            <th>Field Unit</th>
+                            <th>Complaint Type</th>*@
+                        <th>Comments</th>
+                        <th>Admin Comments</th>
+                        <th>Reopend Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if (@item.policyNo.ToString() != null && item.policyNo.ToString() != "")
+                        {
+                            <tr>
+                                @*<td>@Counter</td>*@
+                                <td>@item.complaintId</td>
+                                <td style="overflow: hidden; white-space: nowrap">@item.reopendDate.ToString("MM-dd-yyyy")</td>
+                                <td style="overflow: hidden; white-space: nowrap">@item.policyNo</td>
+                                @*<td>@item.phoneNo</td>
+                                <td>@item.region</td>
+                                <td>@item.fieldUnit</td>
+                                <td>@item.complaintType</td>*@
+                                <td class="col-auto">@item.comments</td>
+                                <td class="col-auto">@item.adminComments</td>
+                                <td class="col-auto">@item.reopenComments</td>
+                            </tr>
+                            //Counter = Counter + 1;
+                        }
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            dom: 'lBfrtip',
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            buttons: [
+                {
+                    extend: "excel",
+                    text: 'Export To Excel',
+                    className: "excel"
+                }
+            ]
+        });
+    });
+
+    //for Fixed Header
+    $(window).scroll(function () {
+        var sticky = $('.sticky'),
+            scroll = $(window).scrolltop();
+
+        if (scroll >= 100) sticky.addclass('fixed');
+        else sticky.removeclass('fixed');
+    });
+
+</script>

@@ -1,0 +1,279 @@
+﻿@*@model PLIC_Web_Poratal.Models.ViewForwardedComplaintDataModel*@
+@{
+    ViewData["Title"] = "Tracking";
+}
+
+<style>
+    /* css for even rows */
+    .highlight-row {
+        background-color: #ffd700; /* change this to the desired highlight color */
+        color: black; /* change this to the desired text color */
+    }
+    .even-row {
+        background-color: #e8e854; /* set the background color for even rows */
+        color: #000000; /* set the text color for even rows */
+    }
+
+    /* css for odd rows */
+    .odd-row {
+        background-color: #755555; /* set the background color for odd rows */
+        color: #000000; /* set the text color for odd rows */
+    }
+    .custom-checkbox input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Define the custom checkbox style */
+    .custom-checkbox label {
+        display: inline-block;
+        position: relative;
+        padding-left: 30px; /* Adjust the space between the checkbox and label */
+        margin-right: 10px; /* Adjust the space between checkboxes if multiple */
+        cursor: pointer;
+    }
+
+        /* Style for the checkbox itself */
+        .custom-checkbox label::before {
+            content: "";
+            display: inline-block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px; /* Adjust the checkbox size */
+            height: 20px; /* Adjust the checkbox size */
+            border: 2px solid #0565B7; /* Border color */
+            background-color: white; /* Background color when not checked */
+            border-radius: 4px; /* Rounded corners */
+        }
+
+        /* Style for the checkmark (visible when checked) */
+        .custom-checkbox label::after {
+            content: "✔"; /* Checkmark symbol */
+            display: block;
+            position: absolute;
+            left: 0.5px; /* Adjust the position of the checkmark */
+            top: -3.2px; /* Adjust the position of the checkmark */
+            font-size: 16px; /* Adjust the checkmark size */
+            color: white; /* Color of the checkmark (white) */
+            opacity: 0; /* Hidden by default */
+        }
+
+    /* Style for the checkbox when checked */
+    .custom-checkbox input[type="checkbox"]:checked + label::before {
+        /* background-color: #0565B7; /* Background color when checked */ */ border: 2px solid #0565B7; /* Border color when checked */
+    }
+
+    /* Style for the checkmark when checked */
+    .custom-checkbox input[type="checkbox"]:checked + label::after {
+        opacity: 1; /* Show the checkmark when checked */
+        color: white;
+    }
+</style>
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div class="row">
+        <!-- left column -->
+
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <!-- jquery validation -->
+
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-2">
+                        <input id="tracking" name="tracking" onkeypress="return onlyNumberKey(event)" placeholder="Please Enter Tracking NO" class="form-control" autofocus />
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <button class="btn btn-success float-left" id="btnSubmit">Track</button>
+
+                    </div>
+                    <div class="custom-checkbox col-lg-2 col-md-2 col-sm-2">
+                        <input type="checkbox" id="myCheckbox">
+                        <label for="myCheckbox">Track With Ticket ID</label>
+                    </div>
+                </div>
+                <span class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="loader"></div>
+<div class="container-fluid ">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-12"></div>
+        <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card">
+                <div id="trackingDetailsContainer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger
+    @*var userRoleID = @ViewData["RoleID"];*@
+        var userRoleID = @ViewBag.RoleID;
+
+        $('.loader').hide();
+        hideLoader();
+        debugger
+
+    });
+    $('#btnSubmit').click(function (event) {
+
+        debugger
+        showLoader();
+        event.preventDefault();
+        var userRoleID = @ViewBag.RoleID;
+        var trackingNumber = $('#tracking').val();
+        debugger
+        if (trackingNumber === '') {
+            $('.loader').hide();
+            hideLoader();
+            Swal.fire('Error', 'Please enter a tracking number.', 'error');
+            // Remove the additional button if it exists
+            $('#additionalButton').remove();
+            return;
+        }
+        //debugger
+        //const isChecked = myCheckbox.checked;
+        //if (isChecked) {
+        //    debugger
+        //    // Make an AJAX request to your Home controller action method
+        //    $.ajax({
+        //        url: '/Home/GetConsignmentNumberByTicketID', // Adjust the URL accordingly
+        //        type: 'GET',
+        //        data: { ticketid: trackingNumber },
+        //        success: function (result) {
+        //            debugger
+        //            if (result.consignmentNo) {
+        //                debugger
+        //                // Store the ConsignmentNo in a variable
+        //                var trackingNumber = result.consignmentNo;
+        //                debugger
+        //                // Now you can use the consignmentNo variable as needed
+
+        //                debugger
+        //                // Example: Update an HTML element with the value
+        //                $('#tracking').val(trackingNumber);
+
+        //            } else {
+        //                debugger
+        //                // Handle the case where ConsignmentNo is not found in the response
+
+        //                Swal.fire('Error', 'ConsignmentNo not found in response.', 'error');
+        //            } debugger
+        //            // Display the consignment number in the result div
+
+        //        },
+        //        error: function () {
+        //            //consignmentResult.textContent = "Error fetching consignment number.";
+        //            Swal.fire('Error', 'Error occurred while consignment number.', 'error');
+        //            hideLoader(); // Hide the loader
+        //        }
+        //    });
+        //} 
+
+        const isChecked = myCheckbox.checked;
+        debugger
+        var trackingNumber = $('#tracking').val();
+        debugger
+        $.ajax({
+            url: '/Home/GetTrackingDetails',
+            type: 'GET',
+            data: { tracking: trackingNumber,
+                isCheckboxChecked: isChecked
+            
+            
+            },
+            success: function (result) {
+                debugger
+
+                // Create a temporary element to parse the HTML string
+                var tempElement = $('<div/>').html(result);
+                var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
+                // Set the value in the input field with the ID "tracking"
+                $('#tracking').val(cnValue);
+                hideLoader(); // Hide the loader
+
+                debugger
+                $('#trackingDetailsContainer').html(result);
+                var hasData = $('#receiverTable tbody tr').length > 0;
+                debugger
+
+                if (hasData) {
+                    debugger
+
+                    if (userRoleID === 4) {
+                        debugger
+                        $('#additionalButton').remove();
+                    }
+
+                    else {
+                        debugger
+                        var additionalButtonExists = $('#additionalButton').length > 0;
+                        if (!additionalButtonExists) {
+                            var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                + 'Ticket Generate'
+                                + '</button>';
+                            $('#btnSubmit').after(additionalButton);
+                            document.getElementById('additionalButton').addEventListener('click', function () {
+                                debugger
+
+                                var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
+                                window.open(url, '_blank');
+                            });
+                        }
+                    }
+                }
+                else {
+
+                    $('#additionalButton').remove();
+
+                }
+            }, complete: function () {
+
+            },
+            error: function () {
+                Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
+                hideLoader(); // Hide the loader
+            }
+        });
+    });
+    function showLoader() {
+        // Add the loader and blur the page
+        $('body').addClass('blur');
+        $('body').append('<div class="loader-container"><div class="loader"></div></div>');
+    }
+
+    function hideLoader() {
+        // Remove the loader and remove the blur from the page
+        $('body').removeClass('blur');
+        $('.loader-container').remove();
+    }
+
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
+
+
+
+
+
+
+
+

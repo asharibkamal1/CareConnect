@@ -1,0 +1,162 @@
+﻿@model IEnumerable<PLIC_Web_Poratal.Models.Policy1>
+
+@{
+    ViewData["Title"] = "Policy";
+}
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+    </style>
+</head>
+
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Policy Details<a class="btn" href="@Url.Action("Menu","Home")" style="float:right; color:white"></a></p>
+        <div class="table-responsive" style="padding:5px 0px 7px 0px;color:black">
+            <table type="1" class="table table-striped" width="100%">
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>Policy No</th>
+                        <th>CNIC</th>
+                        <th>Name</th>
+                        <th>Premium Paid UpTo</th>
+                        <th>Next Due</th>
+                        <th>Maturity Date</th>
+                        <th>Monthly Premium</th>
+                        @*<th>Premium Mode</th>*@
+                        <th>Policy Status</th>
+                        <th>More Info</th>
+                        <th>View Voucher</th>
+                        <th>Register Complaint</th>
+                    </tr>
+                </thead>
+                @{
+                    int Counter = 1;
+
+
+                    @foreach (var item in Model)
+                    {
+
+
+                        @if (@item.policy.ToString() != null && @item.policy.ToString() != "")
+                        {
+                            <tr>
+                                <td>
+                                    @Counter
+                                </td>
+                                <td>
+                                    @Html.ActionLink(
+                                    @item.policy,
+                                    "Index",
+                                    "Home",
+                                    new { policy = @item.policy.ToString(), iid = item.iid },
+                                    null
+                                )
+                                </td>
+                                <td>@item.cnic</td>
+                                <td>@item.name</td>
+                                <td>@item.periodTo.ToString("dd/MM/yyyy")</td>
+                                <td>@item.nextDue.ToString("dd/MM/yyyy")</td>
+                                <td>@item.maturityDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.monthlyPremium</td>
+                                @*<td>@item.premiumMode</td>*@
+                                <td>@item.policyStatus</td>
+                                <td>
+                                    @Html.ActionLink(
+                                   "More Info",
+                                   "Information",
+                                   "Home",
+                                    new { iid = item.iid },
+                                    //new { @class = "button", target = "_blank" }
+                                    //new { policy = @item.policy.ToString(), iid = item.iid },
+                                    null
+                               )
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("Index", "Home", new { policy = @item.policy.ToString(), iid = item.iid }))
+                                    {
+                                        <button class="btn" style="background-color: #0565B7; color : white">View</button>
+                                    }
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("PostLoginComplaint", "Home", new { iid = item.iid }))
+                                    {
+                                        <button class="btn" style="background-color: #0565B7; color : white">Compliant</button>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+
+                        Counter = Counter + 1;
+                    }
+                }
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+
+
+
+
+

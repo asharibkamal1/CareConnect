@@ -1,0 +1,209 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+    ViewData["Title"] = "Report Close";
+}
+<h1 id="reportTitle">Ticket Close Detail Report</h1>
+<br />
+<div class="row">
+    <!-- left column -->
+
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <!-- jquery validation -->
+
+
+
+
+        <div class="form-group">
+
+            <div class="row">
+
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Date From:</label>
+
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="date" id="datefrom" name="datefrom" class="form-control" autofocus />
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Date To:</label>
+
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="date" id="dateto" name="dateto" class="form-control" autofocus />
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <button class="btn btn-success float-left" id="btnReport">Report</button>
+                </div>
+            </div>
+            <div> <br /></div>
+            <span class="text-danger"></span>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table id="ReportaDataTable" class="table table-striped table-bordered" style="width:100%"></table>
+</div>
+
+<script>
+
+    function showLoader() {
+        // Add the loader and blur the page
+        $('body').addClass('blur');
+        $('body').append('<div class="loader-container"><div class="loader"></div></div>');
+    }
+
+    function hideLoader() {
+        // Remove the loader and remove the blur from the page
+        $('body').removeClass('blur');
+        $('.loader-container').remove();
+    }
+
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        // Calculate one week ago date
+        var oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        // Format the date in YYYY-MM-DD format
+        var formattedDate = oneWeekAgo.toISOString().split('T')[0];
+
+        // Set the default date values in the input fields
+        document.getElementById('datefrom').value = formattedDate;
+        document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
+
+        $('#btnReport').click(function () {
+            debugger
+            var datefrom = $('#datefrom').val();
+            var dateto = $('#dateto').val();
+            if (datefrom == "") {
+                datefrom = null;
+            }
+            if (dateto == "") {
+                dateto = null;
+
+            } else {
+
+            }
+
+
+
+            $.ajax({
+                url: '/Home/GetReportCloseDateWise',
+                type: 'GET',
+                data: {
+                    datefrom: datefrom,
+                    dateto: dateto
+                },
+
+                success: function (response) {
+                    debugger
+                    var jsonResponse = JSON.parse(response);
+                    var obj = jsonResponse.Report_rpt_ticketdetails.Table;
+
+                    $('#ReportaDataTable').empty();
+                    var tableHeaders = '<thead><tr>' +
+                        '<th>TicketId</th>' +
+                        '<th>Barcode</th>' +
+                        '<th>CreatedOn</th>' +
+                        '<th>CategoryDescription</th>' +
+
+                        '<th>IssueTypeDescription</th>' +
+                        '<th>Complainer</th>' +
+                        '<th>ComplainerCell</th>' +
+                        '<th>City_Name</th>' +
+                        '<th>Origin</th>' +
+                        '<th>Destination</th>' +
+                        '<th>PaymentMode</th>' +
+                        '<th>CloseDate</th>' +
+                        '<th>ClosingComment</th>' +
+                        '<th>UserName</th>' +
+                        '</tr></thead>';
+
+                    // Create table body
+                    var tableBody = '<tbody>';
+                    debugger
+                    for (var i = 0; i < obj.length; i++) {
+                        var row = obj[i];
+                        tableBody +=
+                            '<tr>' +
+                            '<td>' + row.TicketId + '</td>' +
+                            '<td>' + row.Barcode + '</td>' +
+                            '<td>' + row.CreatedOn + '</td>' +
+                            '<td>' + row.CategoryDescription + '</td>' +
+                            '<td>' + row.IssueTypeDescription + '</td>' +
+                            '<td>' + row.Complainer + '</td>' +
+                            '<td>' + row.ComplainerCell + '</td>' +
+                            '<td>' + row.City_Name + '</td>' +
+                            '<td>' + row.Origin + '</td>' +
+                            '<td>' + row.Destination + '</td>' +
+                            '<td>' + row.PaymentMode + '</td>' +
+                            '<td>' + row.CloseDate + '</td>' +
+                            '<td>' + row.ClosingComment + '</td>' +
+                            '<td>' + row.UserName + '</td>' +
+                            '</tr>';
+                    }
+                    debugger
+                    tableBody += '</tbody>';
+                    debugger
+
+                    // Append table headers and body to the table
+                    $('#ReportaDataTable').append(tableHeaders + tableBody);
+                    $('#ReportaDataTable').DataTable().destroy();
+                    debugger
+                    // Initialize DataTables
+
+
+                    $('#ReportaDataTable').DataTable({
+                        scrollX: '400px',
+                        scrollY: '400px', // Specify the desired height of the scrollable area
+                        scrollCollapse: true,
+                        language: {
+                            paginate: {
+                                first: 'First',
+                                previous: 'Previous',
+                                next: 'Next',
+                                last: 'Last'
+                            }
+                        }
+
+                    });
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+
+
+
+
+
+
+

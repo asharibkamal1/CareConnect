@@ -1,0 +1,229 @@
+﻿@model PLIC_Web_Poratal.Models.PostLoginComplaint
+
+@{
+    ViewData["Title"] = "Complaint";
+}
+
+
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+@if (ViewBag.message == "OK")
+{
+    <script type="text/javascript" style="color:green">
+        swal("Your Complaint has been register successfully", {
+            icon: "success",
+        }).then((value) => {
+            window.location.href = "/Home/Menu";
+
+        });
+
+    </script>
+
+}
+<div class="container-fluid ">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <!-- jquery validation -->
+            <div class="card">
+                <div class="card-header" style="background-color: #0565B7;color:white">
+                    <h3 class="card-title">Complaint Form</h3>
+                    <a class="float-right" asp-action="Menu" asp-controller="Home">
+                        <i class="fa" style="color:white">Back</i>
+                    </a>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form enctype="multipart/form-data" asp-action="InsertPostLoginComplaint" onsubmit="return submitForm(this);">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Policy Number </label>
+                            <input asp-for="policyNo" id="cnic" class="form-control" readonly />
+                            <span asp-validation-for="policyNo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Field Unit</label>
+                            <input asp-for="fieldUnit" id="mobileno" class="form-control" readonly />
+                            <span asp-validation-for="fieldUnit" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Mobile Number</label>
+                            <input asp-for="mobileNumber" id="phone" class="form-control" readonly />
+                            <span asp-validation-for="mobileNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for="fieldUnitId" id="mobileno1" class="form-control" hidden />
+                        </div>
+                        <div class="form-group">
+                            <label>Complaint Type</label>
+                            <select class="form-control" id="complainType1" style="width: 100%;">
+                                <option selected="selected"></option>
+                                @* <option value="Policy Issuance">Policy Issuance</option>*@
+                                <option value="Premium Payment">Premium Payment</option>
+                                <option value="Loan">Loan</option>
+                                <option value="Revivel">Revivel</option>
+                                <option value="Mobile Number Update">Mobile Number Update</option>
+                                <option value="Surrender Value Claim">Surrender Value Claim</option>
+                                <option value="Death Claim">Death Claim</option>
+                                <option value="Maturity Claim">Maturity Claim</option>
+                                <option value="First-Term Maturity Claim">First-Term Maturity Claim</option>
+                                <option value="Second-Term Maturity Claim">Second-Term Maturity Claim</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="complaintType" class="form-control" id="other" hidden maxlength="100" />
+                            <span asp-validation-for="complaintType" class="text-danger"></span>
+
+                            @*<input asp-for="complaintType" type="text" id="selectGroups" class="form-control" list="mylist" autocomplete="off" maxlength="30"/>
+                                <datalist id="mylist" style="width: 100%;">
+                                    <option value="Policy Issuance"></option>
+                                    <option value="Premium Payment"></option>
+                                    <option value="Claim"></option>
+                                    <option value="Loan"></option>
+                                    <option value="Reviewal"></option>
+                                    <option value="Others"></option>
+                                </datalist>*@
+
+                        </div>
+                        @*<div class="form-group">
+                                <input class="form-control" id="phoneno" hidden  />
+                                <span class="text-danger"></span>
+                            </div>*@
+                        <div class="form-group">
+                            <label>Comments</label>
+                            <textarea asp-for="comments" class="form-control" rows="3" placeholder="Enter ..." style="width: 100%;"></textarea>
+                            <span asp-validation-for="comments" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for="complaintOrigin" type="text" value="From Portal" hidden />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Document (Optional)</label>
+                            <div class="custom-file">
+                                <input asp-for="documents" class="form-control custom-file-input" multiple />
+                                <label class="custom-file-label">Choose File...</label>
+                            </div>
+                            <span id="documentsSizeError" class="text-danger" hidden>Document size must not be more than 25 MB</span>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-danger float-right" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+        integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+        crossorigin="anonymous">
+</script>
+
+<script>
+    var nameField = document.getElementById("complainType1");
+    var firstNameInput = document.getElementById("other");
+
+    nameField.addEventListener("change", function () {
+        //Update this to your logic...
+        if (nameField.value === "Others") {
+            other.hidden = false;
+            //other.value = nameField.value;
+            other.value = "";
+            /*   phoneno.hidden = true;*/
+        }
+        //else if (nameField.value === "Mobile Number Update") {
+        //    phoneno.hidden = false;
+        //    //other.value = nameField.value;
+        //    other.hidden = true;
+
+        //}
+        else if (nameField.value != "Others") {
+            other.hidden = true;
+            /*   phoneno.hidden = true;*/
+            other.value = nameField.value;
+        }
+    });
+
+    $('#phoneno').mask('00000000000', { placeholder: "Please Enter Mobile Number e.g (03000000000)" });
+
+    $(document).ready(function () {
+        debugger
+        $('.custom-file-input').on("change", function () {
+            //var fileName = $(this).val().split("\\").pop();
+            //$(this).next('.custom-file-label').html(fileName);
+            var fileLable = $(this).next('.custom-file-label');
+            var files = $(this)[0].files;
+            var lg = files.length; // get length
+            var items = files;
+            var maxFileSize = 25 * 1024 * 1024;
+            var fileSize = 0;
+            if (lg > 0) {
+                if (files.length > 1) {
+                    fileLable.html(files.length + ' files selected');
+                }
+                else if (files.length == 1) {
+                    fileLable.html(files[0].name);
+                }
+
+                for (var i = 0; i < lg; i++) {
+                    fileSize = fileSize + items[i].size; // get file size
+                }
+                if (fileSize > maxFileSize) {
+                    $('#documentsSizeError').prop('hidden', false);
+                    $('#btnSubmit').prop('disabled', true);
+                }
+                else {
+                    $('#documentsSizeError').prop('hidden', true);
+                    $('#btnSubmit').prop('disabled', false);
+                }
+            }
+
+
+
+            //if (files.length > 1) {
+            //    fileLable.html(files.length + ' files selected');
+            //}
+            //else if (files.length==1)
+            //{
+            //    fileLable.html(files[0].name);
+            //}
+        });
+    });
+
+    //$('#phone').mask('00000000000', { placeholder: "Please Enter Mobile Number" });
+    //----------------------------------------------------
+    function submitForm(form) {
+        swal({
+            title: "Are you sure?",
+            text: "This complaint will be submitted.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(function (isOkay) {
+                if (isOkay) {
+                    form.submit();
+                }
+            });
+        return false;
+    }
+
+
+
+</script>
+
+
+
+
+

@@ -1,0 +1,89 @@
+﻿@model PLIC_Web_Poratal.Models.OTP
+@{ Layout = null; }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PICL | Admin Login</title>
+    <link rel="shortcut icon" href="/login/img/p_logo_dark3.png" />
+    <!-- Google Font: Source Sans Pro -->
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">*@
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- icheck bootstrap -->
+    @*<link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">*@
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page" style="background-color: #0565B7; ">
+
+    <div class="login-box ">
+        <!-- /.login-logo -->
+        <div class="card card-outline card-danger">
+            <div class="card-header text-center" style="background-color: #343a40">
+                <img src="~/images/avatar/PLIL_Logo_01.png" class="img-fluid" alt="Responsive image">
+            </div>
+            <div class="card-body" style="background-color: #afbdb7">
+                <div class="text-center">
+                    <h3><b>Admin Login</b></h3>
+                </div>
+                <hr />
+                <form action="AdminOTPVerification" method="post">
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input asp-for="otp" type="text" id="mobileno" class="form-control" autocomplete="off" autofocus>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <!-- /.col -->
+                        <div class="col-2"></div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-danger btn-block">Next</button>
+                        </div>
+                        <div class="col-6">
+                            <button id="OTPSended" type="button" class="btn btn-danger" onclick="location.href = '@Url.Action("ResendAdminOTP", "Account")',OTPResend()">
+                                Resend OTP
+                            </button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    @*<hr />
+                        <div class="row">
+                            <div class="social-icons" style="margin-left:100px">
+                                &nbsp;&nbsp; <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
+                                &nbsp;&nbsp;<a href="#"><i class="fa fa-twitter " ></i></a>
+                                &nbsp;&nbsp;<a href="#"><i class="fa fa-google-plus" ></i></a>
+                                &nbsp;&nbsp;<a href="#"><i class="fa fa-linkedin" ></i></a>
+                            </div>
+                        </div>*@
+                </form>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+            integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+            $('#mobileno').mask('000000', { placeholder: "Enter the Code received on your mobile." })
+        });</script>
+</body>
+</html>
+
+@await Component.InvokeAsync("Notyf")
+

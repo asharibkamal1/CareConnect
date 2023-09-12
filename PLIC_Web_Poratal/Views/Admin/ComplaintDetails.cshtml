@@ -1,0 +1,254 @@
+﻿@model PLIC_Web_Poratal.Models.ComplaintDetailViewModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Complaint Detail";
+    //int Counter = 1;
+}
+
+
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Policies</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/custom.css" />*@
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+@if (ViewBag.CompalintId == "Empty")
+{
+    <script type="text/javascript" style="color:green">
+        swal("Please enter complaint id.", {
+            icon: "info",
+        });
+        //}).then((value) => {
+        //    window.location.href = "/Admin/Menu";
+
+        //});
+
+    </script>
+}
+
+@*href="@Url.Action("Menu", "Home")"*@
+<!--<div class="class=" portlet-body" style="margin-top:6px">
+    <div class="col-md-2">
+        <form asp-action="GetComplaintForwardigDetails">-->
+@*<div class="row">*@
+<!--<div class="form-group">
+    <label for="exampleInputEmail1">Complaint Id</label>
+    <div class="d-flex">
+
+
+        <input asp-for="complaintId" type="text" id="cId" class="form-control" maxlength="8" onkeypress="return onlyNumberKey(event)" autocomplete="off" />
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button type="submit" class="btn btn-danger" id="btnSubmit">Go</button>
+        <span class="text-danger"></span>
+
+    </div>
+
+
+
+</div>-->
+@*</div>*@
+
+
+<!--</form>
+    </div>
+
+</div>-->
+<div class="portlet-body" style="margin-top:6px">
+    <div class="col-lg-12">
+        <p class="policies">
+            Complaint Information
+            @*<a class="btn" href="@Url.Action("Menu","Home")" style="float:right; color:white">Back</a>*@
+            @*<a class="float-right" asp-action="PostComplaint" asp-controller="Admin">
+                <i class="fa" style="color:white">Back</i>
+            </a>*@
+        </p>
+        <div class="table-responsive" style="padding:2px 0px 0px 0px;color:black">
+            <table class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Complaint Id</th>
+                        <th>Entry Date</th>
+                        <th>Policy No</th>
+                        <th>Phone No</th>
+                        <th>Region</th>
+                        <th>Field Unit</th>
+                        <th>Complaint Type</th>
+                        <th>Comments</th>
+                        @*<th>Initiator Name</th>*@
+                        <th>IsResolved</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    
+                    
+                        @if (Model.postComplaint != null)
+                        {
+                            <tr>
+                                <td scope="col">@Model.postComplaint.complaintId</td>
+                                <td scope="col">@Model.postComplaint.entryDate.ToString("dd/MM/yyyy")</td>
+                                <td scope="col">@Model.postComplaint.policyNo</td>
+                                <td scope="col">@Model.postComplaint.phoneNo</td>
+                                <td scope="col">@Model.postComplaint.region</td>
+                                <td scope="col">@Model.postComplaint.fieldUnit</td>
+                                <td scope="col">@Model.postComplaint.complaintType</td>
+                                <td scope="col">@Model.postComplaint.comments</td>
+                                @*<td scope="col">@Model.postComplaint.adminName</td>*@
+                                @if (Model.postComplaint.isResolved == true)
+                                {
+                                    <td scope="col">Resolved</td>
+                                }
+                                else
+                                {
+                                    <td scope="col">UnResolved</td>
+                                }
+                            </tr>
+                        }
+                    
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portlet-body">
+    <div class="col-lg-12">
+        <p class="policies">Complaint Documents</p>
+        <div class="table-responsive" style="padding:2px 0px 0px 0px;color:black">
+            <table id="new_Id2" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        @*<th scope="col">Complaint ID</th>*@
+                        @*<th scope="col">Entry Date</th>*@
+                        <th scope="col">File</th>
+                       
+                        @*<th scope="col">Death Year</th>
+                            <th scope="col">Death Cause</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        @if (Model.complaintDocuments!=null)
+                        {
+
+                            @foreach (ComplaintDocument ? complaintDocument in Model.complaintDocuments)
+                            {
+
+                                <tr>
+                                    @*<td scope="col">@complaintDocument.ComplaintId</td>*@
+                                    @*<td scope="col">@complaintDocument.entryDate</td>*@
+                                    <td>@complaintDocument.documentName</td>
+                                    <td>
+                                        @Html.ActionLink("Download","DownloadFile",new { fileName=complaintDocument.documentName})
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#new_Id').DataTable({
+            //"bPaginate": false,
+            //"bFilter": false, //hide Search bar
+            //"bInfo": false
+            /*dom: 'lBfrtip',*/
+            scrollY: '60vh',
+            scrollX: '60vh',
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            //"pageLength": 50,
+
+            //buttons: [
+            //    {
+            //        extend: "excel",
+            //        text: 'Export To Excel',
+            //        className: "excel",
+            //        exportOptions: {
+            //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            //        }
+            //    }
+            //]
+        });
+
+        /*$('#cId').val("");*/
+    });
+
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+
+</script>
+

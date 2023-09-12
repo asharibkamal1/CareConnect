@@ -1,0 +1,392 @@
+﻿<html lang="en" style="height: auto;">
+<head>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - Care Connect</title>
+    
+    <link rel="shortcut icon" href="/login/img/logo.png" />
+   @* <link rel="shortcut icon" href="~/login/img/p_logo_dark3.png" />*@
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .submenu {
+            display: none;
+            margin-left: 10px; /* Indent sub-menu items */
+        }
+
+     
+
+        .btn-add {
+            background: #EBFFFF;
+            color: #006060;
+            border-color: #006060;
+        }
+
+            .btn-add:hover {
+                background: #006060;
+            }
+
+            .btn-add img:hover {
+                background-color: #006060;
+            }
+
+
+
+
+        .nav-pills .nav-link.active {
+            background-color: #0565B7;
+            color: white;
+        }
+        .no-marker {
+            list-style-type: none;
+        }
+        .submenu li.no-marker:hover {
+            background-color: white;
+            border-radius: 5px; /* Adjust the radius for rounded edges */
+      
+        }
+
+            .submenu li.no-marker:hover a {
+                color: #0565B7; /* Change the text color */
+
+            }
+        .submenu li.no-marker {
+            margin-bottom: 15px; /* Adjust the margin as per your preference */
+        }
+
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+
+        .blur {
+            filter: blur(1px);
+        }
+    </style>
+
+
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">*@
+
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    @*<link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">*@
+    <!-- iCheck -->
+    @*<link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">*@
+    <!-- JQVMap -->
+    @*<link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css">-------------------------------------*@
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">*@
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    @*<link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">*@
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>    <!-- jQuery UI 1.11.4 -->
+    <!-- Include Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    @section Scripts {
+        <script src="~/js/chatbot.js"></script>
+    }
+    <!-- Include SweetAlert CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" href="~/css/chatbot.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+    @*<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/js/adminlte.min.js"></script>*@
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- Box icon CSS   -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body class="sidebar-mini layout-fixed" style="height: auto;">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center" style="height: 0px;">
+            <img class="animation__shake" src="~/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60" style="display: none;">
+        </div>
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background-color: #0565B7;height:67px;">
+
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars" style="color:white"></i></a>
+                </li>
+            </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt" style="color:white"></i>
+                    </a>
+                </li>
+                <li></li>
+                <li class="nav-item">
+                    <i class="fas fa-user-alt" style="color: white; padding-top: 8px;">@ViewBag.UserName &nbsp;</i>
+                </li>
+                <li></li>
+                <li></li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Logout" asp-controller="Account">
+                        <i class="fas fa-sign-out-alt" style="color:white">Logout</i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #0565B7;">
+            <!-- Brand Logo -->
+            <a href="@Url.Action("Menu","Home")" class="brand-link">
+                <img src="~/login/img/d1bg.png" alt="AdminLTE Logo" class="brand-image-xl" style="opacity: .8;border-radius:10px">
+                @*<span class="brand-text font-weight-light">PLIC</span>*@  <!--brand-image-xl , max-height: 92px ,  img-circle-->
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition">
+                <div class="os-resize-observer-host observed"><div class="os-resize-observer" style="left: 0px; right: auto;"></div></div><div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;"><div class="os-resize-observer"></div></div><div class="os-content-glue" style="margin: 0px -8px;"></div><div class="os-padding">
+                    <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow-y: scroll;">
+                        <div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+
+
+                            <!-- Sidebar Menu -->
+                            <nav class="mt-2">
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                    <!-- Add icons to the links using the .nav-icon class
+                                    with font-awesome or any other icon font library -->
+
+                                    <li class="nav-item">
+                                        <a asp-action="Menu" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "#0565B7" : "default");">
+
+
+                                            <i class="nav-icon fas fa-home"></i>
+                                            <p>
+                                                Dashboard
+                                            </p>
+                                        </a>
+                                    </li>
+                                    @*<li class="nav-item">
+                                            <a href="@Url.Action("Index","Home")" class="nav-link">
+                                                <i class="nav-icon far "></i>
+                                                <p>
+                                                    Vouchers
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a asp-action="Policy" asp-controller="Home" class="nav-link">
+                                                <i class="nav-icon fas fa-columns"></i>
+                                                <p>
+                                                    Policy
+                                                </p>
+                                            </a>
+                                        </li>*@
+
+                                    <!-- Nav link code -->
+                                    <!-- Nav link code -->
+                                    <li class="nav-item">
+                                        <a asp-action="Tracking" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fas fa-dot-circle"></i>
+                                            <p>Tracking</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a asp-action="SearchTicket" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fas fa-dot-circle"></i>
+                                            <p>Search Ticket</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                    <li class="nav-item">
+                                        <a id="toggleSubMenu" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fas fa-dot-circle"></i>
+                                            <p>Report</p>
+                                        </a>
+                                        <ul class="submenu" nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                            <li class="no-marker">
+                                                <a asp-action="Report" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fas fa-dot-circle"></i>Track Detail
+                                                </a>
+                                            </li>
+                                            <li class="no-marker">
+                                                <a asp-action="ReportSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>Ticket SMS
+                                                </a>
+                                            </li>
+                                            <li class="no-marker">
+                                                <a asp-action="ReportClose" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>Ticket Close
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!-- /.sidebar-menu -->
+                        </div>
+                    </div>
+                </div><div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="height: 44.1501%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar-corner"></div>
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <section class="content p-0">
+                <div class="container-fluid m-0">
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    @*<script src="~/plugins/jquery/jquery.min.js"></script>*@
+
+    <!-- jQuery UI 1.11.4 -->
+    @*<script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>*@
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    @*<script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>*@
+    <!-- Bootstrap 4 -->
+    @*<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>*@
+    <!-- ChartJS -->
+    @*<script src="~/plugins/chart.js/Chart.min.js"></script>*@
+    <!-- Sparkline -->
+    @*<script src="~/plugins/sparklines/sparkline.js"></script>*@
+    <!-- JQVMap -->
+    @*<script src="~/plugins/jqvmap/jquery.vmap.min.js"></script>*@
+    @*<script src="~/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>*@
+    <!-- jQuery Knob Chart -->
+    @*<script src="~/plugins/jquery-knob/jquery.knob.min.js"></script>*@
+    <!-- daterangepicker -->
+    @*<script src="~/plugins/moment/moment.min.js"></script>*@
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    @*<script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>*@
+    <!-- Summernote -->
+    @*<script src="~/plugins/summernote/summernote-bs4.min.js"></script>*@
+
+    <!-- overlayScrollbars -->
+    <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#trackingLink').click(function () {
+                $('.nav-link').removeClass('active'); // Remove active class from all nav-links
+                $(this).addClass('active'); // Add active class to the clicked nav-link
+            });
+            $('#toggleSubMenu').click(function () {
+                $('.submenu').toggle();
+            });
+        });
+    </script>
+
+
+    <!-- AdminLTE for demo purposes -->
+    @*<script src="~/dist/js/demo.js"></script>*@
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    @*<script src="~/dist/js/pages/dashboard.js"></script>*@
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <div class="daterangepicker ltr show-ranges opensright"><div class="ranges"><ul><li data-range-key="Today">Today</li><li data-range-key="Yesterday">Yesterday</li><li data-range-key="Last 7 Days">Last 7 Days</li><li data-range-key="Last 30 Days">Last 30 Days</li><li data-range-key="This Month">This Month</li><li data-range-key="Last Month">Last Month</li><li data-range-key="Custom Range">Custom Range</li></ul></div><div class="drp-calendar left"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-calendar right"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-buttons"><span class="drp-selected"></span><button class="cancelBtn btn btn-sm btn-default" type="button">Cancel</button><button class="applyBtn btn btn-sm btn-primary" disabled="disabled" type="button">Apply</button> </div></div><div class="jqvmap-label" style="display: none;"></div>
+</body>
+</html>
+
+
+

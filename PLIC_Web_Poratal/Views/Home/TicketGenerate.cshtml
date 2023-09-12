@@ -1,0 +1,210 @@
+﻿@*@model PLIC_Web_Poratal.Models.ViewForwardedComplaintDataModel*@
+@{
+    ViewData["Title"] = "TicketGenerate";
+}
+
+@{
+    ViewData["Title"] = "Tracking";
+}
+<head>
+    @*@{
+            Layout = null;
+
+            ViewData["Title"] = "Policy";
+            //string policy;
+        }*@
+    <title>Ticket Generate</title>
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/custom.css" />*@
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .btn-add {
+            background: #EBFFFF;
+            color: #006060;
+            border-color: #006060;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .radio-group label {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            }
+
+                .radio-group label input[type="radio"] {
+                    display: none;
+                }
+
+                .radio-group label span {
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    border: 2px solid #ccc;
+                    margin-right: 5px;
+                }
+
+                .radio-group label input[type="radio"]:checked + span {
+                    background-color: #0565B7;
+                    border-color: #0565B7;
+                }
+
+        .btn-add:hover {
+            background: #006060;
+        }
+
+        .btn-add img:hover {
+            background-color: #006060;
+        }
+
+
+
+
+        .nav-pills .nav-link.active {
+            background-color: #0565B7;
+            color: white;
+        }
+
+
+
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div class="row">
+        <!-- left column -->
+
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <!-- jquery validation -->
+
+
+            <div class="card" hidden>
+                <div class="card-header"  style="background-color: #0565B7;color:white">
+                    <h3 class="card-title">Tracking Number</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <h2>Your Tracking Number is: @ViewData["TrackingNumber"]</h2>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid ">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-12"></div>
+        <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card">
+                <div id="trackingDetailsContainer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+$(document).ready(function () {
+    debugger;
+    $.ajax({
+        url: '/Home/GetTrackingGenerateDetails',
+        type: 'POST',
+        data: { tracking: '@ViewBag.TrackingNumber' },
+        success: function (result) {
+            debugger;
+            // Render the partial view with the result
+            $('#trackingDetailsContainer').html(result);
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText); // Log the server response
+            Swal.fire('Error', 'Error occurred while retrieving tracking details. Error: ' + error, 'error');
+        }
+    });
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+
+

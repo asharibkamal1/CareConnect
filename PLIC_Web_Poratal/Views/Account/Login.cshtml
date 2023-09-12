@@ -1,0 +1,428 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Account
+
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <meta charset="utf-8">
+    <title>Care Connect</title>
+    <meta name="description" content="Enhance customer satisfaction and streamline communication with our exceptional call center services. Our dedicated team of skilled professionals is committed to providing personalized support, resolving queries, and ensuring seamless interactions. With state-of-the-art technology and a customer-centric approach, we deliver exceptional customer experiences. Experience unparalleled efficiency and reliability with our comprehensive call center solutions tailored to meet your unique business needs. Contact us now and let us elevate your customer service to new heights" />
+    <meta name="keywords" content="Call center,
+Customer service,
+Customer support,
+Inbound calls,
+Outbound calls,
+Telephone communication,
+Contact center,
+Helpdesk,
+Customer satisfaction,
+Call handling,
+Call routing,
+Multichannel support,
+Live chat,
+Email support,
+IVR (Interactive Voice Response),
+CRM (Customer Relationship Management),
+Ticketing system,
+Call monitoring,
+Quality assurance,
+Service level agreements (SLAs)" />
+
+
+
+    @*<!-- Schema.org markup for Google+ -->*@
+    <meta itemprop="name" content="Care Connect!" />
+    <meta itemprop="description" content="Daewoo Express! Improving Pakistan!... Care Connect..." />
+    <meta itemprop="image" content="https://daewoo.com.pk/" />
+
+    @*<!-- Twitter Card data -->*@
+    <meta name="twitter:card" content="product" />
+    <meta name="twitter:site" content="@@publisher_handle" />
+    <meta name="twitter:title" content="Care Connect!" />
+    <meta name="twitter:description" content="Daewoo Express! Improving PAKistan!... Care Connect" />
+    <meta name="twitter:creator" content="@@author_handle" />
+    <meta name="twitter:image" content="https://daewoo.com.pk/" />
+    <meta name="twitter:data1" content="$0.00" />
+    <meta name="twitter:label1" content="Price" />
+    <meta name="twitter:data2" content="Black" />
+    <meta name="twitter:label2" content="Color" />
+
+    @*<!-- Open Graph data -->*@
+    <meta property="og:title" content="Care Connect!" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://daewoo.com.pk/" />
+    <meta property="og:image" content="https://daewoo.com.pk/" />
+    <meta property="og:description" content="Daewoo Express! Improving PAKistan!... Care Connect" />
+    <meta property="og:site_name" content="DAEWOO EXPRESS" />
+    <meta property="og:price:amount" content="0.00" />
+    <meta property="og:price:currency" content="USD" />
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="DAEWOO EXPRESS PAKISTAN.">
+
+    @*<!-- ================= Favicon ================== -->*@
+    @*<!-- Standard -->*@
+    <link rel="shortcut icon" href="/login/img/logo.png" />
+
+    @*<!-- Retina iPad Touch Icon-->*@
+    <link rel="apple-touch-icon" sizes="144x144" href="/login/img/favicon-retina-ipad.png" />
+    @*<!-- Retina iPhone Touch Icon-->*@
+    <link rel="apple-touch-icon" sizes="114x114" href="/login/img/favicon-retina-iphone.png" />
+    @*<!-- Standard iPad Touch Icon-->*@
+    <link rel="apple-touch-icon" sizes="72x72" href="/login/img/favicon-standard-ipad.png" />
+    <!-- Standard iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="/login/img/favicon-standard-iphone.png" />
+
+    @*<!-- ============== Resources style ============== -->*@
+    <link rel="stylesheet" href="/login/css/style.css" />
+
+    @*<!-- Modernizr runs quickly on page load to detect features -->*@
+    <script src="/login/js/modernizr.custom.js"></script>
+    <!--Used this for LoginId masking-->
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>*@
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+</head>
+@*<body id="signin-page" oncontextmenu="return false;>*@
+
+<body id="signin-page">
+
+
+
+    @*<!-- Page preloader -->*@
+    <div id="loading">
+        <div id="preloader">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    @*<!-- Overlay and Star effect -->*@
+    <div class="global-overlay">
+        <div class="overlay skew-part">
+
+            <div id='stars'></div>
+            <div id='stars2'></div>
+            <div id='stars3'></div>
+
+        </div>
+        <div style="position: absolute;right: 260px;bottom: 14.5%;display:none;">
+            <a href="https://daewoo.com.pk/" target="_blank"><img src="./login/img/daewoo-logo.jpg" alt="" class="brand-logo mCS_img_loaded" style="opacity: 0.7;border-radius: 10px;background: white;border: 1px solid #721012;" /></a>
+        </div>
+    </div>
+    @*<marquee style="background-color: black;margin-top:5px;position:fixed">
+        <p style="font-size:16px;font-weight:bold">Transforming into digital World : Daewoo ExpressCL is transforming their business into a digital world and we may required some information from our prestigious customers to update their profile for enhance user experience.</p>
+        </marquee>*@
+    @*<!-- START - Home/Left Part -->*@
+    <section id="left-side">
+
+        @*<!-- Your logo -->*@
+        <img src="/login/img/logo2.png" alt="" class="brand-logo" style="opacity: 0.9" />
+
+        <div class="content">
+
+            <h1 class="text-intro opacity-0">
+                Care Connect!
+                <br />
+                Daewoo Express Pakistan!...
+            </h1>
+
+            @*<%--<h2 class="text-intro opacity-0">Helping schools in Azad Kashmir area gain access to<br />
+                    quality and affordable services in heaven on earth<br />
+                </h2>--%>*@
+            <h4 class="text-intro animated-middle fadeInUp" style="font-style: italic; margin-top: 30px; margin-bottom: 0px;">"We are available 24/7...."</h4>
+            <h4 style="font-style: italic; text-align: left;">We’re always here to help</h4>
+            <h4 style="font-style: italic; text-align: left;">We don’t just answer calls, we build relationships</h4>
+            <nav>
+                <ul>
+                    <li>
+                        <a asp-action="CustomerSignUp"  hidden class="light-btn text-intro opacity-0 hidden">Sign Up</a>
+                    </li>
+                    <li>
+                        <a data-dialog="somedialog" class="action-btn trigger text-intro opacity-0">Login</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+        @*<div style="position: absolute; left: 10%; bottom: 5%;">
+                <a href="https://wa.me/923489541266" target="_blank" style="color: #00c8aa;"><i class="fa fa-whatsapp" style="font-size: 60px; color: #00c8aa"></i>    WhatsApp: 03459541255</a>
+            </div>*@
+
+        <!-- Social icons -->
+        <div class="social-icons">
+
+            <a href="https://www.facebook.com/Daewoo.Official" target="_blank"><i class="fa fa-facebook"></i></a>
+            <a href="https://twitter.com/daewooexpress" target="_blank"><i class="fa fa-twitter"></i></a>
+
+            <a href="https://www.linkedin.com/company/daewoo-pakistan-express-bus-service/" target="_blank"><i class="fa fa-linkedin"></i></a>
+
+        </div>
+
+    </section>
+    <!-- END - Home/Left Part -->
+    <!-- START - More Informations/Right Part -->
+    <!-- START - More Informations/Right Part -->
+    <!-- Button Cross to close the More Informations/Right Part -->
+    <button id="close-more-info" class="hide-close"><i class="icon ion-ios-close-outline"></i></button>
+
+    <!-- START - Newsletter Popup -->
+    <div id="somedialog" class="dialog">
+
+        <div class="dialog__overlay"></div>
+
+        <div class="dialog__content">
+
+            <div class="dialog-inner">
+
+                <h4>USER LOGIN</h4>
+
+                <p>Please Login to Access the Application!</p>
+
+                <!-- Newsletter Form -->
+                <div id="subscribe">
+
+                    @* <form  id="notifyMe" asp-action="Verify" asp-controller="Account" method="post">*@
+                    <form id="notifyMe" asp-action="Login" method="post">
+
+
+                        <div class="form-group">
+
+                            <div class="controls">
+
+                                @*<!-- Field  -->*@
+                                @*<input type="text" id="email" name="email" placeholder="User Name or Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'User Name or Email Address'" class="form-control email srequiredField" style="margin-bottom: 20px;" />*@
+
+
+
+                                @*@Html.TextBoxFor(m => m.LoginId, new { placeholder = "Enter LoginId", @class = "form-control email srequiredField" })*@
+
+
+
+                                <input asp-for="LoginId" id="LoginId" placeholder="Please Enter Your User ID"
+                                       class="form-control email requiredField" />
+                                @*<!-- Spinner top left during the submission -->
+                                    <!-- <i class="fa fa-spinner opacity-0"></i> -->
+
+                                    <!-- Field  -->*@
+                                @*<input type="password" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" class="form-control email srequiredField" />*@
+                                @*@Html.TextBoxFor(m => m.Password, new { placeholder = "Enter Mobile Number (e.g: 03001111111)", @class = "form-control email srequiredField" })*@
+                                <input type="password" asp-for="Password" id="Password" placeholder="Enter Password"
+                                       class="form-control email requiredField" maxlength="20" />
+                                @*<!-- Spinner top left during the submission -->*@
+                                <i class="fa fa-spinner opacity-0"></i>
+
+                                @*<!-- Button -->*@
+                                <button type="submit" class="btn btn-lg submit">Login</button>
+
+                                <div class="clear"></div>
+
+                            </div>
+                        </div>
+                    </form>
+                    @*<!-- Answer for the newsletter form is displayed in the next div, do not remove it. -->*@
+                    <div class="block-message">
+
+                        <div class="message">
+
+                            <p class="notify-valid">
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                @*<!-- /. Newsletter Form -->*@
+
+            </div>
+            @*<!-- /. dialog-inner -->*@
+
+            @*<!-- Button Cross to close the Newsletter Popup -->*@
+            <button class="close-newsletter" data-dialog-close><i class="icon ion-close-round"></i></button>
+
+        </div>
+        @*<!-- /. dialog__content -->*@
+
+    </div>
+    @*<!-- END - Newsletter Popup -->*@
+
+
+    @*<!-- Root element of PhotoSwipe, the gallery. Must have class pswp. -->*@
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+        @* <!-- Background of PhotoSwipe.
+            It's a separate element as animating opacity is faster than rgba(). -->*@
+        <div class="pswp__bg"></div>
+
+        @*<!-- Slides wrapper with overflow:hidden. -->*@
+        <div class="pswp__scroll-wrap">
+
+            @*            <!-- Container that holds slides.
+                PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                Don't modify these 3 pswp__item elements, data is added later on. -->*@
+            <div class="pswp__container">
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+
+            @*<!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->*@
+            <div class="pswp__ui pswp__ui--hidden">
+
+                <div class="pswp__top-bar">
+
+                    @*<!--  Controls are self-explanatory. Order can be changed. -->*@
+
+                    <div class="pswp__counter"></div>
+
+                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                    <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                    <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                    <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                    @*                    <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                        <!-- element will get class pswp__preloader active when preloader is running -->*@
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                            <div class="pswp__preloader__cut">
+                                <div class="pswp__preloader__donut"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div>
+                </div>
+
+                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                </button>
+
+                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                </button>
+
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    @*    <!-- /. Root element of PhotoSwipe. Must have class pswp. -->
+
+        <!-- ///////////////////\\\\\\\\\\\\\\\\\\\ -->
+        <!-- ********** Resources jQuery ********** -->
+        <!-- \\\\\\\\\\\\\\\\\\\/////////////////// -->
+
+        <!-- * Libraries jQuery, Easing and Bootstrap - Be careful to not remove them * -->*@
+    <script src="/login/js/jquery.min.js"></script>
+    <script src="/login/js/jquery.easings.min.js"></script>
+    <script src="/login/js/bootstrap.min.js"></script>
+
+    @*<!-- PhotoSwipe Core JS file -->*@
+    <script src="/login/js/velocity.min.js"></script>
+
+    @*<!-- PhotoSwipe UI JS file -->*@
+    <script src="/login/js/velocity.ui.min.js"></script>
+
+    @*<!-- Newsletter plugin -->*@
+    <script src="/login/js/notifyMe.js"></script>
+
+    @*<!-- Contact form plugin -->*@
+    <script src="/login/js/contact-me.js"></script>
+
+    @*<!-- Slideshow/Image plugin -->*@
+    <script src="/login/js/vegas.js"></script>
+
+    @*<!-- Scroll plugin -->*@
+    <script src="/login/js/jquery.mousewheel.js"></script>
+
+    @*<!-- Custom Scrollbar plugin -->*@
+    <script src="/login/js/jquery.mCustomScrollbar.js"></script>
+
+    @*<!-- Popup Newsletter Form -->*@
+    <script src="/login/js/classie.js"></script>
+    <script src="/login/js/dialogFx.js"></script>
+
+    @*<!-- PhotoSwipe Core JS file -->*@
+    <script src="/login/js/photoswipe.js"></script>
+
+    @*<!-- PhotoSwipe UI JS file -->*@
+    <script src="/login/js/photoswipe-ui-default.js"></script>
+
+    @*<!-- Main JS File -->*@
+    <script src="/login/js/main.js"></script>
+
+    @*<!--[if lt IE 10]><script type="text/javascript" src="/login/js/placeholder.js"></script><![endif]-->*@
+
+    @* Used this for Jquery Masking *@
+    @*<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"
+            integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA="
+            crossorigin="anonymous">
+    </script>
+
+
+
+
+    @section Scripts{
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
+    }
+
+
+
+</body>
+
+<style>
+    #LoginId, #Password {
+        font-size: 15px;
+        text-align: left;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var d = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            if (!(localStorage.key(i).match('^jarvisWidgets'))) {
+                d.push(localStorage.key(i));
+            }
+        }
+        $.each(d, function (indexInArray, valueOfElement) {
+            localStorage.removeItem(valueOfElement);
+        });
+
+        //localStorage.setItem("dtDate", "<%= (Convert.ToString(DateTime.Now.Day).Length<2? "0"+Convert.ToString(DateTime.Now.Day) : Convert.ToString(DateTime.Now.Day)) +"/"+(Convert.ToString(DateTime.Now.Month).Length<2? "0"+Convert.ToString(DateTime.Now.Month) : Convert.ToString(DateTime.Now.Month))+"/"+Convert.ToString(DateTime.Now.Year)  %>");
+        // $('#LoginId').mask('00000-0000000-0', { placeholder: "_____-_______-_      Please Enter Your LoginId" });
+    });
+
+
+
+</script>
+
+</html>

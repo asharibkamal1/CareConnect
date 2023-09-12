@@ -1,0 +1,31 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+            <!-- Render the dropdown list with TicketCatType data -->
+
+<label for="TicketTypeDropdown">Ticket Description:</label>
+<select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory ">
+    @foreach (System.Data.DataRow catRow in Model.TicketIssueTypeDescription.Tables[0].Rows)
+    {
+        <option value="@catRow["IssueTypeId"]">@catRow["IssueTypeDescription"]</option>
+    }
+</select>
+<span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Sub Category.</span>
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,346 @@
+﻿@model PLIC_Web_Poratal.Models.ViewModel
+
+@{
+    Layout = null;
+    //var item = Model.First();
+    //var date = item.DueDate.ToString("dd-MM-yyyy");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Information</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    @*<link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">*@
+    <!-- iCheck -->
+    @*<link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">*@
+    <!-- JQVMap -->
+    @*<link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css">-------------------------------------*@
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    @*<link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">*@
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- Box icon CSS   -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .main {
+            /*            margin-left: 10%;
+        */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+    </style>
+</head>
+<body>
+    @*<div class="portlet-body" style="background-color:gray">
+            <div class="col-lg-12">
+                <p class="policies"><a class="btn" href="@Url.Action("Menu","Home")" style="float:left; color:white">Back</a> </p>
+            </div>
+        </div>*@
+    <nav class="navbar navbar-expand" style="background-color: #0565B7; height: 68px;">
+
+        <!-- Left navbar links -->
+        @*<ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars" style="color:white"></i></a>
+                </li>
+            </ul>*@
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="@Url.Action("Menu","Home")" class="brand-link">
+                    <img src="~/dist/img/PLIL_Logo_01.png" alt="AdminLTE Logo" class="brand-image-xl" style="opacity: .8;border-radius:10px">
+                    @*<span class="brand-text font-weight-light">PLIC</span>*@  <!--brand-image-xl , max-height: 92px ,  img-circle-->
+                </a>
+            </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            @*<li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt" style="color:white"></i>
+                    </a>
+                </li>*@
+            <li></li>
+            <li class="nav-item">
+                <a class="nav-link" asp-action="Menu" asp-controller="Home">
+                    <i class="fas fa-arrow-left" style="color:white">Back</i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="portlet-body" style="margin-top:6px">
+        <div class="col-lg-12">
+            <p class="policies">
+                Personl Information
+                @*<a class="btn" href="@Url.Action("Menu","Home")" style="float:right; color:white">Back</a>*@
+            </p>
+            <div class="table-responsive" style="padding:2px 0px 0px 0px;color:black">
+                <table class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Policy Term</th>
+                            <th scope="col">Policy Type</th>
+                            <th scope="col">Sum Assured</th>
+                            <th scope="col">Risk Date</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Marital Status</th>
+                            <th scope="col">Birth Date</th>
+                            <th scope="col">Birth Place</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Phone No</th>
+                            <th scope="col">Religion</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.info != null)
+                        {
+                            <tr>
+                                <td scope="col">@Model.info.policyTerm</td>
+                                <td scope="col">@Model.info.policyType</td>
+                                <td scope="col">@Model.info.sumAssured</td>
+                                <td scope="col">@Model.info.riskDate.ToString("dd/MM/yyyy")</td>
+                                <td scope="col">@Model.info.gender</td>
+                                <td scope="col">@Model.info.maritalStatus</td>
+                                <td scope="col">@Model.info.birthDate.ToString("dd/MM/yyyy")</td>
+                                <td scope="col">@Model.info.birthPlace</td>
+                                <td scope="col">@Model.info.address</td>
+                                <td scope="col">@Model.info.city</td>
+                                <td scope="col">@Model.info.phone</td>
+                                <td scope="col">@Model.info.religion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    @*<div class="portlet-body">
+        <div class="col-lg-12">
+            <p class="policies">Occupation Information</p>
+            <div class="table-responsive" style="padding:2px 0px 0px 0px;color:black">
+                <table id="new_Id1" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Occupation</th>
+                            <th scope="col">Detail</th>
+                            <th scope="col">Income</th>
+                            <th scope="col">Incom Mode</th>
+                            <th scope="col">Organization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model.occupation != null)
+                        {
+                            <tr>
+                                <td scope="col">@Model.occupation.occupationName</td>
+                                <td scope="col">@Model.occupation.govtServantDetail</td>
+                                <td scope="col">@Model.occupation.income</td>
+                                <td scope="col">@Model.occupation.incomeMode</td>
+                                <td scope="col">@Model.occupation.organizationName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+    @*<div class="portlet-body">
+        <div class="col-lg-12">
+            <p class="policies">Family History</p>
+            <div class="table-responsive" style="padding:2px 0px 0px 0px;color:black">
+                <table id="new_Id2" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Relation</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Health State</th>
+                            <th scope="col">Alive</th>
+                            <th scope="col">Death Age</th>
+                            <th scope="col">Death Year</th>
+                            <th scope="col">Death Cause</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.familyHistory != null)
+                        {
+
+                            @foreach (FamilyHistory? fmHistory in Model.familyHistory)
+                            {
+
+                                <tr>
+                                    <td scope="col">@fmHistory.relation</td>
+                                    <td scope="col">@fmHistory.age</td>
+                                    <td scope="col">@fmHistory.healthState</td>
+                                    <td scope="col">@fmHistory.alive</td>
+                                    <td scope="col">@fmHistory.deathAge</td>
+                                    <td scope="col">@fmHistory.deathYear</td>
+                                    <td scope="col">@fmHistory.deathCause</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+    @*<div class="portlet-body">
+        <div class="col-lg-12">
+            <p class="policies">Assignee</p>
+            <div class="table-responsive" style="padding:2px 0px 0px 0px;color:black">
+                <table id="new_Id3" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Father Name</th>
+                            <th scope="col">CNIC</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Relation</th>
+                            <th scope="col">Share</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.nominees != null)
+                        {
+                            @foreach (Nominee nominee in Model.nominees)
+                            {
+
+                                <tr>
+                                    <td scope="col">@nominee.nomineeName</td>
+                                    <td scope="col">@nominee.nomineeFName</td>
+                                    <td scope="col">@nominee.nic</td>
+                                    <td scope="col">@nominee.age</td>
+                                    <td scope="col">@nominee.relation</td>
+                                    <td scope="col">@nominee.share</td>
+                                    <td scope="col">@nominee.address1</td>
+                                    <td scope="col">@nominee.city</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    @*<script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>*@
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    @*<script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>*@
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ChartJS -->
+    @*<script src="~/plugins/chart.js/Chart.min.js"></script>*@
+    <!-- Sparkline -->
+    @*<script src="~/plugins/sparklines/sparkline.js"></script>*@
+    <!-- JQVMap -->
+    @*<script src="~/plugins/jqvmap/jquery.vmap.min.js"></script>*@
+    @*<script src="~/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>*@
+    <!-- jQuery Knob Chart -->
+    @*<script src="~/plugins/jquery-knob/jquery.knob.min.js"></script>*@
+    <!-- daterangepicker -->
+    @*<script src="~/plugins/moment/moment.min.js"></script>*@
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    @*<script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>*@
+    <!-- Summernote -->
+    @*<script src="~/plugins/summernote/summernote-bs4.min.js"></script>*@
+    <!-- overlayScrollbars -->
+    <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+    @*<script>
+        $(document).ready(function () {
+            $('#new_Id').DataTable(
+
+            );
+        });
+
+        $(document).ready(function () {
+            $('#new_Id1').DataTable(
+              
+            );
+        });
+
+        $(document).ready(function () {
+            $('#new_Id2').DataTable(
+             
+            );
+        });
+
+        $(document).ready(function () {
+            $('#new_Id3').DataTable(
+              
+            );
+        });
+    </script>*@
+
+</body>
+</html>
+
+@*//-----------------------------------------------------------------------------------------------------*@
+

@@ -1,0 +1,88 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+<div class="card">
+
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Ticket Detail</h3>
+
+    </div>
+    <div class="card-body">
+        @if (Model.SearchTicketDetail != null && Model.SearchTicketDetail.Tables.Count > 0 && Model.SearchTicketDetail.Tables[0].Rows.Count > 0)
+        {
+            <table id="bookingstatusTable" width="100%" class="display">
+                <thead>
+                    <tr>
+                        @foreach (System.Data.DataColumn column in Model.SearchTicketDetail.Tables[0].Columns)
+                        {
+                            <th>@column.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.SearchTicketDetail.Tables[0].Rows)
+                    {
+                        <tr style="@(row["OPS_Response"].ToString().Trim() == "Yes" ? "background-color: lightgreen;" : "")">
+                            @foreach (var item in row.ItemArray)
+                            {
+                                <td>
+                                    @if (row.Table.Columns.IndexOf("TicketId") == Array.IndexOf(row.ItemArray, item))
+                                    {
+                                        <a class="ticketLink" href="/Home/GetTicketDetails?ticketno=@item.ToString()" target="_blank">@item.ToString()</a>
+                                    }
+                                    else
+                                    {
+                                        @item.ToString()
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Records Found.</p>
+        }
+    </div>
+
+
+
+
+
+</div>
+<br />
+<script>
+    $(document).ready(function () {
+
+        $('#bookingstatusTable').DataTable({
+            scrollX: '400px',
+            scrollY: '400px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            }
+
+        });
+    });
+    //$(document).on('click', '.detailButton', function () {
+    //    debugger
+    //    var ticketId = $(this).data('ticketid');
+    //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
+
+    //    window.open(url, '_blank');
+
+    //});
+</script>
+
+
+
+
+
+
+
+

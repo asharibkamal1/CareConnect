@@ -1,0 +1,49 @@
+﻿@model CareConnect.Models.ReportViewModel
+            <!-- Render the dropdown list with TicketCatType data -->
+<!-- _ReportDatatableRecord.cshtml -->
+
+
+<table id="myDataTable" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>CNSGNO</th>
+            <th>TrackBy</th>
+            <th>TrackOn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in Model.Report_rpt_ticketdetails.Tables[0].Rows)
+        {
+            <tr>
+                <td>@row["CNSGNO"]</td>
+                <td>@row["TrackBy"]</td>
+                <td>@row["TrackOn"]</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Include DataTables initialization script -->
+<script>
+    $(document).ready(function () {
+        debugger
+        $('#myDataTable').DataTable({
+            // DataTable options and configurations
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
