@@ -1509,11 +1509,6 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         conn.Open();
-                        if (true)
-                        {
-
-                        }
-
                         SqlCommand cmd = new SqlCommand("InsertTicket", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
@@ -1603,7 +1598,7 @@ namespace PLIC_Web_Poratal.Controllers
                         }
                         else
                         {
-                            if (createTicketModel.issendsms == false)
+                            if (createTicketModel.issendsms == false || createTicketModel.ticketcatagory == 6)
                             {
                                 int ticketno1 = ticketID; // Replace with your tracking number variable or value
                                 int ticketupdateno = ticketID; // Replace with your tracking number variable or value
