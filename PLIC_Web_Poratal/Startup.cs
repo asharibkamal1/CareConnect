@@ -30,7 +30,7 @@ namespace PLIC_Web_Poratal
            // services.AddSession();
             services.AddControllersWithViews();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
+            services.AddNotyf(config => { config.DurationInSeconds =300; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddSession(options =>
             {
                 //options.IdleTimeout = TimeSpan.FromMinutes(10);//You can set Time   

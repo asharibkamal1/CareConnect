@@ -1889,7 +1889,7 @@ namespace PLIC_Web_Poratal.Controllers
                         conn.Open();
                    
 
-                        SqlCommand cmd = new SqlCommand("InsertTicket_test", conn);
+                        SqlCommand cmd = new SqlCommand("InsertTicket_Service_Request", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
                         cmd.Transaction = transaction;
@@ -1915,7 +1915,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         cmd.Parameters.AddWithValue("@Agent", createTicketModel.agent);
                         cmd.Parameters.AddWithValue("@AgentReference", createTicketModel.agentref);
-                        cmd.Parameters.AddWithValue("@BookingDate", createTicketModel.BookingDate);
+                        cmd.Parameters.AddWithValue("@BookingDate", null);
                         cmd.Parameters.AddWithValue("@Sender", createTicketModel.sender);
                         cmd.Parameters.AddWithValue("@SenderCompany", createTicketModel.sendercompany);
                         cmd.Parameters.AddWithValue("@SenderReference", createTicketModel.senderref);
@@ -1932,7 +1932,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@PaymentMode", createTicketModel.Payment_Mode);
                         cmd.Parameters.AddWithValue("@Weight", createTicketModel.Weight);
                         cmd.Parameters.AddWithValue("@Pieces", createTicketModel.Quantity);
-                        cmd.Parameters.AddWithValue("@IsClosed", 0);
+                        cmd.Parameters.AddWithValue("@IsClosed", 1);
                         cmd.Parameters.AddWithValue("@EmailAddress", createTicketModel.Name);
                         cmd.Parameters.AddWithValue("@Remarks", createTicketModel.Remarks);
                         cmd.Parameters.AddWithValue("@CreatedOn", DateAndTime.Today);
@@ -1986,7 +1986,7 @@ namespace PLIC_Web_Poratal.Controllers
                                 transaction.Commit();
 
                                 //ViewData["TicketNo"] = ticketno1;
-                                return Json(new { success = true, data = ticketupdateno, message = "Ticket Created Successfully." });
+                                return Json(new { success = true, data = ticketupdateno, message = "Service Request Created Successfully." });
                             }
 
 
