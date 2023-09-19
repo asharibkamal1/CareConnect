@@ -155,10 +155,11 @@
             @{
                 try
                 {
-                    if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+                    //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+                    if(Model.roleid=="2")          
                     {
                         <li class="nav-item">
-                            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS</a>
+                            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
                         </li>
                     }
                     else

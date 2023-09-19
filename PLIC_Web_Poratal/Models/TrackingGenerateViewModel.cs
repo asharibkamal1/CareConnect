@@ -16,6 +16,7 @@ namespace CareConnect.Models
         public DataSet CityDS { get; set; }
 
         public DataSet RegionDS { get; set; }
+        public DataSet Category { get; set; }
 
         public DataSet TicketDetails { get; set; }
         public DataSet TrackingHistory { get; set; }

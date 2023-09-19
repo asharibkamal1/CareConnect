@@ -96,7 +96,7 @@
 
         <div class="row">
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-2 col-sm-2">
 
                 <label for="TicketTypeDropdown">City:</label>
                 <select class="form-control" id="CityDropdown" name="city ">
@@ -109,13 +109,13 @@
                 <span class="text-danger" id="cityError" style="display: none;">Please select City.</span>
             </div>
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-4 col-sm-4">
 
                 <div id="regionContainer">
                 </div>
                 <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
             </div>
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-2 col-sm-2">
 
                 <div class="form-group">
                     <label class="control-label">Tracking NO:</label>
@@ -125,7 +125,8 @@
 
             </div>
 
-            <div class="col-md-3 col-sm-3">
+
+            <div class="col-md-2 col-sm-2">
                 <label for="BarcodeDropdown">BarCode:</label>
                 <select class="form-control" id="BarcodeDropdown" name="barcode" required>
                     <option value="">ALL</option>
@@ -137,7 +138,15 @@
                 <span class="text-danger" id="barcodeError" style="display: none;">Please select a barcode.</span>
             </div>
 
+            <div class="col-md-2 col-sm-2">
+
+                <div id="categorycontainer">
+                </div>
+                <span class="text-danger" id="barcodcateerror" style="display: none;">Please select Category.</span>
+            </div>
+
         </div>
+
 
         <div class="row">
             <div class="col-md-4">
@@ -280,6 +289,32 @@
         });
 
 
+        $('#BarcodeDropdown').change(function () {
+            debugger
+            var selectedBarcode = $(this).val();
+
+            // Clear the subcategory container
+            $('#categorycontainer').html('');
+
+            debugger
+
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetCategory',
+                type: 'POST',
+                data: { Barcode: selectedBarcode },
+                success: function (result) {
+                    debugger
+                    // Render the subcategory dropdown
+                    $('#categorycontainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        });
+
+
     });
 </script>
 
@@ -314,12 +349,13 @@
         $('#btnCreateTicket').click(function () {
             debugger
 
-            debugger
+          
             var barcodeValue = $('#BarcodeDropdown').val();
             var tickettypeValue = $('#TicketTypeDropdown').val();
             var categoryValue = $('#categoryDropdown').val();
             var ticketsubcatagory = $('#subcategoryContainer').find('#SubcategoryDropdown').val();
             var ticketsubcatagoryName = $('#subcategoryContainer').find('#SubcategoryDropdown option:selected').text();
+            var barcodecategoryname = $('#categorycontainer').find('#CategoryDropdown option:selected').text();
             var RemarksValue = $('#txtremarks').val();
             var TicketDescription = $('#txtremarks').val();
             var TicketPriority = $('#PriorityDropdown').val();
@@ -361,6 +397,13 @@
             } else {
                 $('#emailerror').hide();
             }
+            if (barcodecategoryname === '') {
+                $('#barcodcateerror').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#barcodcateerror').hide();
+            }
+            
             if (categoryValue === '') {
                 $('#categoryDropdownError').show();
                 return false; // Prevent form submission if barcode is not selected
@@ -432,6 +475,8 @@
                 barcode: $('#BarcodeDropdown').val(),
                 ticketsubcatagory: $('#subcategoryContainer').find('#SubcategoryDropdown').val(),
                 ticketsubcatagoryName: ticketsubcatagoryName,
+                ticketsubcatagoryName: ticketsubcatagoryName,
+                barcodecategoryname: barcodecategoryname,
                 name: $('#txtname').val(),
                 contact: contact,
                 Gender: $('#ddgender').val(),
@@ -485,7 +530,7 @@
 
                         // Construct the URL with the tracking number as a query parameter
                         var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
-                      
+
 
                         // Redirect to the new URL same tab
                         window.location.href = url;

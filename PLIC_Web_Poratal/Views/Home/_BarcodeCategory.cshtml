@@ -1,0 +1,44 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+<!-- Render the dropdown list with TicketCatType data -->
+<div class="row">
+
+    <div class="col-md-12 col-sm-12">
+        <label for="TicketTypeDropdown">Category</label>
+        <select class="form-control" id="CategoryDropdown" name="category">
+            @foreach (System.Data.DataRow catRow in Model.Category.Tables[0].Rows)
+            {
+                <option value="@catRow["booking_id"]">@catRow["cat_name"]</option>
+            }
+        </select>
+    </div>
+</div>
+@* <label for="TicketTypeDropdown">User Email:</label>
+<select class="form-control" id="useremail" name="email">
+    @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
+    {
+        <option value="@catRow["userid"]">@catRow["user_email"]</option>
+    }
+</select> *@
+
+
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

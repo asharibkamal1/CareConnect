@@ -1419,6 +1419,55 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+        public ActionResult GetCategory(string Barcode)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Category_By_Barcode", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    command1.Parameters.AddWithValue("@Barcode", Barcode);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        Category = dataSet
+                    };
+
+                    return PartialView("_BarcodeCategory", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
 
 
@@ -1769,6 +1818,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         cmd.Parameters.AddWithValue("@TicketTypeId", createTicketModel.tickettype);
                         cmd.Parameters.AddWithValue("@Barcode", createTicketModel.barcode);
+                        cmd.Parameters.AddWithValue("@BarcodeCategory", createTicketModel.barcodecategoryname);
                         cmd.Parameters.AddWithValue("@ticketcategory", createTicketModel.ticketcatagory);
                         cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
 
