@@ -16,7 +16,7 @@ namespace PLIC_Web_Poratal
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration)    
         {
             Configuration = configuration;
         }
@@ -33,7 +33,8 @@ namespace PLIC_Web_Poratal
             services.AddNotyf(config => { config.DurationInSeconds =300; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddSession(options =>
             {
-                //options.IdleTimeout = TimeSpan.FromMinutes(10);//You can set Time   
+                options.IdleTimeout = TimeSpan.FromMinutes(30);//You can set Time
+               // options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the session timeout to 30 minutes
             });
         }
 

@@ -543,6 +543,253 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpGet]
+        public IActionResult GetChartData2(DateTime datefrom, DateTime dateto)
+        {
+            try
+            {
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    //DataSet dataSet = new DataSet();
+                    //DataSet dt2 = new DataSet();
+                    //DataSet dt3 = new DataSet();
+                    SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            conn.Open();
+
+
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_get_dashboard_New", conn))
+
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@datefrom", datefrom);
+                            command.Parameters.AddWithValue("@dateto", dateto);
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                // Create separate lists for the two charts
+                                var chartDataAll = new List<ChartData>();
+                                var chartDatComplaint = new List<ChartData>();
+                                var chartDataInfo = new List<ChartData>();
+                                var chartDataServiceRequest = new List<ChartData>();
+                                var chartDataregion = new List<ChartData>();
+                                var chartDatatickettype = new List<ChartData>();
+                                var chartDatatotalcount = new List<ChartData>();
+                                var chartDatainprogress = new List<ChartData>();
+                                var chartDataproducts = new List<ChartData>();
+                                var chartDataopsclosed = new List<ChartData>();
+                                var chartDataclosed = new List<ChartData>();
+
+
+                                // Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalTicket"];
+                                    var categoryDescription = reader["CategoryDescription"].ToString();
+
+
+                                    chartDataAll.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        CategoryDescription = categoryDescription,
+
+                                    });
+                                }
+                                // Move to the next result set for the second query
+                                reader.NextResult();
+                                // Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalTicket"];
+                                    var IssueTypeDescription = reader["IssueTypeDescription"].ToString();
+
+
+                                    chartDatComplaint.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        IssueTypeDescription = IssueTypeDescription,
+
+                                    });
+                                }
+                                // Move to the next result set for the second query
+                                reader.NextResult();
+                                // Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalTicket"];
+                                    var IssueTypeDescription = reader["IssueTypeDescription"].ToString();
+
+
+                                    chartDataInfo.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        IssueTypeDescription = IssueTypeDescription,
+
+                                    });
+                                }
+                                // Move to the next result set for the second query
+                                reader.NextResult();
+                                // Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalTicket"];
+                                    var IssueTypeDescription = reader["IssueTypeDescription"].ToString();
+
+
+                                    chartDataServiceRequest.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        IssueTypeDescription = IssueTypeDescription,
+
+                                    });
+                                }
+                                reader.NextResult();
+
+
+
+                                while (reader.Read())
+                                {
+                                    var region_name = reader["region_name"].ToString();
+                                    var Percentage = reader["Percentage"].ToString();
+
+
+                                    chartDataregion.Add(new ChartData
+                                    {
+                                        region_name = region_name,
+                                        Percentage = Percentage,
+
+                                    });
+                                }
+
+
+                                reader.NextResult();
+
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalTicket"];
+                                    var Ticket_Type = reader["Ticket_Type"].ToString();
+
+
+                                    chartDatatickettype.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        TicketType = Ticket_Type,
+
+                                    });
+                                }
+
+                                reader.NextResult();
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalCount"];
+                                    // var Ticket_Type = reader["Ticket_Type"].ToString();
+
+
+                                    chartDatatotalcount.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        //TicketType = Ticket_Type,
+
+                                    });
+                                }
+
+
+
+                                reader.NextResult();
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["InProgress"];
+                                    //var Ticket_Type = reader["Ticket_Type"].ToString();
+
+
+                                    chartDatainprogress.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        // TicketType = Ticket_Type,
+
+                                    });
+                                }
+
+
+
+
+                                reader.NextResult();
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TotalTicket"];
+                                    var Products = reader["Product"].ToString();
+
+
+                                    chartDataproducts.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        Products = Products,
+
+                                    });
+                                }
+
+                                reader.NextResult();
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["OPSClosedTotalTicket"];
+                                    //var Ticket_Type = reader["Ticket_Type"].ToString();
+
+
+                                    chartDataopsclosed.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        // TicketType = Ticket_Type,
+
+                                    });
+                                }
+                                reader.NextResult();
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["ClosedTotalTicket"];
+                                    //var Ticket_Type = reader["Ticket_Type"].ToString();
+
+
+                                    chartDataclosed.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        // TicketType = Ticket_Type,
+
+                                    });
+                                }
+
+                                var jsonData = new
+                                {
+                                    chartDataAll = chartDataAll,
+                                    chartDatComplaint = chartDatComplaint,
+                                    chartDataInfo = chartDataInfo,
+                                    chartDataServiceRequest = chartDataServiceRequest,
+                                    chartDataregion = chartDataregion,
+                                    chartDatatickettype = chartDatatickettype,
+                                    chartDatatotalcount = chartDatatotalcount,
+                                    chartDatainprogress = chartDatainprogress,
+                                    chartDataproducts = chartDataproducts,
+                                    chartDataopsclosed = chartDataopsclosed,
+                                    chartDataclosed = chartDataclosed
+                                };
+
+                                return Json(jsonData);
+                            }
+                        }
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                return Json(new { errorMessage = ex.Message });
+
+
+            }
+        }
+
+
+        [HttpGet]
         public ActionResult GetTrackingDetails(string tracking,bool isCheckboxChecked)
         {
 
@@ -1509,7 +1756,7 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("InsertTicket", conn);
+                        SqlCommand cmd = new SqlCommand("InsertTicket_ASH", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
                         cmd.Transaction = transaction;

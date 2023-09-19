@@ -3,15 +3,15 @@
 
 @{
     ViewData["Title"] = "Tracking Detail";
-  
+
 }
 <head>
     @*@{
-            Layout = null;
+    Layout = null;
 
-            ViewData["Title"] = "Policy";
-            //string policy;
-        }*@
+    ViewData["Title"] = "Policy";
+    //string policy;
+    }*@
     <title>Ticket Generate</title>
     <!-- SweetAlert CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
@@ -91,7 +91,7 @@
 
         .main {
             /*            margin-left: 10%;
-            */ border: 1px solid;
+                                                                    */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -140,8 +140,8 @@
     <div class="card-body">
         <ul class="nav nav-pills nav-tabs" role="tablist">
             @*<li class="nav-item">
-                    <a class="nav-link active" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Ticket Detail</a>
-                </li>*@
+            <a class="nav-link active" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Ticket Detail</a>
+            </li>*@
 
             <li class="nav-item">
                 <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" href="#secondTableTabContent">History Detail</a>
@@ -152,23 +152,65 @@
             <li class="nav-item">
                 <a class="nav-link" id="emailTableTabButton" data-toggle="pill" href="#emailTableTabContent">Email</a>
             </li>
-            @if (Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
-            {
-                <li class="nav-item">
-                    <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS</a>
-                </li>
+            @{
+                try
+                {
+                    if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS</a>
+                        </li>
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception here
+                    throw ex;
+                }
             }
-            @if (Model.roleid == "4")
-            {
-                <li class="nav-item">
-                    <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
-                </li>
+            @{
+                try
+                {
+
+
+
+
+                    if (Model.roleid == "4")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
+                        </li>
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
-            @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
-            {
-                <li class="nav-item">
-                    <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
-                </li>
+
+            @{
+                try
+                {
+
+
+
+                    @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
+                        </li>
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
             }
 
 
@@ -415,17 +457,17 @@
                                     <label class="text-secondary font-weight-bold">Status:</label>
                                 </div>
                                 @*<div class="col-lg-4 col-md-4 col-sm-4">
-                                        @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
-                                        {
-                                            foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
-                                            {
-                                                if (column.ColumnName == "ComplainerCell")
-                                                {
-                                                    <input type="text" id="txtcomplainercell" class="form-control" value="@row[column.ColumnName]" readonly />
-                                                }
-                                            }
-                                        }
-                                    </div>*@
+                                @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
+                                {
+                                foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
+                                {
+                                if (column.ColumnName == "ComplainerCell")
+                                {
+                                <input type="text" id="txtcomplainercell" class="form-control" value="@row[column.ColumnName]" readonly />
+                                }
+                                }
+                                }
+                                </div>*@
                                 <div class="col-md-3 col-sm-3">
                                     @*<label for="TicketTypeDropdown">Status:</label>*@
                                     <select class="form-control" id="TicketStatusDropdown" name="TicketType ">
@@ -734,7 +776,7 @@
             var ticketData = {
 
                 remarks: $('#txtremarks').val(),
-                ticketdid:@ViewData["TicketNo"],
+                ticketdid: @ViewData["TicketNo"],
                 activity: "Update",
                 userid: "",
 
@@ -748,8 +790,8 @@
                 $('#RemarksError').hide();
             }
 
-        $.ajax({
-            url: '/Home/UpdateTicket',
+            $.ajax({
+                url: '/Home/UpdateTicket',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -759,15 +801,15 @@
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
-                       @*// var ticketno = @ViewData["TicketNo"];*@
-                       // var ticketno = $('#tracking').val();
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                            // var ticketno = $('#tracking').val();
 
-                        // Construct the URL with the tracking number as a query parameter
-                       // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                            // Construct the URL with the tracking number as a query parameter
+                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
-                        // Open the new view in a new window/tab
-                       // window.open(url, '_blank');
-                        $('#txtremarks').val('');
+                            // Open the new view in a new window/tab
+                            // window.open(url, '_blank');
+                            $('#txtremarks').val('');
 
                     }
                     else {
@@ -785,7 +827,7 @@
 
 
         $('#btnemail').click(function () {
-               debugger
+            debugger
             //console.log("button is clisked");
             debugger
 
@@ -793,7 +835,7 @@
 
                 emailto: $('#autocompletetoemail').val(),
                 emailcc: $('#autocompletefromemail').val(),
-                ticketdid:@ViewData["TicketNo"],
+                ticketdid: @ViewData["TicketNo"],
                 activity: "Email",
                 userid: "",
                 remarks: $('#txtremarksemail').val()
@@ -801,8 +843,8 @@
             };
 
 
-        $.ajax({
-            url: '/Home/UpdateTicketEmail',
+            $.ajax({
+                url: '/Home/UpdateTicketEmail',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -812,13 +854,13 @@
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
 
-                       // var ticketno = $('#tracking').val();
+                        // var ticketno = $('#tracking').val();
 
                         // Construct the URL with the tracking number as a query parameter
-                       // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
                         // Open the new view in a new window/tab
-                       // window.open(url, '_blank');
+                        // window.open(url, '_blank');
                         $('#autocompletetoemail').val('');
                         $('#autocompletefromemail').val('');
                         $('#txtremarksemail').val('');
@@ -839,7 +881,7 @@
         });
 
         $('#btnsms').click(function () {
-               debugger
+            debugger
             //console.log("button is clisked");
             debugger
 
@@ -847,16 +889,16 @@
 
 
                 complainercell: $('#txtcomplainercell').val(),
-                ticketdid:@ViewData["TicketNo"],
+                ticketdid: @ViewData["TicketNo"],
                 activity: "SMS",
                 userid: "",
                 remarks: $('#txtremarkssms').val()
 
             };
 
-               debugger
-        $.ajax({
-            url: '/Home/UpdateTicketSMS',
+            debugger
+            $.ajax({
+                url: '/Home/UpdateTicketSMS',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -868,7 +910,7 @@
 
 
 
-                       // $('#txtremarkssms').val('');
+                        // $('#txtremarkssms').val('');
 
 
                     }
@@ -904,16 +946,16 @@
 
 
                 //complainercell: $('#txtcomplainercell').val(),
-                ticketdid:@ViewData["TicketNo"],
+                ticketdid: @ViewData["TicketNo"],
                 activity: "close",
                 userid: "",
                 remarks: $('#txtremarksclosing').val()
 
             };
 
-               debugger
-        $.ajax({
-            url: '/Home/TicketClosing',
+            debugger
+            $.ajax({
+                url: '/Home/TicketClosing',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -947,7 +989,7 @@
             debugger
             var TicketStatus = $('#TicketStatusDropdown option:selected').text();
             var TicketStatusid = $('#TicketStatusDropdown').val();
-           // var City = $('#citydropdown').val();
+            // var City = $('#citydropdown').val();
             var City = $('#citydropdown').find('#citysubdropdown').val();
 
             if (TicketStatusid === "0") {
@@ -986,14 +1028,14 @@
             var ticketData = {
 
                 remarks: RemarksValue,
-                ticketdid:@ViewData["TicketNo"],
+                ticketdid: @ViewData["TicketNo"],
                 activity: TicketStatus,
                 userid: "",
-                city:City,
+                city: City,
 
             };
-        $.ajax({
-            url: '/Home/TickedClosed',
+            $.ajax({
+                url: '/Home/TickedClosed',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -1003,15 +1045,15 @@
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
-                       @*// var ticketno = @ViewData["TicketNo"];*@
-                       // var ticketno = $('#tracking').val();
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                            // var ticketno = $('#tracking').val();
 
-                        // Construct the URL with the tracking number as a query parameter
-                       // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                            // Construct the URL with the tracking number as a query parameter
+                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
-                        // Open the new view in a new window/tab
-                       // window.open(url, '_blank');
-                        $('#txtremarksclosed').val('');
+                            // Open the new view in a new window/tab
+                            // window.open(url, '_blank');
+                            $('#txtremarksclosed').val('');
 
                     }
                     else {
@@ -1032,7 +1074,7 @@
 
             var TicketTypeDropdown = $('#TicketTypeDropdown option:selected').text();
             var TicketTypeDropdownid = $('#TicketTypeDropdown').val();
-           // var City = $('#citydropdown').val();
+            // var City = $('#citydropdown').val();
             //var City = $('#citydropdown').find('#citysubdropdown').val();
 
             if (TicketTypeDropdownid === "0") {
@@ -1071,15 +1113,15 @@
             var ticketData = {
 
                 remarks: RemarksValue,
-                ticketdid:@ViewData["TicketNo"],
+                ticketdid: @ViewData["TicketNo"],
                 //activity: TicketStatusreopen,
                 userid: "",
                 complainercell: $('#txtcomplainercell').val(),
                 TicketTypeDropdownid: TicketTypeDropdownid,
 
             };
-        $.ajax({
-            url: '/Home/TicketReopen',
+            $.ajax({
+                url: '/Home/TicketReopen',
                 type: 'POST',
                 data: ticketData,
                 success: function (response) {
@@ -1089,15 +1131,15 @@
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
-                       @*// var ticketno = @ViewData["TicketNo"];*@
-                       // var ticketno = $('#tracking').val();
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                            // var ticketno = $('#tracking').val();
 
-                        // Construct the URL with the tracking number as a query parameter
-                       // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                            // Construct the URL with the tracking number as a query parameter
+                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
-                        // Open the new view in a new window/tab
-                       // window.open(url, '_blank');
-                        $('#txtremarksreopen').val('');
+                            // Open the new view in a new window/tab
+                            // window.open(url, '_blank');
+                            $('#txtremarksreopen').val('');
 
                     }
                     else {
@@ -1133,7 +1175,7 @@
             // Target the div element
             var citydropdown = document.getElementById("citydropdown");
 
-              // Check the condition and hide the div if necessary
+            // Check the condition and hide the div if necessary
             if (TicketStatusid != 2) {
                 citydropdown.style.display = "none";
             } else {

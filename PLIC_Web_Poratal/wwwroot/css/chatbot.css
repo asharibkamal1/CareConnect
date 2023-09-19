@@ -23,10 +23,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 20px;
+    padding: 10px; /* Reduced padding */
     color: #333;
     margin: 0 auto;
-    max-width: 1200px; /* Set a max-width for responsiveness */
+    max-width: 1400px; /* Increased max-width */
 }
 
 .dashboard {
@@ -118,6 +118,16 @@
 .south {
     background-color: #1abc9c;
     color: #fff;
+}
+.opscloded {
+    background-color: #006400; /* Change to your desired color */
+    color: #fff; /* Change to your desired text color */
+}
+
+/* Style for the "Closed" box */
+.closed {
+    background-color: #e11eca; /* Change to your desired color */
+    color: #fff; /* Change to your desired text color */
 }
 
 #region-chart {
