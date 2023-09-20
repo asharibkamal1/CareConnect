@@ -293,7 +293,7 @@
                                     <li class="nav-item">
                                         <a id="toggleSubMenu" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
                                             <i class="nav-icon fas fa-dot-circle"></i>
-                                            <p>Report</p>
+                                            <p>Reports</p>
                                         </a>
                                         <ul class="submenu" nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                             <li class="no-marker">
@@ -313,6 +313,12 @@
                                                     <i class="nav-icon fas fa-dot-circle"></i>Ticket Close
                                                 </a>
                                             </li>
+                @*                             <li class="no-marker">
+                                                <a asp-action="ReportCRM" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>CRM
+                                                </a>
+                                            </li> *@
                                         </ul>
                                     </li>
                                 </ul>

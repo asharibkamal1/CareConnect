@@ -57,7 +57,8 @@
                     @foreach (System.Data.DataRow catRow in Model.TicketCatType.Tables[1].Rows)
                     {
                         // Check if the CategoryDescription is "Service Request"
-                        if (string.Equals(catRow["CategoryDescription"].ToString(), "Service Request", StringComparison.OrdinalIgnoreCase))
+                        if (!string.Equals(catRow["CategoryDescription"].ToString(), "Complaints", StringComparison.OrdinalIgnoreCase))
+                        
                         {
                             <option value="@catRow["CategoryId"]">@catRow["CategoryDescription"]</option>
                         }
@@ -257,7 +258,7 @@
             debugger
             // Make AJAX call to fetch subcategories based on the selected category
             $.ajax({
-                url: '/Home/GetSubcategories2',
+                url: '/Home/GetSubcategoriesServiceRequest',
                 type: 'POST',
                 data: { category: selectedCategory },
                 success: function (result) {

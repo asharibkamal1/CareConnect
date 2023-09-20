@@ -1266,6 +1266,57 @@ namespace PLIC_Web_Poratal.Controllers
                 throw ex;
             }
         }
+
+        public ActionResult GetSubcategoriesCRM(string category)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_type_description_By_ID_CRM", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    command1.Parameters.AddWithValue("@category_Id", category);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        TicketIssueTypeDescription = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_SubCategory", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         public ActionResult GetSubcategories2(string category)
         {
 
@@ -1318,7 +1369,56 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+        public ActionResult GetSubcategoriesServiceRequest(string category)
+        {
 
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_type_description_By_ID_ServiceRequest", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    command1.Parameters.AddWithValue("@category_Id", category);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        TicketIssueTypeDescription = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_IssueTypeDescription", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         public ActionResult GetCities(string ticketstatus)
         {
 
@@ -1560,6 +1660,66 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
+
+        public IActionResult ReportCRM()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+                    {
+                        conn1.Open();
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
+                        command.CommandType = CommandType.StoredProcedure;
+                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                        //dataAdapter.Fill(dataSet);
+                        dataAdapter1.Fill(dataSet1);
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            TicketCatType = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        //return PartialView("_TicketSearchCatagory", model);
+                        return View("~/Views/Home/ReportCRM.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
         public IActionResult ServiceRequest()
         {
             try
@@ -1619,6 +1779,10 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         }
+
+
+
+
         public IActionResult Report()
         {
             // HttpContext.Session.Clear();
@@ -1903,7 +2067,7 @@ namespace PLIC_Web_Poratal.Controllers
                                 transaction.Commit();
 
                                 //ViewData["TicketNo"] = ticketno1;
-                                return Json(new { success = true, data = ticketupdateno, message = "Ticket created successfully not send sms." });
+                                return Json(new { success = true, data = ticketupdateno, message = "Ticket Created Successfully not send sms." });
                             }
 
 
@@ -3974,8 +4138,9 @@ namespace PLIC_Web_Poratal.Controllers
                 SmtpClient SmtpServer = new SmtpClient("mail.daewoofastex.pk");
 
                 mail.From = new MailAddress("helpdesk@daewoofastex.pk");
-                mail.To.Add("asharib.kamal@daewoo.com.pk"); // Set the 'To' email address
+                mail.To.Add(toEmail); // Set the 'To' email address
                 mail.CC.Add("asharib.kamal@daewoo.com.pk"); // Set the 'CC' email address
+                mail.CC.Add("amir.saleem@daewoo.com.pk"); // Set the 'CC' email address
                 mail.IsBodyHtml = true;
 
                 mail.Subject = subject; // Set the subject of the email
