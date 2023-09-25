@@ -10,6 +10,7 @@ namespace CareConnect.Models
 
         public string Name { get; set; }
         public string ticketsubcatagoryName { get; set; }
+        public string infosubcatagoryName { get; set; }
         public string barcodecategoryname { get; set; }
         public string Contact { get; set; }
         public string Gender { get; set; }
@@ -18,6 +19,7 @@ namespace CareConnect.Models
         public int ticketcatagory { get; set; }
         public string ticketcatagoryName { get; set; }
         public int ticketsubcatagory { get; set; }
+        public int infosubcatagoryid { get; set; }
         public int region { get; set; }
         public int accountno { get; set; }
         public int agent { get; set; }

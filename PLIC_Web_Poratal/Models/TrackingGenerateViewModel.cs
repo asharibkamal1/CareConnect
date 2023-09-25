@@ -10,8 +10,10 @@ namespace CareConnect.Models
     {
         public DataSet BookingDetail { get; set; }
         public DataSet TicketType { get; set; }
+        public DataSet CRMReportDetail { get; set; }
         public DataSet TicketCatType { get; set; }
         public DataSet TicketIssueTypeDescription { get; set; }
+        public DataSet InfoSubcategory { get; set; }
         public DataSet PriorityDS { get; set; }
         public DataSet CityDS { get; set; }
 

@@ -142,7 +142,7 @@
     <div class="row">
         <br />
     </div>
-    <div id="trackingDetailsContainer">
+    <div id="CRMReportContainer">
 
     </div>
 </div>
@@ -270,7 +270,7 @@
 
         debugger
         $.ajax({
-            url: '/Home/SearchTicketDetail',
+            url: '/Home/GetCRMReport',
             type: 'POST',
             data: ticketData,
             success: function (result) {
@@ -281,7 +281,7 @@
                 // Show a success message using SweetAlert
                 //Swal.fire('Success', response.message, 'success');
 
-                $('#trackingDetailsContainer').html(result);
+                $('#CRMReportContainer').html(result);
 
 
 

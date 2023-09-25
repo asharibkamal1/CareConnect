@@ -50,7 +50,7 @@
         <div class="row">
 
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-auto col-12">
                 <label for="TicketTypeDropdown">Ticket Category:</label>
                 <select class="form-control" id="categoryDropdown" name="ticketcatagory">
                     <option value="">Select Category</option>
@@ -58,7 +58,7 @@
                     {
                         // Check if the CategoryDescription is "Service Request"
                         if (!string.Equals(catRow["CategoryDescription"].ToString(), "Complaints", StringComparison.OrdinalIgnoreCase))
-                        
+
                         {
                             <option value="@catRow["CategoryId"]">@catRow["CategoryDescription"]</option>
                         }
@@ -68,38 +68,19 @@
                 <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Category.</span>
             </div>
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-auto col-12">
 
                 <div id="subcategoryContainer">
                 </div>
                 <span class="text-danger" id="subcategoryDropdownError" style="display: none;">Please select Sub Category.</span>
             </div>
+            <div class="col-md-auto col-12">
 
-         @*    <div class="col-md-3 col-sm-3">
-                <label for="TicketTypeDropdown">Ticket Type:</label>
-                <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
-
-                    <option value="">Select Ticket Type</option>
-                    @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
-                    {
-                        <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
-            </div> *@
-   @*          <div class="col-md-3 col-sm-3">
-                <label for="TicketTypeDropdown">Ticket Priority:</label>
-                <select class="form-control" id="PriorityDropdown" name="priority ">
-                    <option value="">Select Priority</option>
-                    @foreach (System.Data.DataRow catRow in Model.PriorityDS.Tables[2].Rows)
-                    {
-                        <option value="@catRow["priority_id"]">@catRow["priority_type"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="priorityError" style="display: none;">Please select priority.</span>
-            </div> *@
-
-            <div class="col-md-3 col-sm-3">
+                <div id="2subcategoryContainer">
+                </div>
+                <span class="text-danger" id="2subcategoryDropdownError" style="display: none;">Please select Info Sub Category.</span>
+            </div>
+            <div class="col-md-3 col-md-3 col-sm-3">
                 <div class="form-group">
                     <label for="TicketTypeDropdown">Remarks:</label>
 
@@ -109,132 +90,9 @@
             </div>
 
         </div>
-
-
- @*        <div class="row">
-
-            <div class="col-md-3 col-sm-3">
-
-                <label for="TicketTypeDropdown">City:</label>
-                <select class="form-control" id="CityDropdown" name="city ">
-                    <option value="">Select City</option>
-                    @foreach (System.Data.DataRow catRow in Model.CityDS.Tables[3].Rows)
-                    {
-                        <option value="@catRow["city_id"]">@catRow["city_name"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="cityError" style="display: none;">Please select City.</span>
-            </div>
-
-            <div class="col-md-3 col-sm-3">
-
-                <div id="regionContainer">
-                </div>
-                <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
-            </div>
-            <div class="col-md-3 col-sm-3">
-
-                <div class="form-group">
-                    <label class="control-label">Tracking NO:</label>
-                    <input type="text" disabled class="form-control" value="@ViewData["TrackingNumber"]" />
-                    <span class="text-danger" id="trackingError" style="display: none;">Tracking No Empty.</span>
-                </div>
-
-            </div>
-
-            <div class="col-md-3 col-sm-3">
-                <label for="BarcodeDropdown">BarCode:</label>
-                <select class="form-control" id="BarcodeDropdown" name="barcode" required>
-                    <option value="">ALL</option>
-                    @foreach (System.Data.DataRow catRow in Model.BookingDetail.Tables[6].Rows)
-                    {
-                        <option value="@catRow["BarCode"]">@catRow["BarCode"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="barcodeError" style="display: none;">Please select a barcode.</span>
-            </div>
-
-        </div> *@
-
-@*         <div class="row">
-            <div class="col-md-4">
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="rdotype" checked value="sender">
-                        <span></span>Sender
-                    </label>
-
-                    <label>
-                        <input type="radio" name="rdotype" value="receiver">
-                        <span></span>Receiver
-                    </label>
-
-
-                    <label>
-                        <input type="radio" name="rdotype" value="none">
-                        <span></span>None
-                    </label>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div radio-group>
-
-                    <label>
-                        <input type="checkbox" id="chksendsms" checked name="SMS" />
-                        <span></span>Send SMS
-                    </label>
-
-                </div>
-            </div>
-
-        </div> *@
-
-
-      @*   <div class="row">
-            <div class="col-md-3 col-sm-3">
-                <div class="form-group">
-                    <label for="TicketTypeDropdown">Name:</label>
-                    <input type="text" id="txtname" name="name" value="@Model.BookingDetail.Tables[2].Rows[0]["Person:"]" class="form-control" placeholder="Name">
-                    <span class="text-danger" id="nameError" style="display: none;">Please type name.</span>
-                </div>
-
-            </div>
-            <div class="col-md-3 col-sm-3">
-                <div class="form-group">
-                    <label for="TicketTypeDropdown">Contact NO:</label>
-                    <input type="text" id="txtcontactno" name="contact" value="@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]" class="form-control" placeholder="Contact No">
-                    <span class="text-danger" id="contactError" style="display: none;">Please type contact.</span>
-                    <span class="text-danger" id="contactErrorvalidation" style="display: none;">Contact number is invalid. Please enter a 11-digit number like (XXXX-XXXXXXX).</span>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-3 col-sm-3">
-                <label for="TicketTypeDropdown">Gender:</label>
-                <select name="Gender" id="ddgender" class="form-control">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
-
-
-            </div>
-            <div class="col-md-3 col-sm-3">
-                <div class="form-group">
-                    <label for="TicketTypeDropdown">Remarks:</label>
-
-                    <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
-                    <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
-                </div>
-            </div>
-
-
-        </div> *@
         <div class="row">
 
-            <div class="col-md-12 col-sm-12">
+            <div class="col-md-auto col-12">
                 <button class="btn btn-success float-Right" id="btnCreateTicket">Create Ticket</button>
 
             </div>
@@ -243,7 +101,39 @@
     </div>
 
 </div>
+<script>
+    debugger
+    function handleDropdownChange(selectElement) {
+        debugger
+        $('#2subcategoryContainer').html('');
+        // Get the selected value
+        var selectedValue = selectElement.value;
 
+        // Do something with the selected value
+        console.log("Selected value: " + selectedValue);
+
+        if (selectedValue === '48') {
+            $('#2subcategoryContainer').html('');
+
+            debugger
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/Get2SubcategoriesInfo',
+                type: 'POST',
+                data: { subcategory: selectedValue },
+                success: function (result) {
+                    debugger
+                    // Render the subcategory dropdown
+                    $('#2subcategoryContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        }
+        // You can perform any additional actions here based on the selected value
+    }
+</script>
 
 <script>
     $(document).ready(function () {
@@ -270,6 +160,8 @@
                 }
             });
         });
+
+
 
         $('#CityDropdown').change(function () {
             debugger
@@ -300,43 +192,18 @@
     });
 </script>
 
-@* <script>
-    $(document).ready(function () {
-        // Set initial values based on the checked radio button
-        // updateTextboxValues();
-
-        // Handle change event of radio buttons
-        // $('input[name="rdotype"]').change(function () {
-        //     updateTextboxValues();
-        // });
-
-        // function updateTextboxValues() {
-        //     var selectedValue = $('input[name="rdotype"]:checked').val();
-        //     if (selectedValue === "sender") {
-        //         $('#txtname').val("@Model.BookingDetail.Tables[2].Rows[0]["Person:"]");
-        //         $('#txtcontactno').val("@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]");
-        //     } else if (selectedValue === "receiver") {
-        //         $('#txtname').val("@Model.BookingDetail.Tables[3].Rows[0]["Name:"]");
-        //         $('#txtcontactno').val("@Model.BookingDetail.Tables[3].Rows[0]["Ph.No:"]");
-        //     } else {
-        //         $('#txtname').val("");
-        //         $('#txtcontactno').val("");
-        //     }
-        // }
-    });
-</script> *@
 
 <script>
     $(document).ready(function () {
         $('#btnCreateTicket').click(function () {
-      
-
             debugger
             var barcodeValue = $('#BarcodeDropdown').val();
             var tickettypeValue = $('#TicketTypeDropdown').val();
             var categoryValue = $('#categoryDropdown').val();
             var ticketsubcatagory = $('#subcategoryContainer').find('#SubcategoryDropdown').val();
+            var infosubcatagoryid = $('#2subcategoryContainer').find('#infoSubcategoryDropdown').val();
             var ticketsubcatagoryName = $('#subcategoryContainer').find('#SubcategoryDropdown option:selected').text();
+            var infosubcatagoryName = $('#2subcategoryContainer').find('#infoSubcategoryDropdown option:selected').text();
             var RemarksValue = $('#txtremarks').val();
             var TicketDescription = $('#txtremarks').val();
             var TicketPriority = $('#PriorityDropdown').val();
@@ -346,7 +213,7 @@
             var UserEmail = $('#regionContainer').find('#useremail option:selected').text();
             // var TrackingNO = @ViewData["TrackingNumber"];
 
-           
+
 
             var name = $('#txtname').val();
             var contact = $('#txtcontactno').val();
@@ -358,18 +225,6 @@
 
 
 
-            // if (tickettypeValue === '') {
-            //     $('#TicketTypeDropdownError').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#TicketTypeDropdownError').hide();
-            // }
-            // if (UserEmail === '') {
-            //     $('#emailerror').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#emailerror').hide();
-            // }
             if (categoryValue === '') {
                 $('#categoryDropdownError').show();
                 return false; // Prevent form submission if barcode is not selected
@@ -383,53 +238,14 @@
                 $('#subcategoryDropdownError').hide();
             }
 
-            
-            // if (TicketPriority === '') {
-            //     $('#priorityError').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#priorityError').hide();
-            // }
-            // if (City === '') {
-            //     $('#cityError').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#cityError').hide();
-            // }
-            //if (barcodeValue === '') {
-            //    $('#barcodeError').show();
-            //    return false; // Prevent form submission if barcode is not selected
-            //}
-            //else {
-            //    $('#barcodeError').hide();
-            //}
+            if (infosubcatagoryid === '0') {
+                $('#2subcategoryDropdownError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#2subcategoryDropdownError').hide();
+            }
 
-            // if (name === '') {
-            //     $('#nameError').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#nameError').hide();
-            // }
-            // if (contact === '') {
-            //     $('#contactError').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
 
-            //     contact = "92" + contact.replace(/-/g, "").replace(/^0+/, "");
-
-            //     var pattern = /^92\d{10}$/;
-            //     if (pattern.test(contact)) {
-            //         // Valid contact number
-            //         console.log('Contact number is valid.');
-            //         $('#contactErrorvalidation').hide();
-            //     } else {
-            //         // Invalid contact number
-            //         console.log('Contact number is invalid. Please enter a 12-digit number starting with 92.');
-            //         $('#contactErrorvalidation').show();
-            //         return false;
-            //     }
-            //     $('#contactError').hide();
-            // }
 
 
             if (RemarksValue === '') {
@@ -448,7 +264,9 @@
                 tickettype: $('#TicketTypeDropdown').val(),
                 barcode: $('#BarcodeDropdown').val(),
                 ticketsubcatagory: $('#subcategoryContainer').find('#SubcategoryDropdown').val(),
+                infosubcatagoryid: $('#2subcategoryContainer').find('#infoSubcategoryDropdown').val(),
                 ticketsubcatagoryName: ticketsubcatagoryName,
+                infosubcatagoryName: infosubcatagoryName,
                 name: $('#txtname').val(),
                 contact: '',
                 Gender: $('#ddgender').val(),
@@ -497,28 +315,9 @@
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
-                        // var ticketno = @ViewData["TicketNo"];
-                        // var ticketno = $('#tracking').val();
-
-                        // Construct the URL with the tracking number as a query parameter
-                     //   var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
-
-
-                        // Redirect to the new URL same tab
-                       // window.location.href = url;
-
-                        // Open the new view in a new window/tab
-                        //window.open(url, '_blank');
-                        // $('#TicketTypeDropdown').val(''),
-                            $('#categoryDropdown').val(''),
-                            // $('#PriorityDropdown').val(''),
-                            // $('#CityDropdown').val(''),
-                            // $('#BarcodeDropdown').val(''),
-                            // $('#ddgender').val(''),
-
-                            // $('#chksendsms').val(''),
-                            // $('#txtname').val(''),
-                            // $('#txtcontactno').val(''),
+                     
+                        $('#categoryDropdown').val(''),
+                           
                             $('#txtremarks').val('')
                     }
                     else {

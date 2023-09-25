@@ -1419,6 +1419,59 @@ namespace PLIC_Web_Poratal.Controllers
                 throw ex;
             }
         }
+
+
+
+        public ActionResult Get2SubcategoriesInfo(string subcategory)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_SubCategory_By_ID_Info", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    command1.Parameters.AddWithValue("@subcategory_Id", subcategory);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        InfoSubcategory = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_SubCategoryInfo", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         public ActionResult GetCities(string ticketstatus)
         {
 
@@ -2160,7 +2213,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                                     textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + createTicketModel.Remarks + "<tr><td> </table> \n" +
                                             "</br><table> <tr><td>\n" +
-                                            "Kindly Login Care Connect Portal URL. https://localhost:44371/ </br></br></td></tr>\n" +
+                                            "Kindly Login Care Connect Portal URL. http://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
 
                                            "<tr><td>\n" +
                                            "Best regards,</br> </td></tr>\n" +
@@ -2766,6 +2819,66 @@ namespace PLIC_Web_Poratal.Controllers
                 return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
             }
         }
+        [HttpPost]
+        public ActionResult GetCRMReport(CreateTicketModel createTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("SP_CRM_Report", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@CnsgNo", createTicketModel.cgnno);
+                        cmd.Parameters.AddWithValue("@RoleID", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@TicketID", createTicketModel.ticketid);
+                        cmd.Parameters.AddWithValue("@Barcode", createTicketModel.barcode);
+                        cmd.Parameters.AddWithValue("@CategoryID", createTicketModel.ticketcatagory);
+
+                        cmd.Parameters.AddWithValue("@CityID", null);
+                        cmd.Parameters.AddWithValue("@Origin", createTicketModel.Origin);
+                        cmd.Parameters.AddWithValue("@Destination", createTicketModel.Destination);
+                        cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
+                        cmd.Parameters.AddWithValue("@CreatedFrom", createTicketModel.datefrom);
+                        cmd.Parameters.AddWithValue("@CreatedTo", createTicketModel.dateto);
+                        cmd.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("LoginId"));
+
+                        conn.Close();
+                        conn.Open();
+                        // Execute the stored procedure and retrieve the results into a DataTable
+                        DataSet ds = new DataSet();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        conn.Close();
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            CRMReportDetail = ds,
+                        };
+
+                        ViewBag.TrackingData = ds;
+                        return PartialView("_CRMReportDetail", model);
+
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
+            }
+        }
+
 
 
 
@@ -3532,7 +3645,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                     textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + EmailTicketModel.remarks + "<tr><td> </table> \n" +
                             "</br><table> <tr><td>\n" +
-                            "Kindly Login Care Connect Portal URL. https://localhost:44371/ </br></br></td></tr>\n" +
+                            "Kindly Login Care Connect Portal URL. http://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
 
                            "<tr><td>\n" +
                            "Best regards,</br> </td></tr>\n" +
@@ -3902,6 +4015,7 @@ namespace PLIC_Web_Poratal.Controllers
                         return Json(new { success = false, message = "Remarks field is Empty." });
                     }
                     string pattern = @"^92\d{10}$";
+
 
 
 

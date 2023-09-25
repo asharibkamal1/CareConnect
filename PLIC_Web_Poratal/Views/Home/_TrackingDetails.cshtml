@@ -392,6 +392,22 @@
             $(this).css('background-color', barcodeColors[barcodeValue]);
         });
 
+        // Iterate through each row in the table
+        $('#hdstatusTable tbody tr').each(function () {
+            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+            // Check if this barcode value has been encountered before
+            if (barcodeColors[barcodeValue] === undefined) {
+                // If not encountered before, generate a random color and store it
+                barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                    barcodeCell.addClass('highlighted'); *@
+
+                }
+
+            // Apply the background color to highlight rows with the same barcode value
+            $(this).css('background-color', barcodeColors[barcodeValue]);
+        });
 
 
       
@@ -491,29 +507,32 @@
             scrollY: '400px', // Specify the desired height of the scrollable area
             scrollCollapse: true,
             ordering: false,
+            pageLength: 100,
+
             language: {
                 paginate: {
-                    first: '',
-                    previous: '',
-                    next: '',
-                    last: ''
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
                 }
-            },
-            dom: 'lfrt' // 'lrtip' Hide search box and page number
+            }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
         });
         $('#hdstatusTable').DataTable({
             scrollX: '400px',
             scrollY: '400px', // Specify the desired height of the scrollable area
             scrollCollapse: true,
-            language: {
+            pageLength: 100,
+            ordering: false,
+             language: {
                 paginate: {
-                    first: '',
-                    previous: '',
-                    next: '',
-                    last: ''
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
                 }
-            }, dom: 'lfrt' // 'lrtip' Hide search box and page number
+            }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
         });
         $(document).on('click', '.detailButton', function () {
