@@ -1437,7 +1437,8 @@ namespace PLIC_Web_Poratal.Controllers
 
                 {
 
-                    conn1.Open();
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
 
 
                     SqlCommand command1 = new SqlCommand("sp_careconnect_Get_SubCategory_By_ID_Info", conn1);
@@ -4252,7 +4253,7 @@ namespace PLIC_Web_Poratal.Controllers
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient("mail.daewoofastex.pk");
 
-                mail.From = new MailAddress("helpdesk@daewoofastex.pk");
+                mail.From = new MailAddress("careconnect@daewoofastex.pk");
                 mail.To.Add(toEmail); // Set the 'To' email address
                 mail.CC.Add("asharib.kamal@daewoo.com.pk"); // Set the 'CC' email address
                 mail.CC.Add("amir.saleem@daewoo.com.pk"); // Set the 'CC' email address
@@ -4268,7 +4269,7 @@ namespace PLIC_Web_Poratal.Controllers
                 SmtpServer.Timeout = int.MaxValue;
                 //SmtpServer.Port = 25;
                 SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential("helpdesk@daewoofastex.pk", "Wateen@786786");
+                SmtpServer.Credentials = new System.Net.NetworkCredential("careconnect@daewoofastex.pk", "Wateen@786786");
                 SmtpServer.EnableSsl = false;
 
                 SmtpServer.Send(mail); // Send the email
