@@ -63,7 +63,7 @@
 
                 <div id="subcategoryContainer">
                 </div>
-            </div>F
+            </div>
 
             <div class="col-md-3 col-sm-3">
                 <label for="TicketTypeDropdown">Ticket Type:</label>
@@ -77,7 +77,7 @@
                 </select>
                 <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
             </div>
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3 divhide" >
                 <label for="TicketTypeDropdown">Ticket Priority:</label>
                 <select class="form-control" id="PriorityDropdown" name="priority ">
                     <option value="">Select Priority</option>
@@ -94,7 +94,7 @@
         </div>
 
 
-        <div class="row">
+        <div class="row divhide">
 
             <div class="col-md-2 col-sm-2">
 
@@ -148,7 +148,7 @@
         </div>
 
 
-        <div class="row">
+        <div class="row divhide">
             <div class="col-md-4">
                 <div class="radio-group">
                     <label>
@@ -184,7 +184,7 @@
 
 
         <div class="row">
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3 divhide">
                 <div class="form-group">
                     <label for="TicketTypeDropdown">Name:</label>
                     <input type="text" id="txtname" name="name" value="@Model.BookingDetail.Tables[2].Rows[0]["Person:"]" class="form-control" placeholder="Name">
@@ -192,7 +192,7 @@
                 </div>
 
             </div>
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3 divhide">
                 <div class="form-group">
                     <label for="TicketTypeDropdown">Contact NO:</label>
                     <input type="text" id="txtcontactno" name="contact" value="@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]" class="form-control" placeholder="Contact No">
@@ -203,7 +203,7 @@
 
             </div>
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3 divhide">
                 <label for="TicketTypeDropdown">Gender:</label>
                 <select name="Gender" id="ddgender" class="form-control">
                     <option value="male">Male</option>
@@ -213,7 +213,7 @@
 
 
             </div>
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3 ">
                 <div class="form-group">
                     <label for="TicketTypeDropdown">Remarks:</label>
 
@@ -239,13 +239,26 @@
 
 <script>
     $(document).ready(function () {
-
+        debugger
         // Event listener for category selection
         $('#categoryDropdown').change(function () {
             var selectedCategory = $(this).val();
 
             // Clear the subcategory container
             $('#subcategoryContainer').html('');
+
+
+            if (selectedCategory=='6'){
+                $('.divhide').hide();
+                
+
+                // Clear the selected value of the dropdown
+               
+            } else {
+                // Show the div and dropdown for other values
+                $('.divhide').show();
+            
+            }
 
             debugger
             // Make AJAX call to fetch subcategories based on the selected category
@@ -387,6 +400,72 @@
             var TicketCategoryName = selectedOption.text;
             debugger
             var pattern = /^92\d{10}$/;
+            debugger
+            if (categoryValue == '6') {
+                var barcodeValue = $('#BarcodeDropdown').val('');
+                var barcodecategoryname = '';
+                var RemarksValue = $('#txtremarks').val('');
+                var TicketPriority = $('#PriorityDropdown').val('');
+
+
+                var City = $('#CityDropdown').val('');
+                var region = '';
+
+                var UserEmail = '';
+
+                var name = $('#txtname').val('');
+                var contact = $('#txtcontactno').val('');
+            }
+            else{
+                if (UserEmail === '') {
+                    $('#emailerror').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#emailerror').hide();
+                }
+
+                if (TicketPriority === '') {
+                    $('#priorityError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#priorityError').hide();
+                }
+                if (City === '') {
+                    $('#cityError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#cityError').hide();
+                }
+                if (name === '') {
+                    $('#nameError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#nameError').hide();
+                }
+                if (contact === '') {
+                    $('#contactError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+
+                    contact = "92" + contact.replace(/-/g, "").replace(/^0+/, "");
+
+                    var pattern = /^92\d{10}$/;
+                    if (pattern.test(contact)) {
+                        // Valid contact number
+                        console.log('Contact number is valid.');
+                        $('#contactErrorvalidation').hide();
+                    } else {
+                        // Invalid contact number
+                        console.log('Contact number is invalid. Please enter a 12-digit number starting with 92.');
+                        $('#contactErrorvalidation').show();
+                        return false;
+                    }
+                    $('#contactError').hide();
+                }
+
+            }
+
+
 
 
 
@@ -396,12 +475,7 @@
             } else {
                 $('#TicketTypeDropdownError').hide();
             }
-            if (UserEmail === '') {
-                $('#emailerror').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#emailerror').hide();
-            }
+            
             // if (barcodecategoryname === '') {
             //     $('#barcodcateerror').show();
             //     return false; // Prevent form submission if barcode is not selected
@@ -415,18 +489,7 @@
             } else {
                 $('#categoryDropdownError').hide();
             }
-            if (TicketPriority === '') {
-                $('#priorityError').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#priorityError').hide();
-            }
-            if (City === '') {
-                $('#cityError').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#cityError').hide();
-            }
+            
             //if (barcodeValue === '') {
             //    $('#barcodeError').show();
             //    return false; // Prevent form submission if barcode is not selected
@@ -435,32 +498,7 @@
             //    $('#barcodeError').hide();
             //}
 
-            if (name === '') {
-                $('#nameError').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#nameError').hide();
-            }
-            if (contact === '') {
-                $('#contactError').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-
-                contact = "92" + contact.replace(/-/g, "").replace(/^0+/, "");
-
-                var pattern = /^92\d{10}$/;
-                if (pattern.test(contact)) {
-                    // Valid contact number
-                    console.log('Contact number is valid.');
-                    $('#contactErrorvalidation').hide();
-                } else {
-                    // Invalid contact number
-                    console.log('Contact number is invalid. Please enter a 12-digit number starting with 92.');
-                    $('#contactErrorvalidation').show();
-                    return false;
-                }
-                $('#contactError').hide();
-            }
+        
 
 
             if (RemarksValue === '') {
