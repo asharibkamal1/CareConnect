@@ -2413,6 +2413,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@Barcode", createTicketModel.barcode);
                         cmd.Parameters.AddWithValue("@ticketcategory", createTicketModel.ticketcatagory);
                         cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
+                        cmd.Parameters.AddWithValue("@infosubcategory", createTicketModel.infosubcatagoryName);
 
                         cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
                         cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
