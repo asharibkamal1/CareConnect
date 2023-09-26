@@ -77,7 +77,7 @@
                 </select>
                 <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
             </div>
-            <div class="col-md-3 col-sm-3 divhide" >
+            <div class="col-md-3 col-sm-3 divhide">
                 <label for="TicketTypeDropdown">Ticket Priority:</label>
                 <select class="form-control" id="PriorityDropdown" name="priority ">
                     <option value="">Select Priority</option>
@@ -248,16 +248,16 @@
             $('#subcategoryContainer').html('');
 
 
-            if (selectedCategory=='6'){
+            if (selectedCategory == '6') {
                 $('.divhide').hide();
-                
+
 
                 // Clear the selected value of the dropdown
-               
+
             } else {
                 // Show the div and dropdown for other values
                 $('.divhide').show();
-            
+
             }
 
             debugger
@@ -306,7 +306,7 @@
             debugger
             var selectedBarcode = $(this).val();
 
-            if (selectedBarcode==""){
+            if (selectedBarcode == "") {
                 $('#categorycontainer').html('');
                 return;
             }
@@ -367,7 +367,7 @@
         $('#btnCreateTicket').click(function () {
             debugger
 
-          
+            var Gender = $('#ddgender').val();
             var barcodeValue = $('#BarcodeDropdown').val();
             var tickettypeValue = $('#TicketTypeDropdown').val();
             var categoryValue = $('#categoryDropdown').val();
@@ -402,21 +402,28 @@
             var pattern = /^92\d{10}$/;
             debugger
             if (categoryValue == '6') {
-                var barcodeValue = $('#BarcodeDropdown').val('');
+                var Gender = undefined;
+                var barcode = undefined;
+                var tickettypeValue = undefined;
+
                 var barcodecategoryname = '';
-                var RemarksValue = $('#txtremarks').val('');
-                var TicketPriority = $('#PriorityDropdown').val('');
+                
+                var TicketPriority = undefined;
 
 
-                var City = $('#CityDropdown').val('');
+                var City = undefined;
                 var region = '';
 
                 var UserEmail = '';
 
-                var name = $('#txtname').val('');
-                var contact = $('#txtcontactno').val('');
+                var name = '';
+                var contact = '';
+                var RemarksValue = $('#txtremarks').val();
             }
-            else{
+            else {
+
+                var tickettypeValue = $('#TicketTypeDropdown').val();
+                var Gender = $('#ddgender').val();
                 if (UserEmail === '') {
                     $('#emailerror').show();
                     return false; // Prevent form submission if barcode is not selected
@@ -475,21 +482,21 @@
             } else {
                 $('#TicketTypeDropdownError').hide();
             }
-            
+
             // if (barcodecategoryname === '') {
             //     $('#barcodcateerror').show();
             //     return false; // Prevent form submission if barcode is not selected
             // } else {
             //     $('#barcodcateerror').hide();
             // }
-            
+
             if (categoryValue === '') {
                 $('#categoryDropdownError').show();
                 return false; // Prevent form submission if barcode is not selected
             } else {
                 $('#categoryDropdownError').hide();
             }
-            
+
             //if (barcodeValue === '') {
             //    $('#barcodeError').show();
             //    return false; // Prevent form submission if barcode is not selected
@@ -498,7 +505,7 @@
             //    $('#barcodeError').hide();
             //}
 
-        
+
 
 
             if (RemarksValue === '') {
@@ -508,24 +515,27 @@
                 $('#RemarksError').hide();
             }
             const checkbox = document.getElementById("chksendsms");
-
+          
             // Get the value (true or false) from the checkbox
             const isChecked = checkbox.checked;
+
+          
+
             debugger
             var ticketData = {
 
-                tickettype: $('#TicketTypeDropdown').val(),
-                barcode: $('#BarcodeDropdown').val(),
+                tickettype:  tickettypeValue,
+                barcode: barcode,
                 ticketsubcatagory: $('#subcategoryContainer').find('#SubcategoryDropdown').val(),
                 ticketsubcatagoryName: ticketsubcatagoryName,
-                ticketsubcatagoryName: ticketsubcatagoryName,
+                //  ticketsubcatagoryName: ticketsubcatagoryName,
                 barcodecategoryname: barcodecategoryname,
-                name: $('#txtname').val(),
+                name: name,
                 contact: contact,
-                Gender: $('#ddgender').val(),
+                Gender: Gender,
                 issendsms: isChecked,
-                priority: $('#PriorityDropdown').val(),
-                city: $('#CityDropdown').val(),
+                priority: TicketPriority,
+                city: City,
                 region: region,
                 UserEmail: UserEmail,
                 cgnno: @ViewData["TrackingNumber"],
@@ -553,7 +563,7 @@
                 Quantity: $('#Quantity').val(),
                 ticketcatagory: $('#categoryDropdown').val(),
                 ticketcatagoryName: TicketCategoryName,
-                Remarks: $('#txtremarks').val(),
+                Remarks: RemarksValue,
 
             };
             debugger

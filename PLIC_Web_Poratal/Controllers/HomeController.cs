@@ -2023,7 +2023,7 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("InsertTicket_ASH", conn);
+                        SqlCommand cmd = new SqlCommand("InsertTicket", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
                         cmd.Transaction = transaction;
@@ -2039,8 +2039,16 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@BarcodeCategory", createTicketModel.barcodecategoryname);
                         cmd.Parameters.AddWithValue("@ticketcategory", createTicketModel.ticketcatagory);
                         cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
+                        if (createTicketModel.ticketcatagory==6)
+                        {
+                            cmd.Parameters.AddWithValue("@SMSAllow", false);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
+                        }
 
-                        cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
+                        
                         cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
                         cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
                         cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
