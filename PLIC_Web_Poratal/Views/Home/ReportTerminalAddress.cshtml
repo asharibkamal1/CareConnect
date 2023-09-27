@@ -1,0 +1,235 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+@Html.ValidationSummary(true)
+@{
+    ViewData["Title"] = "Terminal Address Report";
+}
+<h1 id="reportTitle">Terminal / franchises / Agent Address</h1>
+<br />
+<div class="row">
+
+    <div class="col-lg-1 col-md-1 col-sm-1">
+        <label for="terminalDropdown" class="text-secondary font-weight-bold">Terminal:</label>
+
+    </div>
+    <div class="col-md-3 col-sm-3">
+        <select class="form-control" id="terminalDropdown" name="terminal ">
+            <option value="">Select Terminal</option>
+            @foreach (System.Data.DataRow catRow in Model.AllTerminals.Tables[0].Rows)
+            {
+                <option value="@catRow["Terminal_Id"]">@catRow["Terminal_Name"]</option>
+            }
+        </select>
+        <span class="text-danger" id="terminalDropdownError" style="display: none;">Please Select Terminal.</span>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1">
+        <label for="subterminalDropdown" class="text-secondary font-weight-bold">Sub-Terminal:</label>
+
+    </div>
+
+
+    <div id="subterminalContainer">
+    </div>
+
+    <div class="col-md-3 col-sm-3">
+
+        <label class="col-md-2 col-sm-2">
+            <input type="checkbox" id="chkAGT" name="AGT" />
+            <span></span>AGENT
+        </label>
+
+        <label class="col-md-1 col-sm-1">
+            <input type="checkbox" id="chkFRN" name="FRN" />
+            <span></span>FRN
+        </label>
+
+
+    </div>
+
+
+</div>
+<div><br /></div>
+
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <button class="btn btn-success float-left" id="btnSearch">Search</button>
+    </div>
+
+</div>
+
+
+
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div id="TermianlAddressReportContainer">
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        $('#chkAGT').change(function () {
+            debugger
+
+            var selectedTerminal = $('#terminalDropdown').val();
+            if ($(this).is(':checked')) {
+                debugger
+                $('#subterminalContainer').html('');
+                // Checkbox is checked, make an AJAX request
+                $.ajax({
+                    url: '/Home/GetSubtermianlAGT',
+                    type: 'GET', // or 'POST' depending on your action
+                    data: { terminalid: selectedTerminal },
+                    success: function (result) {
+                        debugger
+                        $('#subterminalContainer').html(result);
+                        // Handle the success response from the server
+                        console.log('Action was called successfully.');
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Error', 'Please Select Valid Terminal: ' + error, 'error');
+                    }
+                });
+            }
+        });
+
+        // Similar code for the 'chkFRN' checkbox if needed
+        $('#chkFRN').change(function () {
+            debugger
+            var selectedTerminal = $('#terminalDropdown').val();
+            if ($(this).is(':checked')) {
+                debugger
+                $('#subterminalContainer').html('');
+
+                // Checkbox is checked, make an AJAX request
+                $.ajax({
+                    url: '/Home/GetSubtermianlFRN',
+                    type: 'GET', // or 'POST' depending on your action
+                    data: { terminalid: selectedTerminal },
+                    success: function (result) {
+                        debugger
+                        // Handle the success response from the server
+                        $('#subterminalContainer').html(result);
+                        console.log('Action was called successfully.');
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire('Error', 'Please Select Valid Terminal: ' + error, 'error');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        // Event listener for category selection
+        $('#terminalDropdown').change(function () {
+            var selectedTerminal = $(this).val();
+            debugger
+            // Clear the subcategory container
+            $('#subterminalContainer').html('');
+
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetSubtermianl',
+                type: 'POST',
+                data: { terminalid: selectedTerminal },
+                success: function (result) {
+                    debugger
+                    // var subcatagoryid = '@ViewBag.SubCatagory';
+                    // Render the subcategory dropdown
+                    $('#subterminalContainer').html(result);
+                    // Set the first option as selected by default
+
+                    debugger
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Terminal: ' + error, 'error');
+                }
+            });
+        });
+
+
+    });
+</script>
+
+<script>
+    $('#btnSearch').click(function () {
+        debugger
+        var terminalvalue = $('#terminalDropdown').val();
+        var subterminalValue = $('#subterminalContainer').find('#SubtermianlDropdown').val();
+
+
+        debugger
+        if (terminalvalue == "") {
+            return;
+
+        } if (subterminalValue == "") {
+            return;
+
+        }
+        debugger
+        const chkAGT = document.getElementById("chkAGT");
+        const chkFRN = document.getElementById("chkFRN");
+
+        // Check if the checkboxes are checked
+        const isAGTChecked = chkAGT.checked;
+        const isFRNChecked = chkFRN.checked;
+
+        // You can now use isAGTChecked and isFRNChecked in your code
+        if (isAGTChecked) {
+            console.log("AGENT checkbox is checked.");
+        } else {
+            console.log("AGENT checkbox is not checked.");
+        }
+
+        if (isFRNChecked) {
+            console.log("FRN checkbox is checked.");
+        } else {
+            console.log("FRN checkbox is not checked.");
+        }
+
+        debugger
+        var terminalData = {
+
+            terminal: terminalvalue,
+            subterminal: subterminalValue,
+            isAGTChecked: isAGTChecked,
+            isFRNChecked: isFRNChecked,
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/GetTerminalAddressReport',
+            type: 'GET',
+            data: terminalData,
+            success: function (result) {
+                debugger
+                // Check if the ticket was created successfully
+
+                debugger;
+                // Show a success message using SweetAlert
+                //Swal.fire('Success', response.message, 'success');
+
+                $('#TermianlAddressReportContainer').html(result);
+                // $('#terminalDropdown').val(''),
+                //     $('#subterminalContainer').find('#SubtermianlDropdown').val('')
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Searching Terminal Address: ' + error, 'error');
+            }
+        });
+    });
+</script>
+
+
+
+
+
+

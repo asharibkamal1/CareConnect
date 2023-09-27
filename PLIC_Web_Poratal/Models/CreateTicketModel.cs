@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.FlowAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,6 +57,10 @@ namespace CareConnect.Models
         public string datefrom { get; set; }
         public string dateto { get; set; }
         public string UserEmail { get; set; }
+        public int terminal { get; set; }
+        public int subterminal { get; set; }
+        public bool isAGTChecked { get; set; }
+        public bool isFRNChecked { get; set; }
      
         
 

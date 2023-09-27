@@ -51,34 +51,55 @@
 
 
 <div class="dashboard">
-    <div class="box central">
-        <h4>Central</h4>
-        <span class="count" id="central-count"></span>
+
+    <div class="box total">
+        <h4>Total Tickets</h4>
+        <span class="count" id="total-count"></span>
+
+    </div>
+    <div class="box complaints">
+        <h4>Complaints</h4>
+        <span class="count" id="total-complaints"></span>
+        <br />
+        <span class="count" id="percent-complaints"></span>
+    </div>
+    <div class="box servicerequest">
+        <h4>Service Request</h4>
+        <span class="count" id="total-servicerequest"></span>
+        <br />
+        <span class="count" id="percent-servicerequest"></span>
+    </div>
+    <div class="box info">
+        <h4>Info</h4>
+        <span class="count" id="total-info"></span>
+        <br />
+        <span class="count" id="percent-info"></span>
+    </div>
+    @* <div class="box central">
+    <h4>Central</h4>
+    <span class="count" id="central-count"></span>
     </div>
     <div class="box north">
-        <h4>North</h4>
-        <span class="count" id="north-count"></span>
+    <h4>North</h4>
+    <span class="count" id="north-count"></span>
     </div>
     <div class="box south">
-        <h4>South</h4>
-        <span class="count" id="south-count"></span>
-    </div>
-    <div class="box total">
-        <h4>Total Count</h4>
-        <span class="count" id="total-count"></span>
-    </div>
-    <div class="box in-progress">
-        <h4>In Progress</h4>
-        <span class="count" id="progress-count"></span>
+    <h4>South</h4>
+    <span class="count" id="south-count"></span>
+    </div> *@
+
+    @*    <div class="box in-progress">
+    <h4>In Progress</h4>
+    <span class="count" id="progress-count"></span>
     </div>
     <div class="box opscloded">
-        <h4>OPS Closed</h4>
-        <span class="count" id="opsclosed-count"></span>
+    <h4>OPS Closed</h4>
+    <span class="count" id="opsclosed-count"></span>
     </div>
     <div class="box closed">
-        <h4>Closed</h4>
-        <span class="count" id="closed-count"></span>
-    </div>
+    <h4>Closed</h4>
+    <span class="count" id="closed-count"></span>
+    </div> *@
 </div>
 
 <br />
@@ -251,7 +272,7 @@
         // Set the default date values in the input fields
         document.getElementById('datefrom').value = formattedDate;
         document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
-        debugger 
+        debugger
         $('#btnChart').click(function () {
             debugger
             var datefrom = $('#datefrom').val();
@@ -942,13 +963,24 @@
                 // var chartDataproducts = data.chartDataproducts;
 
                 debugger
-                chartdataregion.forEach(item => {
-                    if (item.region_name === 'CENTRAL') {
-                        document.getElementById('central-count').textContent = item.percentage;
-                    } else if (item.region_name === 'NORTH') {
-                        document.getElementById('north-count').textContent = item.percentage;
-                    } else if (item.region_name === 'SOUTH') {
-                        document.getElementById('south-count').textContent = item.percentage;
+                // chartdataregion.forEach(item => {
+                //     if (item.region_name === 'Complaints') {
+                //         document.getElementById('percent-complaints').textContent = item.percentage;
+                //     } else if (item.region_name === 'Info') {
+                //         document.getElementById('percent-info').textContent = item.percentage;
+                //     } else if (item.region_name === 'Service Request') {
+                //         document.getElementById('percent-servicerequest').textContent = item.percentage;
+                //     }
+                // });
+
+
+                chartDataall.forEach(item => {
+                    if (item.categoryDescription === 'Complaints') {
+                        document.getElementById('total-complaints').textContent = item.totalTicket;
+                    } else if (item.categoryDescription === 'Info') {
+                        document.getElementById('total-info').textContent = item.totalTicket;
+                    } else if (item.categoryDescription === 'Service Request') {
+                        document.getElementById('total-servicerequest').textContent = item.totalTicket;
                     }
                 });
                 debugger
@@ -1009,7 +1041,7 @@
                     // Handle the case where chartdataclosed is empty
                     $('#total-count').text('N/A'); // You can display a message like "N/A"
                 }
-                
+
 
 
                 const commonBarColors = [
@@ -1059,116 +1091,116 @@
 
 
                 // Add cases for other chart types you want to support
-                        /*  --chart 1 ALL---*/
-                        // myChartall = new Chart(ctxall, {
-                        //     type: 'pie',
-                        //     data: {
-                        //         labels: chartDataall.map(item => item.categoryDescription),
-                        //         datasets: [{
-                        //             label: 'Total Tickets',
-                        //             data: chartDataall.map(item => item.totalTicket),
-                        //             backgroundColor: commonBarColors[0], // Bar fill color
-                        //             borderColor: commonBorderColors[0], // Bar border color
-                        //             borderWidth: 2,
-                        //             barPercentage: 0.7,
-                        //             minBarLength: 5,
-                        //         }]
-                        //     },
-                        //     options: {
-                        //         scales: {
-                        //             y: {
-                        //                 beginAtZero: true,
-                        //                 ticks: {
-                        //                     stepSize: 1, // Customize the tick interval on the y-axis
-                        //                 }
-                        //             }
-                        //         },
-                        //         animation: {
-                        //             duration: 1000,
-                        //             easing: 'easeOutQuart',
-                        //             delay: (context) => context.dataIndex * 50,
-                        //             from: 'bottom',
-                        //         },
-                        //         plugins: {
-                        //             legend: {
-                        //                 display: true,
-                        //                 labels: {
-                        //                     usePointStyle: true,
-                        //                 }
-                        //             },
-                        //             title: {
-                        //                 display: true,
-                        //                 text: 'Total Tickets by Category', // Chart title
-                        //                 fontSize: 16,
-                        //                 padding: {
-                        //                     top: 10,
-                        //                     bottom: 10,
-                        //                 },
-                        //             }
-                        //         }
-                        //     }
-                        // });
-                        /*     ---chart 2  Complaints-----*/
-                        myChartcomplaints = new Chart(ctxcomplaints, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDatacomplaints.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatacomplaints.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                    backgroundColor: commonBarColors[1], // Bar fill color
-                                    borderColor: commonBorderColors[1], // Bar border color
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
+                /*  --chart 1 ALL---*/
+                // myChartall = new Chart(ctxall, {
+                //     type: 'pie',
+                //     data: {
+                //         labels: chartDataall.map(item => item.categoryDescription),
+                //         datasets: [{
+                //             label: 'Total Tickets',
+                //             data: chartDataall.map(item => item.totalTicket),
+                //             backgroundColor: commonBarColors[0], // Bar fill color
+                //             borderColor: commonBorderColors[0], // Bar border color
+                //             borderWidth: 2,
+                //             barPercentage: 0.7,
+                //             minBarLength: 5,
+                //         }]
+                //     },
+                //     options: {
+                //         scales: {
+                //             y: {
+                //                 beginAtZero: true,
+                //                 ticks: {
+                //                     stepSize: 1, // Customize the tick interval on the y-axis
+                //                 }
+                //             }
+                //         },
+                //         animation: {
+                //             duration: 1000,
+                //             easing: 'easeOutQuart',
+                //             delay: (context) => context.dataIndex * 50,
+                //             from: 'bottom',
+                //         },
+                //         plugins: {
+                //             legend: {
+                //                 display: true,
+                //                 labels: {
+                //                     usePointStyle: true,
+                //                 }
+                //             },
+                //             title: {
+                //                 display: true,
+                //                 text: 'Total Tickets by Category', // Chart title
+                //                 fontSize: 16,
+                //                 padding: {
+                //                     top: 10,
+                //                     bottom: 10,
+                //                 },
+                //             }
+                //         }
+                //     }
+                // });
+                /*     ---chart 2  Complaints-----*/
+                myChartcomplaints = new Chart(ctxcomplaints, {
+                    type: 'bar',
+                    data: {
+                        labels: chartDatacomplaints.map(item => item.issueTypeDescription),
+                        datasets: [{
+                            label: 'Total Tickets',
+                            data: chartDatacomplaints.map(item => item.totalTicket),
+                            borderWidth: 1,
+                            backgroundColor: commonBarColors[1], // Bar fill color
+                            borderColor: commonBorderColors[1], // Bar border color
+                            barPercentage: 0.5,
+                            minBarLength: 5,
+                        }]
+                    },
+                    options: {
+                        //indexAxis: 'y',
+                        scales: {
+                            y: {
+                                ticks: {
+                                    stepSize: 1, // Customize the tick interval on the y-axis
+                                },
+                                beginAtZero: true
                             }
-                        });
-                        debugger
-            
-
-               
-                        // /*----chart 1 all pie  -----*/
-
-                        // myChartall = new Chart(ctxall, {
-                        //     type: 'pie',
-                        //     data: {
-                        //         labels: chartDataall.map(item => item.categoryDescription),
-                        //         datasets: [{
-                        //             label: 'Total Tickets',
-                        //             data: chartDataall.map(item => item.totalTicket),
-                        //             borderWidth: 1,
-                        //         }]
-                        //     },
-                        //     options: {
-                        //         responsive: true, // Enable resizing of the chart to fit the container
-                        //         maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                        //         width: 800, // Set the custom width for the pie chart
-                        //         height: 400, // Set the custom height for the pie chart
-                        //         //indexAxis: 'y',
-
-                        //     }
-                        // });
-      
+                        }
+                    }
+                });
+                debugger
 
 
-                   
 
-                  
-                    // Add cases for other chart types you want to support
-              
-               
+                // /*----chart 1 all pie  -----*/
+
+                // myChartall = new Chart(ctxall, {
+                //     type: 'pie',
+                //     data: {
+                //         labels: chartDataall.map(item => item.categoryDescription),
+                //         datasets: [{
+                //             label: 'Total Tickets',
+                //             data: chartDataall.map(item => item.totalTicket),
+                //             borderWidth: 1,
+                //         }]
+                //     },
+                //     options: {
+                //         responsive: true, // Enable resizing of the chart to fit the container
+                //         maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+                //         width: 800, // Set the custom width for the pie chart
+                //         height: 400, // Set the custom height for the pie chart
+                //         //indexAxis: 'y',
+
+                //     }
+                // });
+
+
+
+
+
+
+                // Add cases for other chart types you want to support
+
+
             })
             .catch(error => {
                 debugger
@@ -1188,8 +1220,8 @@
 
 
 
-    // Call the updateChart function when the page loads to display the default chart
-    //document.addEventListener('DOMContentLoaded', updateChart);
+        // Call the updateChart function when the page loads to display the default chart
+        //document.addEventListener('DOMContentLoaded', updateChart);
 
 
 </script>

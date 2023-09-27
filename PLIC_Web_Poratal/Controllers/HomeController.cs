@@ -433,7 +433,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                                 while (reader.Read())
                                 {
-                                    var region_name = reader["region_name"].ToString();
+                                    var region_name = reader["CategoryDescription"].ToString();
                                     var Percentage = reader["Percentage"].ToString();
 
 
@@ -649,7 +649,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                                 while (reader.Read())
                                 {
-                                    var region_name = reader["region_name"].ToString();
+                                    var region_name = reader["CategoryDescription"].ToString();
                                     var Percentage = reader["Percentage"].ToString();
 
 
@@ -1317,6 +1317,171 @@ namespace PLIC_Web_Poratal.Controllers
                 throw ex;
             }
         }
+
+
+        public ActionResult GetSubtermianl(string terminalid)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    string type = "ALL";
+
+                    command1.Parameters.AddWithValue("@terminal_id", terminalid);
+                    command1.Parameters.AddWithValue("@type", type);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        Sub_Terminal = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_SubTerminal", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult GetSubtermianlFRN(string terminalid)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    string type = "FRN";
+
+
+
+
+                    command1.Parameters.AddWithValue("@terminal_id", terminalid);
+                    command1.Parameters.AddWithValue("@type", type);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        Sub_Terminal = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_SubTerminal", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public ActionResult GetSubtermianlAGT(string terminalid)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+
+
+                {
+
+                    conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    string type = "AGT";
+                   
+
+                    command1.Parameters.AddWithValue("@terminal_id", terminalid);
+                    command1.Parameters.AddWithValue("@type", type);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        Sub_Terminal = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_SubTerminal", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         public ActionResult GetSubcategories2(string category)
         {
 
@@ -1752,6 +1917,68 @@ namespace PLIC_Web_Poratal.Controllers
                         //ViewData["TrackingNumber"] = trackingNumbernew;
                         //return PartialView("_TicketSearchCatagory", model);
                         return View("~/Views/Home/ReportCRM.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
+
+
+
+        public IActionResult ReportTerminalAddress()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+
+                    {
+                        conn1.Open();
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_ALL_Terminal", conn1);
+                        command.CommandType = CommandType.StoredProcedure;
+                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                        //dataAdapter.Fill(dataSet);
+                        dataAdapter1.Fill(dataSet1);
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            AllTerminals = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        //return PartialView("_TicketSearchCatagory", model);
+                        return View("~/Views/Home/ReportTerminalAddress.cshtml", model);
                     }
                 }
                 return RedirectToAction("Login", "Account");
@@ -2890,6 +3117,55 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult GetTerminalAddressReport(CreateTicketModel createTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("SP_careconnect_TerminalAddress_Report", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@terminalID", createTicketModel.terminal);
+                        cmd.Parameters.AddWithValue("@subterminalID", createTicketModel.subterminal);
+                        cmd.Parameters.AddWithValue("@isAGTChecked", createTicketModel.isAGTChecked);
+                        cmd.Parameters.AddWithValue("@isFRNChecked", createTicketModel.isFRNChecked);
+                        conn.Close();
+                        conn.Open();
+                        // Execute the stored procedure and retrieve the results into a DataTable
+                        DataSet ds = new DataSet();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        conn.Close();
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            TerminalAddressReportDS = ds,
+                        };
+
+                        ViewBag.TrackingData = ds;
+                        return PartialView("_TerminalAddressReportDetail", model);
+
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
+            }
+        }
 
 
 

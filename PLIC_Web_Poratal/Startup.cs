@@ -33,8 +33,10 @@ namespace PLIC_Web_Poratal
             services.AddNotyf(config => { config.DurationInSeconds =300; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);//You can set Time
-               // options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the session timeout to 30 minutes
+                options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                // options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the session timeout to 30 minutes
             });
         }
 
