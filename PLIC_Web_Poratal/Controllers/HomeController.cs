@@ -559,12 +559,12 @@ namespace PLIC_Web_Poratal.Controllers
                             conn.Open();
 
 
-                        using (SqlCommand command = new SqlCommand("sp_careconnect_get_dashboard_New", conn))
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_get_dashboard_New_Test", conn))
 
                         {
                             command.CommandType = CommandType.StoredProcedure;
                             command.Parameters.AddWithValue("@datefrom", datefrom);
-                            command.Parameters.AddWithValue("@dateto", dateto);
+                            command.Parameters.AddWithValue("@dateto", dateto);0
                             using (SqlDataReader reader = command.ExecuteReader())
                             {
                                 // Create separate lists for the two charts
@@ -577,6 +577,7 @@ namespace PLIC_Web_Poratal.Controllers
                                 var chartDatatotalcount = new List<ChartData>();
                                 var chartDatainprogress = new List<ChartData>();
                                 var chartDataproducts = new List<ChartData>();
+                                var chartDatacomplaintspie = new List<ChartData>();
                                 var chartDataopsclosed = new List<ChartData>();
                                 var chartDataclosed = new List<ChartData>();
 
@@ -612,37 +613,23 @@ namespace PLIC_Web_Poratal.Controllers
                                     });
                                 }
                                 // Move to the next result set for the second query
-                                reader.NextResult();
-                                // Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
-                                while (reader.Read())
-                                {
-                                    var TotalTicket = (int)reader["TotalTicket"];
-                                    var IssueTypeDescription = reader["IssueTypeDescription"].ToString();
-
-
-                                    chartDataInfo.Add(new ChartData
-                                    {
-                                        TotalTicket = TotalTicket,
-                                        IssueTypeDescription = IssueTypeDescription,
-
-                                    });
-                                }
+                             
                                 // Move to the next result set for the second query
-                                reader.NextResult();
-                                // Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
-                                while (reader.Read())
-                                {
-                                    var TotalTicket = (int)reader["TotalTicket"];
-                                    var IssueTypeDescription = reader["IssueTypeDescription"].ToString();
+                                //reader.NextResult();
+                                //// Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
+                                //while (reader.Read())
+                                //{
+                                //    var TotalTicket = (int)reader["TotalTicket"];
+                                //    var IssueTypeDescription = reader["IssueTypeDescription"].ToString();
 
 
-                                    chartDataServiceRequest.Add(new ChartData
-                                    {
-                                        TotalTicket = TotalTicket,
-                                        IssueTypeDescription = IssueTypeDescription,
+                                //    chartDataServiceRequest.Add(new ChartData
+                                //    {
+                                //        TotalTicket = TotalTicket,
+                                //        IssueTypeDescription = IssueTypeDescription,
 
-                                    });
-                                }
+                                //    });
+                                //}
                                 reader.NextResult();
 
 
@@ -662,21 +649,21 @@ namespace PLIC_Web_Poratal.Controllers
                                 }
 
 
-                                reader.NextResult();
+                                //reader.NextResult();
 
-                                while (reader.Read())
-                                {
-                                    var TotalTicket = (int)reader["TotalTicket"];
-                                    var Ticket_Type = reader["Ticket_Type"].ToString();
+                                //while (reader.Read())
+                                //{
+                                //    var TotalTicket = (int)reader["TotalTicket"];
+                                //    var Ticket_Type = reader["Ticket_Type"].ToString();
 
 
-                                    chartDatatickettype.Add(new ChartData
-                                    {
-                                        TotalTicket = TotalTicket,
-                                        TicketType = Ticket_Type,
+                                //    chartDatatickettype.Add(new ChartData
+                                //    {
+                                //        TotalTicket = TotalTicket,
+                                //        TicketType = Ticket_Type,
 
-                                    });
-                                }
+                                //    });
+                                //}
 
                                 reader.NextResult();
                                 while (reader.Read())
@@ -728,6 +715,25 @@ namespace PLIC_Web_Poratal.Controllers
                                     });
                                 }
 
+
+                                reader.NextResult();
+                                while (reader.Read())
+                                {
+                                    var TotalTicket = (int)reader["TicketCount"];
+                                    var category = reader["MHeading"].ToString();
+
+
+                                    chartDatacomplaintspie.Add(new ChartData
+                                    {
+                                        TotalTicket = TotalTicket,
+                                        category = category,
+
+
+                                    });
+                                }
+
+
+
                                 reader.NextResult();
                                 while (reader.Read())
                                 {
@@ -768,6 +774,7 @@ namespace PLIC_Web_Poratal.Controllers
                                     chartDatatotalcount = chartDatatotalcount,
                                     chartDatainprogress = chartDatainprogress,
                                     chartDataproducts = chartDataproducts,
+                                    chartDatacomplaintspie = chartDatacomplaintspie,
                                     chartDataopsclosed = chartDataopsclosed,
                                     chartDataclosed = chartDataclosed
                                 };
@@ -790,7 +797,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpGet]
-        public ActionResult GetTrackingDetails(string tracking,bool isCheckboxChecked)
+        public ActionResult GetTrackingDetails(string tracking, bool isCheckboxChecked)
         {
 
             try
@@ -818,7 +825,7 @@ namespace PLIC_Web_Poratal.Controllers
                     if (isCheckboxChecked)
 
                     {
-                        
+
 
                         if (conn1.State != ConnectionState.Open)
                             conn1.Open();
@@ -835,7 +842,7 @@ namespace PLIC_Web_Poratal.Controllers
                                 // Replace "ColumnName" with the actual column name that holds the consignment number
                                 consignmentNumber = reader["ConsignmentNo"].ToString();
 
-                                
+
                             }
                         }
 
@@ -870,8 +877,8 @@ namespace PLIC_Web_Poratal.Controllers
                         command1.Parameters.AddWithValue("@CNSGNO", tracking);
                         command2.Parameters.AddWithValue("@CNSGNO", tracking);
                     }
-              
-                
+
+
                     dataAdapter.Fill(dataSet);
                     dataAdapter1.Fill(dataSet1);
                     dataAdapter2.Fill(dataSet2);
@@ -1453,7 +1460,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                     SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
                     string type = "AGT";
-                   
+
 
                     command1.Parameters.AddWithValue("@terminal_id", terminalid);
                     command1.Parameters.AddWithValue("@type", type);
@@ -1872,10 +1879,10 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
-                //return View("~/Views/Home/SearchTicket.cshtml", model);
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
 
-                // return View("~/Views/Home/SearchTicket.cshtml");
-          
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
 
         }
 
@@ -2266,7 +2273,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@BarcodeCategory", createTicketModel.barcodecategoryname);
                         cmd.Parameters.AddWithValue("@ticketcategory", createTicketModel.ticketcatagory);
                         cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
-                        if (createTicketModel.ticketcatagory==6)
+                        if (createTicketModel.ticketcatagory == 6)
                         {
                             cmd.Parameters.AddWithValue("@SMSAllow", false);
                         }
@@ -2275,7 +2282,7 @@ namespace PLIC_Web_Poratal.Controllers
                             cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
                         }
 
-                        
+
                         cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
                         cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
                         cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
@@ -2331,7 +2338,7 @@ namespace PLIC_Web_Poratal.Controllers
                         // Check if the ticket already exists in your database
                         //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
 
-                    
+
 
 
                         bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
@@ -2632,7 +2639,7 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         conn.Open();
-                   
+
 
                         SqlCommand cmd = new SqlCommand("InsertTicket_Service_Request", conn);
                         cmd.CommandType = CommandType.StoredProcedure;

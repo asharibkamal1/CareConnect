@@ -106,12 +106,13 @@
 <div class="row">
 
     <div class="col-6">
-        <h4>Ticket Catagories</h4>
+        <h4 id=reportTitle>Ticket Catagories</h4>
     </div>
     <div class="col-6">
-        <h4>Complaints</h4>
+        <h4 id=reportTitle>Complaints By Work Code</h4>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-6">
@@ -123,10 +124,32 @@
     </div>
 </div>
 
+<br />
+<div class="row">
+    <div class="col-6">
+        <h4 id=reportTitle>Complaints Stats</h4>
+    </div>
+    <div class="col-6">
+        <h4 id=reportTitle>Products</h4>
+    </div>
+   
+</div>
+<div class="row">
+    <div class="col-6">
+        <canvas id="complaintstatsPieChart" width="850" height="350"></canvas>
+
+    </div>
+    <div class="col-6">
+        <canvas id="productBarChart" width="850" height="350"></canvas>
+    </div>
+  
+</div>
+
+
 
 @*<h2>Role ID: @ViewData["RoleID"]</h2>
     <h2>User Name: @ViewBag.username</h2>*@
-<div class="col-3">
+@* <div class="col-3">
     <label for="chartType">Select Chart Type:</label>
     <select class="form-control" id="chartType" onchange="updateChart()">
         <option value="bar">Bar Chart</option>
@@ -159,11 +182,11 @@
     </div>
 </div>
 <br />
+ *@
 
 
 
-
-
+@*
 
 <div class="row">
 
@@ -186,6 +209,7 @@
 </div>
 <br />
 
+ *@
 
 
 
@@ -193,8 +217,7 @@
 
 
 
-
-<div class="row">
+@* <div class="row">
 
     <div class="col-6">
         <h4>Products (Daily) </h4>
@@ -222,23 +245,25 @@
     <div class="chat-header">
         Chat with ChatBot
         @*<span class="close-btn" id="close-btn">&times;</span>*@
-    </div>
+@*  </div>
     <div class="chat-messages" id="chat-messages"></div>
     <input type="text" id="user-input" placeholder="Type a message...">
     <div class="suggested-text">
         <button class="suggested-btn" onclick="sendMessage('Hello')">Hello</button>
         <button class="suggested-btn" onclick="sendMessage('How can you help?')">How can you help?</button>
     </div>
-</div>
+</div> *@ *
 <!-- Start of HubSpot Embed Code -->
 <!--<script type="text/javascript" id="hs-script-loader" async defer src="//js-na1.hs-scripts.com/43368633.js"></script>-->
 <!-- End of HubSpot Embed Code -->
-@section Scripts {
+@* @section Scripts {
     <script src="~/js/chatbot.js"></script>
-}
+} *@
 <!-- Include SweetAlert CSS and JS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
 
 <link rel="stylesheet" href="~/css/chatbot.css">
 
@@ -256,7 +281,6 @@
         month: 'long',
         day: 'numeric'
     });
-
 
 
     $(document).ready(function () {
@@ -289,6 +313,9 @@
             LoadCharts();
         });
     });
+    var myChartall;
+    var myChartcomplaints;
+    var myChartinfo;
 
     // Get the heading element by its ID
     //var headingElement = document.getElementById("reportTitle");
@@ -296,610 +323,614 @@
     //// Append the formatted date to the heading text
     //headingElement.innerHTML += " - " + formattedDate;
     // Define a variable to hold the chart instance
-    var myChartall;
-    var myChartcomplaints;
-    var myChartinfo;
-    var myChartservicerequest;
-    var myChartregion;
-    var myCharttickettypes;
-    var myChartproducts;
+    // var myChartall;
+    // var myChartcomplaints;
+    // var myChartinfo;
+    var myChartservicerequesttest;
+    // var myChartregion;
+    // var myCharttickettypes;
+    // var myChartproducts;
 
-    // Function to make the AJAX request and update the chart
-    function updateChart() {
-        debugger
-        // Get the selected chart type from the drop-down
-        var selectedChartType = document.getElementById('chartType').value;
-        debugger
-        fetch('/Home/GetChartData') // Replace 'Dashboard' with the name of your controller
-            .then(response => {
-                debugger
-                if (!response.ok) {
-                    throw new Error('');
-                }
-                debugger
-                return response.json();
-            })
-            .then(data => {
-                debugger
-                var ctxall = document.getElementById('complaintsChartall').getContext('2d');
-                var ctxcomplaints = document.getElementById('complaintsChartcomplaints').getContext('2d');
-                var ctxinfo = document.getElementById('complaintsChartinfo').getContext('2d');
-                var ctxservicerequest = document.getElementById('complaintsservicerequest').getContext('2d');
-                var ctxtickettypes = document.getElementById('tickettypes').getContext('2d');
-                var ctxproducts = document.getElementById('productsChart').getContext('2d');
+    // // Function to make the AJAX request and update the chart
+    // function updateChart() {
+    //     debugger
+    //     // Get the selected chart type from the drop-down
+    //     var selectedChartType = document.getElementById('chartType').value;
+    //     debugger
+    //     fetch('/Home/GetChartData') // Replace 'Dashboard' with the name of your controller
+    //         .then(response => {
+    //             debugger
+    //             if (!response.ok) {
+    //                 throw new Error('');
+    //             }
+    //             debugger
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             debugger
+    //             var ctxall = document.getElementById('complaintsChartall').getContext('2d');
+    //             var ctxcomplaints = document.getElementById('complaintsChartcomplaints').getContext('2d');
+    //             var ctxinfo = document.getElementById('complaintsChartinfo').getContext('2d');
+    //             var ctxservicerequest = document.getElementById('complaintsservicerequest').getContext('2d');
+    //             var ctxtickettypes = document.getElementById('tickettypes').getContext('2d');
+    //             var ctxproducts = document.getElementById('productsChart').getContext('2d');
 
-                // Destroy the previous chart instance if it exists
-                if (myChartall) {
-                    myChartall.destroy();
-                }
+    //             // Destroy the previous chart instance if it exists
+    //             if (myChartall) {
+    //                 myChartall.destroy();
+    //             }
 
-                if (myChartcomplaints) {
-                    myChartcomplaints.destroy();
-                }
-                if (myChartinfo) {
-                    myChartinfo.destroy();
-                }
-                if (myChartservicerequest) {
-                    myChartservicerequest.destroy();
-                }
-                if (myCharttickettypes) {
-                    myCharttickettypes.destroy();
-                }
+    //             if (myChartcomplaints) {
+    //                 myChartcomplaints.destroy();
+    //             }
+    //             if (myChartinfo) {
+    //                 myChartinfo.destroy();
+    //             }
+    //             if (myChartservicerequest) {
+    //                 myChartservicerequest.destroy();
+    //             }
+    //             if (myCharttickettypes) {
+    //                 myCharttickettypes.destroy();
+    //             }
 
-                if (myChartproducts) {
-                    myChartproducts.destroy();
-                }
-                debugger
-                var chartDataall = data.chartDataAll;
-                var chartDatacomplaints = data.chartDatComplaint;
-                var chartDatainfo = data.chartDataInfo;
-                var chartDataservicerequest = data.chartDataServiceRequest;
-                var chartdataregion = data.chartDataregion;
-                var chartDatatickettype = data.chartDatatickettype;
-                var chartDataproducts = data.chartDataproducts;
+    //             if (myChartproducts) {
+    //                 myChartproducts.destroy();
+    //             }
+    //             debugger
+    //             var chartDataall = data.chartDataAll;
+    //             var chartDatacomplaints = data.chartDatComplaint;
+    //             var chartDatainfo = data.chartDataInfo;
+    //             var chartDataservicerequest = data.chartDataServiceRequest;
+    //             var chartdataregion = data.chartDataregion;
+    //             var chartDatatickettype = data.chartDatatickettype;
+    //             var chartDataproducts = data.chartDataproducts;
 
-                debugger
-                chartdataregion.forEach(item => {
-                    if (item.region_name === 'CENTRAL') {
-                        document.getElementById('central-count').textContent = item.percentage;
-                    } else if (item.region_name === 'NORTH') {
-                        document.getElementById('north-count').textContent = item.percentage;
-                    } else if (item.region_name === 'SOUTH') {
-                        document.getElementById('south-count').textContent = item.percentage;
-                    }
-                });
-                debugger
-                const commonBarColors = [
-                    'rgba(75, 192, 192, 0.6)', // Color for the first chart
-                    'rgba(255, 99, 132, 0.6)', // Color for the second chart
-                    'rgba(54, 162, 235, 0.6)', // Color for the third chart
-                    'rgba(255, 206, 86, 0.6)', // Color for the fourth chart
-                    'rgba(255, 159, 64, 0.6)', // Color for the fifth chart
-                    'rgba(128, 0, 128, 0.6)', // New color for the sixth chart
-                    // Add more colors for additional charts
-                ];
-                const commonBorderColors = [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(128, 0, 128, 1)', // New border color for the sixth chart
-                    // Add more colors for additional charts
-                ];
-                switch (selectedChartType) {
+    //             debugger
+    //             chartdataregion.forEach(item => {
+    //                 if (item.region_name === 'CENTRAL') {
+    //                     document.getElementById('central-count').textContent = item.percentage;
+    //                 } else if (item.region_name === 'NORTH') {
+    //                     document.getElementById('north-count').textContent = item.percentage;
+    //                 } else if (item.region_name === 'SOUTH') {
+    //                     document.getElementById('south-count').textContent = item.percentage;
+    //                 }
+    //             });
+    //             debugger
+    //             const commonBarColors = [
+    //                 'rgba(75, 192, 192, 0.6)', // Color for the first chart
+    //                 'rgba(255, 99, 132, 0.6)', // Color for the second chart
+    //                 'rgba(54, 162, 235, 0.6)', // Color for the third chart
+    //                 'rgba(255, 206, 86, 0.6)', // Color for the fourth chart
+    //                 'rgba(255, 159, 64, 0.6)', // Color for the fifth chart
+    //                 'rgba(128, 0, 128, 0.6)', // New color for the sixth chart
+    //                 // Add more colors for additional charts
+    //             ];
+    //             const commonBorderColors = [
+    //                 'rgba(75, 192, 192, 1)',
+    //                 'rgba(255, 99, 132, 1)',
+    //                 'rgba(54, 162, 235, 1)',
+    //                 'rgba(255, 206, 86, 1)',
+    //                 'rgba(255, 159, 64, 1)',
+    //                 'rgba(128, 0, 128, 1)', // New border color for the sixth chart
+    //                 // Add more colors for additional charts
+    //             ];
+    //             switch (selectedChartType) {
 
-                    case 'bar':
-                        /*  --chart 1 ALL---*/
-                        myChartall = new Chart(ctxall, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDataall.map(item => item.categoryDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataall.map(item => item.totalTicket),
-                                    backgroundColor: commonBarColors[0], // Bar fill color
-                                    borderColor: commonBorderColors[0], // Bar border color
-                                    borderWidth: 2,
-                                    barPercentage: 0.7,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        }
-                                    }
-                                },
-                                animation: {
-                                    duration: 1000,
-                                    easing: 'easeOutQuart',
-                                    delay: (context) => context.dataIndex * 50,
-                                    from: 'bottom',
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: true,
-                                        labels: {
-                                            usePointStyle: true,
-                                        }
-                                    },
-                                    title: {
-                                        display: true,
-                                        text: 'Total Tickets by Category', // Chart title
-                                        fontSize: 16,
-                                        padding: {
-                                            top: 10,
-                                            bottom: 10,
-                                        },
-                                    }
-                                }
-                            }
-                        });
-                        /*     ---chart 2  Complaints-----*/
-                        myChartcomplaints = new Chart(ctxcomplaints, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDatacomplaints.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatacomplaints.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                    backgroundColor: commonBarColors[1], // Bar fill color
-                                    borderColor: commonBorderColors[1], // Bar border color
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-
-
-                        /*     ---chart 3  info-----*/
-                        myChartinfo = new Chart(ctxinfo, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDatainfo.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatainfo.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                    backgroundColor: commonBarColors[2], // Bar fill color
-                                    borderColor: commonBorderColors[2], // Bar border color
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        /*----chart 4 service request -----*/
-
-                        myChartservicerequest = new Chart(ctxservicerequest, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDataservicerequest.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataservicerequest.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                    backgroundColor: commonBarColors[3], // Bar fill color
-                                    borderColor: commonBorderColors[3], // Bar border color
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        debugger
-                        /*----chart 5 Ticket Types -----*/
-
-                        myCharttickettypes = new Chart(ctxtickettypes, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDatatickettype.map(item => item.ticketType),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatatickettype.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                    backgroundColor: commonBarColors[4], // Bar fill color
-                                    borderColor: commonBorderColors[4], // Bar border color
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
+    //                 case 'bar':
+    //                     /*  --chart 1 ALL---*/
+    //                     myChartall = new Chart(ctxall, {
+    //                         type: 'bar',
+    //                         data: {
+    //                             labels: chartDataall.map(item => item.categoryDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataall.map(item => item.totalTicket),
+    //                                 backgroundColor: commonBarColors[0], // Bar fill color
+    //                                 borderColor: commonBorderColors[0], // Bar border color
+    //                                 borderWidth: 2,
+    //                                 barPercentage: 0.7,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true,
+    //                                     ticks: {
+    //                                         stepSize: 1, // Customize the tick interval on the y-axis
+    //                                     }
+    //                                 }
+    //                             },
+    //                             animation: {
+    //                                 duration: 1000,
+    //                                 easing: 'easeOutQuart',
+    //                                 delay: (context) => context.dataIndex * 50,
+    //                                 from: 'bottom',
+    //                             },
+    //                             plugins: {
+    //                                 legend: {
+    //                                     display: true,
+    //                                     labels: {
+    //                                         usePointStyle: true,
+    //                                     }
+    //                                 },
+    //                                 title: {
+    //                                     display: true,
+    //                                     text: 'Total Tickets by Category', // Chart title
+    //                                     fontSize: 16,
+    //                                     padding: {
+    //                                         top: 10,
+    //                                         bottom: 10,
+    //                                     },
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+    //                     /*     ---chart 2  Complaints-----*/
+    //                     myChartcomplaints = new Chart(ctxcomplaints, {
+    //                         type: 'bar',
+    //                         data: {
+    //                             labels: chartDatacomplaints.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatacomplaints.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                                 backgroundColor: commonBarColors[1], // Bar fill color
+    //                                 borderColor: commonBorderColors[1], // Bar border color
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     ticks: {
+    //                                         stepSize: 1, // Customize the tick interval on the y-axis
+    //                                     },
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
 
 
-                        /*----chart 6 Products -----*/
+    //                     /*     ---chart 3  info-----*/
+    //                     myChartinfo = new Chart(ctxinfo, {
+    //                         type: 'bar',
+    //                         data: {
+    //                             labels: chartDatainfo.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatainfo.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                                 backgroundColor: commonBarColors[2], // Bar fill color
+    //                                 borderColor: commonBorderColors[2], // Bar border color
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     ticks: {
+    //                                         stepSize: 1, // Customize the tick interval on the y-axis
+    //                                     },
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
-                        myChartproducts = new Chart(ctxproducts, {
-                            type: 'bar',
-                            data: {
-                                labels: chartDataproducts.map(item => item.products),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataproducts.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                    backgroundColor: commonBarColors[5], // Bar fill color
-                                    borderColor: commonBorderColors[5], // Bar border color
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            stepSize: 1, // Customize the tick interval on the y-axis
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
+    //                     /*----chart 4 service request -----*/
 
+    //                     myChartservicerequest = new Chart(ctxservicerequest, {
+    //                         type: 'bar',
+    //                         data: {
+    //                             labels: chartDataservicerequest.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataservicerequest.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                                 backgroundColor: commonBarColors[3], // Bar fill color
+    //                                 borderColor: commonBorderColors[3], // Bar border color
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     ticks: {
+    //                                         stepSize: 1, // Customize the tick interval on the y-axis
+    //                                     },
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
-                        debugger
-                        break;
-                    case 'line':
-                        myChartall = new Chart(ctxall, {
-                            type: 'line',
-                            data: {
-                                labels: chartDataall.map(item => item.categoryDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataall.map(item => item.totalTicket),
-                                    borderWidth: 1,
+    //                     debugger
+    //                     /*----chart 5 Ticket Types -----*/
 
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        /*     ---chart 2  Complaints-----*/
-                        myChartcomplaints = new Chart(ctxcomplaints, {
-                            type: 'line',
-                            data: {
-                                labels: chartDatacomplaints.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatacomplaints.map(item => item.totalTicket),
-                                    borderWidth: 1,
-
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        /*     ---chart 3  info-----*/
-                        myChartinfo = new Chart(ctxinfo, {
-                            type: 'line',
-                            data: {
-                                labels: chartDatainfo.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatainfo.map(item => item.totalTicket),
-                                    borderWidth: 1,
-
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        /*----chart 4 service request -----*/
-
-                        myChartservicerequest = new Chart(ctxservicerequest, {
-                            type: 'line',
-                            data: {
-                                labels: chartDataservicerequest.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataservicerequest.map(item => item.totalTicket),
-                                    borderWidth: 1,
-
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        /*----chart 5 ticket types -----*/
-
-                        myCharttickettypes = new Chart(ctxtickettypes, {
-                            type: 'line',
-                            data: {
-                                labels: chartDatatickettype.map(item => item.ticketType),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatatickettype.map(item => item.totalTicket),
-                                    borderWidth: 1,
-
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-
-                        /*----chart 6 products -----*/
-
-                        myChartproducts = new Chart(ctxproducts, {
-                            type: 'line',
-                            data: {
-                                labels: chartDataproducts.map(item => item.products),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataproducts.map(item => item.totalTicket),
-                                    borderWidth: 1,
-
-                                    barPercentage: 0.5,
-                                    minBarLength: 5,
-                                }]
-                            },
-                            options: {
-                                //indexAxis: 'y',
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
+    //                     myCharttickettypes = new Chart(ctxtickettypes, {
+    //                         type: 'bar',
+    //                         data: {
+    //                             labels: chartDatatickettype.map(item => item.ticketType),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatatickettype.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                                 backgroundColor: commonBarColors[4], // Bar fill color
+    //                                 borderColor: commonBorderColors[4], // Bar border color
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     ticks: {
+    //                                         stepSize: 1, // Customize the tick interval on the y-axis
+    //                                     },
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
 
 
-                        break;
-                    case 'pie':
-                        /*----chart 1 all pie  -----*/
+    //                     /*----chart 6 Products -----*/
 
-                        myChartall = new Chart(ctxall, {
-                            type: 'pie',
-                            data: {
-                                labels: chartDataall.map(item => item.categoryDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataall.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Enable resizing of the chart to fit the container
-                                maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                                width: 800, // Set the custom width for the pie chart
-                                height: 400, // Set the custom height for the pie chart
-                                //indexAxis: 'y',
-
-                            }
-                        });
-                        /*----chart 2 complaints pie  -----*/
-
-
-                        myChartcomplaints = new Chart(ctxcomplaints, {
-                            type: 'pie',
-                            data: {
-                                labels: chartDatacomplaints.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatacomplaints.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Enable resizing of the chart to fit the container
-                                maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                                width: 800, // Set the custom width for the pie chart
-                                height: 400, // Set the custom height for the pie chart
-                                //indexAxis: 'y',
-
-                            }
-                        });
+    //                     myChartproducts = new Chart(ctxproducts, {
+    //                         type: 'bar',
+    //                         data: {
+    //                             labels: chartDataproducts.map(item => item.products),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataproducts.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                                 backgroundColor: commonBarColors[5], // Bar fill color
+    //                                 borderColor: commonBorderColors[5], // Bar border color
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     ticks: {
+    //                                         stepSize: 1, // Customize the tick interval on the y-axis
+    //                                     },
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
 
+    //                     debugger
+    //                     break;
+    //                 case 'line':
+    //                     myChartall = new Chart(ctxall, {
+    //                         type: 'line',
+    //                         data: {
+    //                             labels: chartDataall.map(item => item.categoryDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataall.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
 
-                        /*----chart 3 info pie  -----*/
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
-                        myChartinfo = new Chart(ctxinfo, {
-                            type: 'pie',
-                            data: {
-                                labels: chartDatainfo.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatainfo.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Enable resizing of the chart to fit the container
-                                maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                                width: 800, // Set the custom width for the pie chart
-                                height: 400, // Set the custom height for the pie chart
-                                //indexAxis: 'y',
+    //                     /*     ---chart 2  Complaints-----*/
+    //                     myChartcomplaints = new Chart(ctxcomplaints, {
+    //                         type: 'line',
+    //                         data: {
+    //                             labels: chartDatacomplaints.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatacomplaints.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
 
-                            }
-                        });
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+
+    //                     /*     ---chart 3  info-----*/
+    //                     myChartinfo = new Chart(ctxinfo, {
+    //                         type: 'line',
+    //                         data: {
+    //                             labels: chartDatainfo.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatainfo.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+
+    //                     /*----chart 4 service request -----*/
+
+    //                     myChartservicerequest = new Chart(ctxservicerequest, {
+    //                         type: 'line',
+    //                         data: {
+    //                             labels: chartDataservicerequest.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataservicerequest.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+
+    //                     /*----chart 5 ticket types -----*/
+
+    //                     myCharttickettypes = new Chart(ctxtickettypes, {
+    //                         type: 'line',
+    //                         data: {
+    //                             labels: chartDatatickettype.map(item => item.ticketType),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatatickettype.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+
+
+    //                     /*----chart 6 products -----*/
+
+    //                     myChartproducts = new Chart(ctxproducts, {
+    //                         type: 'line',
+    //                         data: {
+    //                             labels: chartDataproducts.map(item => item.products),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataproducts.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+
+    //                                 barPercentage: 0.5,
+    //                                 minBarLength: 5,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             //indexAxis: 'y',
+    //                             scales: {
+    //                                 y: {
+    //                                     beginAtZero: true
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
 
 
 
-                        /*----chart 4 service request pie  -----*/
-                        myChartservicerequest = new Chart(ctxservicerequest, {
-                            type: 'pie',
-                            data: {
-                                labels: chartDataservicerequest.map(item => item.issueTypeDescription),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataservicerequest.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Enable resizing of the chart to fit the container
-                                maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                                width: 800, // Set the custom width for the pie chart
-                                height: 400, // Set the custom height for the pie chart
-                                //indexAxis: 'y',
+    //                     break;
+    //                 case 'pie':
+    //                     /*----chart 1 all pie  -----*/
 
-                            }
-                        });
+    //                     myChartall = new Chart(ctxall, {
+    //                         type: 'pie',
+    //                         data: {
+    //                             labels: chartDataall.map(item => item.categoryDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataall.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             responsive: true, // Enable resizing of the chart to fit the container
+    //                             maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+    //                             width: 800, // Set the custom width for the pie chart
+    //                             height: 400, // Set the custom height for the pie chart
+    //                             //indexAxis: 'y',
 
-
-
-                        /*----chart 5 ticket types  -----*/
-                        myCharttickettypes = new Chart(ctxtickettypes, {
-                            type: 'pie',
-                            data: {
-                                labels: chartDatatickettype.map(item => item.ticketType),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDatatickettype.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Enable resizing of the chart to fit the container
-                                maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                                width: 800, // Set the custom width for the pie chart
-                                height: 400, // Set the custom height for the pie chart
-                                //indexAxis: 'y',
-
-                            }
-                        });
-
-                        /*----chart 6 products  -----*/
-                        myChartproducts = new Chart(ctxproducts, {
-                            type: 'pie',
-                            data: {
-                                labels: chartDataproducts.map(item => item.products),
-                                datasets: [{
-                                    label: 'Total Tickets',
-                                    data: chartDataproducts.map(item => item.totalTicket),
-                                    borderWidth: 1,
-                                }]
-                            },
-                            options: {
-                                responsive: true, // Enable resizing of the chart to fit the container
-                                maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                                width: 800, // Set the custom width for the pie chart
-                                height: 400, // Set the custom height for the pie chart
-                                //indexAxis: 'y',
-
-                            }
-                        });
+    //                         }
+    //                     });
+    //                     /*----chart 2 complaints pie  -----*/
 
 
-                        break;
-                    // Add cases for other chart types you want to support
-                    default:
-                        break;
-                }
-            })
-            .catch(error => {
-                debugger
+    //                     myChartcomplaints = new Chart(ctxcomplaints, {
+    //                         type: 'pie',
+    //                         data: {
+    //                             labels: chartDatacomplaints.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatacomplaints.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             responsive: true, // Enable resizing of the chart to fit the container
+    //                             maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+    //                             width: 800, // Set the custom width for the pie chart
+    //                             height: 400, // Set the custom height for the pie chart
+    //                             //indexAxis: 'y',
 
-                // Show SweetAlert error message
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'An error occurred while fetching data "' + error + '"',
-                });
+    //                         }
+    //                     });
 
-                //Swal.fire('Error', 'Error fetching data: ' + error, 'error');
-            });
-    }
+
+
+    //                     /*----chart 3 info pie  -----*/
+
+    //                     myChartinfo = new Chart(ctxinfo, {
+    //                         type: 'pie',
+    //                         data: {
+    //                             labels: chartDatainfo.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatainfo.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             responsive: true, // Enable resizing of the chart to fit the container
+    //                             maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+    //                             width: 800, // Set the custom width for the pie chart
+    //                             height: 400, // Set the custom height for the pie chart
+    //                             //indexAxis: 'y',
+
+    //                         }
+    //                     });
+
+
+
+    //                     /*----chart 4 service request pie  -----*/
+    //                     myChartservicerequest = new Chart(ctxservicerequest, {
+    //                         type: 'pie',
+    //                         data: {
+    //                             labels: chartDataservicerequest.map(item => item.issueTypeDescription),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataservicerequest.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             responsive: true, // Enable resizing of the chart to fit the container
+    //                             maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+    //                             width: 800, // Set the custom width for the pie chart
+    //                             height: 400, // Set the custom height for the pie chart
+    //                             //indexAxis: 'y',
+
+    //                         }
+    //                     });
+
+
+
+    //                     /*----chart 5 ticket types  -----*/
+    //                     myCharttickettypes = new Chart(ctxtickettypes, {
+    //                         type: 'pie',
+    //                         data: {
+    //                             labels: chartDatatickettype.map(item => item.ticketType),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDatatickettype.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             responsive: true, // Enable resizing of the chart to fit the container
+    //                             maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+    //                             width: 800, // Set the custom width for the pie chart
+    //                             height: 400, // Set the custom height for the pie chart
+    //                             //indexAxis: 'y',
+
+    //                         }
+    //                     });
+
+    //                     /*----chart 6 products  -----*/
+    //                     myChartproducts = new Chart(ctxproducts, {
+    //                         type: 'pie',
+    //                         data: {
+    //                             labels: chartDataproducts.map(item => item.products),
+    //                             datasets: [{
+    //                                 label: 'Total Tickets',
+    //                                 data: chartDataproducts.map(item => item.totalTicket),
+    //                                 borderWidth: 1,
+    //                             }]
+    //                         },
+    //                         options: {
+    //                             responsive: true, // Enable resizing of the chart to fit the container
+    //                             maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+    //                             width: 800, // Set the custom width for the pie chart
+    //                             height: 400, // Set the custom height for the pie chart
+    //                             //indexAxis: 'y',
+
+    //                         }
+    //                     });
+
+
+    //                     break;
+    //                 // Add cases for other chart types you want to support
+    //                 default:
+    //                     break;
+    //             }
+    //         })
+    //         .catch(error => {
+    //             debugger
+
+    //             // Show SweetAlert error message
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: 'An error occurred while fetching data "' + error + '"',
+    //             });
+
+    //             //Swal.fire('Error', 'Error fetching data: ' + error, 'error');
+    //         });
+    // }
 
 
 
     function LoadCharts() {
         debugger
+
+        // var myChartticketcategory;
+        // var myChartcomplaints;
+        // var myChartproduct;
         // Get the selected chart type from the drop-down
         //var selectedChartType = document.getElementById('chartType').value;
         var datefrom = $('#datefrom').val();
@@ -921,8 +952,12 @@
                 debugger
                 var ctxall = document.getElementById('TicketCategoriesPieChart').getContext('2d');
                 var ctxcomplaints = document.getElementById('complaintBarChart').getContext('2d');
+                var ctxproduct = document.getElementById('productBarChart').getContext('2d');
+                var ctxcomplaintspie = document.getElementById('complaintstatsPieChart').getContext('2d');
+
+
                 // var ctxinfo = document.getElementById('complaintsChartinfo').getContext('2d');
-                // var ctxservicerequest = document.getElementById('complaintsservicerequest').getContext('2d');
+                //var ctxservicerequest = document.getElementById('complaintsservicerequest').getContext('2d');
                 // var ctxtickettypes = document.getElementById('tickettypes').getContext('2d');
                 // var ctxproducts = document.getElementById('productsChart').getContext('2d');
 
@@ -934,12 +969,12 @@
                 if (myChartcomplaints) {
                     myChartcomplaints.destroy();
                 }
-                // if (myChartinfo) {
-                //     myChartinfo.destroy();
-                // }
-                // if (myChartservicerequest) {
-                //     myChartservicerequest.destroy();
-                // }
+                if (myChartinfo) {
+                    myChartinfo.destroy();
+                }
+                if (myChartservicerequesttest) {
+                    myChartservicerequesttest.destroy();
+                }
                 // if (myCharttickettypes) {
                 //     myCharttickettypes.destroy();
                 // }
@@ -960,18 +995,19 @@
                 var chartDataclosed = data.chartDataclosed;
 
                 // var chartDatatickettype = data.chartDatatickettype;
-                // var chartDataproducts = data.chartDataproducts;
+                var chartDataproducts = data.chartDataproducts;
+                var chartDataComplaintspie = data.chartDatacomplaintspie;
 
                 debugger
-                // chartdataregion.forEach(item => {
-                //     if (item.region_name === 'Complaints') {
-                //         document.getElementById('percent-complaints').textContent = item.percentage;
-                //     } else if (item.region_name === 'Info') {
-                //         document.getElementById('percent-info').textContent = item.percentage;
-                //     } else if (item.region_name === 'Service Request') {
-                //         document.getElementById('percent-servicerequest').textContent = item.percentage;
-                //     }
-                // });
+                chartdataregion.forEach(item => {
+                    if (item.region_name === 'Complaints') {
+                        document.getElementById('percent-complaints').textContent = item.percentage;
+                    } else if (item.region_name === 'Info') {
+                        document.getElementById('percent-info').textContent = item.percentage;
+                    } else if (item.region_name === 'Service Request') {
+                        document.getElementById('percent-servicerequest').textContent = item.percentage;
+                    }
+                });
 
 
                 chartDataall.forEach(item => {
@@ -1065,25 +1101,81 @@
 
                 /*----chart 1 all pie  -----*/
 
+                // myChartall = new Chart(ctxall, {
+                //     type: 'doughnut',
+                //     data: {
+                //         labels: chartDataall.map(item => item.categoryDescription),
+                //         datasets: [{
+                //             label: 'Total Tickets',
+                //             data: chartDataall.map(item => item.totalTicket),
+                //             borderWidth: 1,
+                //         }]
+                //     },
+                //     options: {
+                //         responsive: true, // Enable resizing of the chart to fit the container
+                //         maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+                //         width: 800, // Set the custom width for the pie chart
+                //         height: 200, // Set the custom height for the pie chart
+                //         //indexAxis: 'y',
+
+                //     }
+                // });
+
                 myChartall = new Chart(ctxall, {
-                    type: 'pie',
+                    type: 'doughnut',
                     data: {
                         labels: chartDataall.map(item => item.categoryDescription),
                         datasets: [{
                             label: 'Total Tickets',
                             data: chartDataall.map(item => item.totalTicket),
                             borderWidth: 1,
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(128, 0, 128, 1)',
+                            ],
                         }]
                     },
                     options: {
-                        responsive: true, // Enable resizing of the chart to fit the container
-                        maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
-                        width: 800, // Set the custom width for the pie chart
-                        height: 200, // Set the custom height for the pie chart
-                        //indexAxis: 'y',
+                        tooltipTemplate: "<%= value %>",
 
-                    }
+                        showTooltips: true,
+
+                        onAnimationComplete: function () {
+                            this.showTooltip(this.datasets[0].points, true);
+                        },
+                        tooltipEvents: [],
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        width: 800,
+                        height: 200,
+                        plugins: {
+                            legend: {
+                                position: 'right', // Set the position of the legend
+                                labels: {
+                                    // Generate labels that include the category description and the total ticket value
+                                    generateLabels: function (chart) {
+                                        const data = chart.data.datasets[0].data;
+                                        const labels = chart.data.labels;
+
+                                        return labels.map((label, index) => {
+                                            return {
+                                                text: `${label} - ${data[index]}`, // Display category description and total ticket value
+                                                fillStyle: chart.data.datasets[0].backgroundColor[index],
+                                            };
+                                        });
+                                    },
+                                },
+                            },
+                        },
+                    },
                 });
+
+
+
 
 
 
@@ -1167,7 +1259,158 @@
                         }
                     }
                 });
+                myChartinfo = new Chart(ctxproduct, {
+                    type: 'bar',
+                    data: {
+                        labels: chartDataproducts.map(item => item.products),
+                        datasets: [{
+                            label: 'Total Tickets',
+                            data: chartDataproducts.map(item => item.totalTicket),
+                            borderWidth: 1,
+                            backgroundColor: commonBarColors[1], // Bar fill color
+                            borderColor: commonBorderColors[1], // Bar bor....der color
+                            barPercentage: 0.5,
+                            minBarLength: 5,
+                        }]
+                    },
+                    options: {
+                        //indexAxis: 'y',
+                        scales: {
+                            y: {
+                                ticks: {
+                                    stepSize: 1, // Customize the tick interval on the y-axis
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+
                 debugger
+
+                // myChartservicerequest = new Chart(ctxcomplaintspie, {
+                //     type: 'pie',
+                //     data: {
+                //         labels: chartDataComplaintspie.map(item => item.Category),
+                //         datasets: [{
+                //             label: 'Total Tickets',
+                //             data: chartDataComplaintspie.map(item => item.totalTicket),
+                //             borderWidth: 1,
+                //             //backgroundColor: commonBarColors[2], // Bar fill color
+                //            // borderColor: commonBorderColors[2], // Bar bor....der color
+                //            // barPercentage: 0.5,
+                //            // minBarLength: 5,
+                //         }]
+                //     },
+                //     options: {
+                //         //indexAxis: 'y',
+                //         responsive: true, //Enable resizing of the chart to fit the container
+                //         maintainAspectRatio: false, // Disable the aspect ratio to use custom width and height
+                //         width: 800, // Set the custom width for the pie chart
+                //         height: 400, // Set the custom height for the pie chart
+                //         //indexAxis: 'y',
+                //     }
+                // });
+
+
+
+
+                myChartservicerequesttest = new Chart(ctxcomplaintspie, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartDataComplaintspie.map(item => item.category),
+                        datasets: [{
+                            label: 'Total Tickets',
+                            data: chartDataComplaintspie.map(item => item.totalTicket),
+                            borderWidth: 1,
+                            //backgroundColor: commonBarColors[2], // Bar fill color
+                           // borderColor: commonBorderColors[2], // Bar bor....der color
+                           // barPercentage: 0.5,
+                           // minBarLength: 5,
+                        }]
+                    },
+                    options: {
+
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        width: 800,
+                        height: 200,
+                        plugins: {
+                            legend: {
+                                position: 'right', // Set the position of the legend
+                                labels: {
+                                    // Generate labels that include the category description and the total ticket value
+                                    generateLabels: function (chart) {
+                                        const data = chart.data.datasets[0].data;
+                                        const labels = chart.data.labels;
+
+                                        return labels.map((label, index) => {
+                                            return {
+                                                text: `${label} - ${data[index]}`, // Display category description and total ticket value
+                                                fillStyle: chart.data.datasets[0].backgroundColor[index],
+                                            };
+                                        });
+                                    },
+                                },
+                            },
+                        },
+                    },
+                });
+
+
+
+
+
+                debugger
+
+                // myChartservicerequesttest = new Chart(ctxcomplaintspie, {
+                //     type: 'pie',
+                //     data: {
+                //         labels: chartDataComplaintspie.map(item => item.category),
+                //         datasets: [{
+                //             label: 'Total Tickets',
+                //             data: chartDataComplaintspie.map(item => item.totalTicket),
+                //             borderWidth: 1,
+                //             backgroundColor: [
+                //                 'rgba(75, 192, 192, 1)',
+                //                 'rgba(255, 99, 132, 1)',
+                //                 'rgba(54, 162, 235, 1)',
+                //                 'rgba(255, 206, 86, 1)',
+                //                 'rgba(255, 159, 64, 1)',
+                //                 'rgba(128, 0, 128, 1)',
+                //             ],
+                //         }]
+                //     },
+                //     options: {
+                    
+                //         responsive: true,
+                //         maintainAspectRatio: false,
+                //         width: 800,
+                //         height: 200,
+                //         plugins: {
+                //             legend: {
+                //                 position: 'right', // Set the position of the legend
+                //                 labels: {
+                //                     // Generate labels that include the category description and the total ticket value
+                //                     generateLabels: function (chart) {
+                //                         const data = chart.data.datasets[0].data;
+                //                         const labels = chart.data.labels;
+
+                //                         return labels.map((label, index) => {
+                //                             return {
+                //                                 text: `${label} - ${data[index]}`, // Display category description and total ticket value
+                //                                 fillStyle: chart.data.datasets[0].backgroundColor[index],
+                //                             };
+                //                         });
+                //                     },
+                //                 },
+                //             },
+                //         },
+                //     },
+                // });
+
+
 
 
 
@@ -1219,9 +1462,6 @@
 
 
 
-
-        // Call the updateChart function when the page loads to display the default chart
-        //document.addEventListener('DOMContentLoaded', updateChart);
 
 
 </script>

@@ -63,6 +63,7 @@
 
                 <div id="subcategoryContainer">
                 </div>
+                <span class="text-danger" id="subcategoryDropdownError" style="display: none;">Please select Sub Category.</span>
             </div>
 
             <div class="col-md-3 col-sm-3 divhide">
@@ -402,6 +403,20 @@
             var pattern = /^92\d{10}$/;
             debugger
             if (categoryValue == '6') {
+
+                if (categoryValue === '') {
+                    $('#categoryDropdownError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#categoryDropdownError').hide();
+                }
+
+                if (ticketsubcatagory === '0') {
+                    $('#subcategoryDropdownError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#subcategoryDropdownError').hide();
+                }
                 var Gender = undefined;
                 var barcode = undefined;
                 var tickettypeValue = undefined;
@@ -424,12 +439,25 @@
 
                 var tickettypeValue = $('#TicketTypeDropdown').val();
                 var Gender = $('#ddgender').val();
-                if (UserEmail === '') {
-                    $('#emailerror').show();
+
+
+
+                if (categoryValue === '') {
+                    $('#categoryDropdownError').show();
                     return false; // Prevent form submission if barcode is not selected
                 } else {
-                    $('#emailerror').hide();
+                    $('#categoryDropdownError').hide();
                 }
+
+                if (ticketsubcatagory === '0') {
+                    $('#subcategoryDropdownError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#subcategoryDropdownError').hide();
+                }
+
+                
+              
 
                 if (TicketPriority === '') {
                     $('#priorityError').show();
@@ -442,6 +470,12 @@
                     return false; // Prevent form submission if barcode is not selected
                 } else {
                     $('#cityError').hide();
+                }
+                if (UserEmail === '') {
+                    $('#emailerror').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#emailerror').hide();
                 }
                 if (name === '') {
                     $('#nameError').show();
@@ -490,12 +524,7 @@
             //     $('#barcodcateerror').hide();
             // }
 
-            if (categoryValue === '') {
-                $('#categoryDropdownError').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#categoryDropdownError').hide();
-            }
+           
 
             //if (barcodeValue === '') {
             //    $('#barcodeError').show();

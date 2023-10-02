@@ -8,7 +8,11 @@ namespace CareConnect.Models
     public class ChartData
     {
         public int TotalTicket { get; set; }
+        public string MHeading { get; set; }
+        public int Closed { get; set; }
+        public int IP { get; set; }
         public string CategoryDescription { get; set; }
+        public string category { get; set; }
         public string IssueTypeDescription { get; set; }
         public string Percentage { get; set; }
         public string region_name { get; set; }
