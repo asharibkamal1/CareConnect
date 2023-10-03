@@ -283,16 +283,62 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
+        //public IActionResult Menu()
+        //{
+
+        //    //string password = HttpContext.Session.GetString("Password");
+        //    List<Policy1> policies = new List<Policy1>();
+        //    SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+        //    if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+        //    {
+        //        var viewModel = TempData["UserViewModel"] as UserViewModel;
+        //        // Check if the viewModel is not null before using it
+        //        if (viewModel != null)
+        //        {
+        //            // Access properties of viewModel
+        //            string loginId = viewModel.LoginId;
+        //            string userName = viewModel.UserName;
+        //            string password = viewModel.Password;
+        //            string roleId = viewModel.RoleID;
+
+        //            // Rest of your code using the viewModel...
+        //        }
+
+        //        string RoleID = HttpContext.Session.GetString("RoleID");
+        //        string UserName = HttpContext.Session.GetString("UserName");
+
+        //        ViewData["RoleID"] = RoleID;
+
+
+        //        ViewBag.UserName = UserName;
+        //        // ViewBag.RoleID = RoleID;
+
+        //        conn.Close();
+
+
+
+        //        return View("~/Views/Home/LoginPage.cshtml", viewModel);
+
+
+        //    }
+
+
+        //    return RedirectToAction("Login", "Account");
+
+        //}
+
+
+
+
         public IActionResult Menu()
         {
-
-            //string password = HttpContext.Session.GetString("Password");
             List<Policy1> policies = new List<Policy1>();
-            SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
 
             if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
             {
                 var viewModel = TempData["UserViewModel"] as UserViewModel;
+
                 // Check if the viewModel is not null before using it
                 if (viewModel != null)
                 {
@@ -309,24 +355,27 @@ namespace PLIC_Web_Poratal.Controllers
                 string UserName = HttpContext.Session.GetString("UserName");
 
                 ViewData["RoleID"] = RoleID;
-
-
+                ViewBag.RoleID = RoleID;
                 ViewBag.UserName = UserName;
-                // ViewBag.RoleID = RoleID;
 
-                conn.Close();
+                // Use a using statement for SqlConnection to ensure proper disposal
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                {
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
 
+                    // Rest of your code using the SqlConnection...
+                    // Execute SQL queries, fetch data, etc.
 
+                    //conn.Close(); // You can close the connection explicitly if needed, but it's not required within the using block.
 
-                return View("~/Views/Home/LoginPage.cshtml", viewModel);
-
-
+                    return View("~/Views/Home/LoginPage.cshtml", viewModel);
+                }
             }
 
-
             return RedirectToAction("Login", "Account");
-
         }
+
 
 
         [HttpGet]
@@ -553,7 +602,7 @@ namespace PLIC_Web_Poratal.Controllers
                     //DataSet dataSet = new DataSet();
                     //DataSet dt2 = new DataSet();
                     //DataSet dt3 = new DataSet();
-                    SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         if (conn.State != ConnectionState.Open)
                             conn.Open();
@@ -564,7 +613,7 @@ namespace PLIC_Web_Poratal.Controllers
                         {
                             command.CommandType = CommandType.StoredProcedure;
                             command.Parameters.AddWithValue("@datefrom", datefrom);
-                            command.Parameters.AddWithValue("@dateto", dateto);0
+                            command.Parameters.AddWithValue("@dateto", dateto);
                             using (SqlDataReader reader = command.ExecuteReader())
                             {
                                 // Create separate lists for the two charts
@@ -613,7 +662,7 @@ namespace PLIC_Web_Poratal.Controllers
                                     });
                                 }
                                 // Move to the next result set for the second query
-                             
+
                                 // Move to the next result set for the second query
                                 //reader.NextResult();
                                 //// Assuming the second query returns columns named TotalTicket, CategoryDescription, and IssueTypeDescription as well
@@ -799,34 +848,28 @@ namespace PLIC_Web_Poratal.Controllers
         [HttpGet]
         public ActionResult GetTrackingDetails(string tracking, bool isCheckboxChecked)
         {
-
             try
             {
                 string consignmentNumber = "";
                 DataSet dataSet = new DataSet();
                 DataSet dataSet1 = new DataSet();
                 DataSet dataSet2 = new DataSet();
-                SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                 {
-                    conn.Open();
-                    conn1.Open();
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
 
-
-
-
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
 
                     string LoginId = HttpContext.Session.GetString("LoginId");
                     string RoleID = HttpContext.Session.GetString("RoleID");
                     string trackingid = tracking;
 
-
-
                     if (isCheckboxChecked)
-
                     {
-
-
                         if (conn1.State != ConnectionState.Open)
                             conn1.Open();
 
@@ -836,233 +879,192 @@ namespace PLIC_Web_Poratal.Controllers
 
                         using (SqlDataReader reader = command3.ExecuteReader())
                         {
-                            // Check if there are rows and retrieve the consignment number
                             if (reader.Read())
                             {
-                                // Replace "ColumnName" with the actual column name that holds the consignment number
                                 consignmentNumber = reader["ConsignmentNo"].ToString();
-
-
                             }
                         }
-
                     }
 
-                    //string Password = HttpContext.Session.GetString("Password");
                     InsertTrackingHistory(LoginId, trackingid);
 
-
-
-
-
-                    SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn);
-                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Track_History_By_CNSGNO", conn1);
-                    SqlCommand command2 = new SqlCommand("sp_GetTicketHistoryBYCNSGNO", conn1);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command1.CommandType = CommandType.StoredProcedure;
-                    command2.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
-                    SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
-
-                    if (isCheckboxChecked)
+                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Track_History_By_CNSGNO", conn1))
+                    using (SqlCommand command2 = new SqlCommand("sp_GetTicketHistoryBYCNSGNO", conn1))
                     {
-                        command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
-                        command1.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
-                        command2.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command1.CommandType = CommandType.StoredProcedure;
+                        command2.CommandType = CommandType.StoredProcedure;
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                        SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+
+                        if (isCheckboxChecked)
+                        {
+                            command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                            command1.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
+                            command2.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@bookingNumber", tracking);
+                            command1.Parameters.AddWithValue("@CNSGNO", tracking);
+                            command2.Parameters.AddWithValue("@CNSGNO", tracking);
+                        }
+
+                        dataAdapter.Fill(dataSet);
+                        dataAdapter1.Fill(dataSet1);
+                        dataAdapter2.Fill(dataSet2);
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            BookingDetail = dataSet,
+                            TrackingHistory = dataSet1,
+                            TicketDetails = dataSet2
+                        };
+
+                        //ViewBag.TrackingData = dataSet;
+                        //ViewBag.RoleId = HttpContext.Session.GetString("RoleID");
+
+                        return PartialView("_TrackingDetails", model);
                     }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@bookingNumber", tracking);
-                        command1.Parameters.AddWithValue("@CNSGNO", tracking);
-                        command2.Parameters.AddWithValue("@CNSGNO", tracking);
-                    }
-
-
-                    dataAdapter.Fill(dataSet);
-                    dataAdapter1.Fill(dataSet1);
-                    dataAdapter2.Fill(dataSet2);
-
-                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
-                    {
-                        BookingDetail = dataSet,
-                        TrackingHistory = dataSet1,
-                        TicketDetails = dataSet2
-
-                    };
-
-                    ViewBag.TrackingData = dataSet;
-
-                    ViewBag.RoleId = HttpContext.Session.GetString("RoleID");
-                    return PartialView("_TrackingDetails", model);
                 }
             }
-
-
-
-
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
+
+
+
 
 
         public ActionResult GetTicketDetails(string ticketno)
         {
-
             try
             {
-
                 DataSet dataSet1 = new DataSet();
                 DataSet dataSet2 = new DataSet();
 
-
-                SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                 {
                     DataSet dataSet5 = new DataSet();
-                    conn.Open();
-                    conn1.Open();
+
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
+
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
 
                     string LoginId = HttpContext.Session.GetString("LoginId");
                     string ticketid = ticketno;
-                    SqlCommand command3 = new SqlCommand("SP_Get_ConsignmentNo_By_TicketNO", conn1);
-                    SqlCommand command5 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
-                    command5.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
-                    dataAdapter5.Fill(dataSet5);
-                    command3.CommandType = CommandType.StoredProcedure;
-                    command3.Parameters.AddWithValue("@TicketID", ticketid);
-                    string consignmentNumber;
 
-                    // Execute the stored procedure and store the result in the variable
-                    object result = command3.ExecuteScalar();
-
-                    consignmentNumber = result.ToString(); // Replace 'int' with the appropriate data type
-
-
-
-                    // SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn);
-                    SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn);
-                    SqlCommand command1 = new SqlCommand("sp_GetRequestDetails", conn1);
-                    SqlCommand command2 = new SqlCommand("sp_GetTicketHistory", conn1);
-                    SqlCommand command4 = new SqlCommand("sp_careconnect_Get_Ticket_Status", conn1);
-
-
-                    command.CommandType = CommandType.StoredProcedure;
-                    command1.CommandType = CommandType.StoredProcedure;
-                    command2.CommandType = CommandType.StoredProcedure;
-                    command4.CommandType = CommandType.StoredProcedure;
-
-
-
-
-
-
-                    //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
-                    SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
-                    SqlDataAdapter dataAdapter4 = new SqlDataAdapter(command4);
-
-
-                    // command.Parameters.AddWithValue("@bookingNumber", tracking);
-                    command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
-                    command1.Parameters.AddWithValue("@TicketID", ticketid);
-                    command2.Parameters.AddWithValue("@TicketID", ticketid);
-
-                    DataSet dataSet3 = new DataSet();
-                    DataSet dataSet4 = new DataSet();
-                    //dataAdapter.Fill(dataSet);
-                    dataAdapter.Fill(dataSet3);
-                    dataAdapter1.Fill(dataSet1);
-                    dataAdapter2.Fill(dataSet2);
-                    dataAdapter4.Fill(dataSet4);
-
-                    var userId = HttpContext.Session.GetString("LoginId"); // Change this to your actual session key
-                    var userRoleId = HttpContext.Session.GetString("RoleID"); // Change this to your actual session key
-
-                    //var currentUser = new UserModel
-                    //{
-                    //    UserId = userId,
-                    //    RoleId = userRoleId
-                    //};
-
-                    TicketDetailsViewModel model = new TicketDetailsViewModel
+                    using (SqlCommand command3 = new SqlCommand("SP_Get_ConsignmentNo_By_TicketNO", conn1))
+                    using (SqlCommand command5 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1))
                     {
-                        BookingDetail = dataSet3,
-                        TicketDetails = dataSet1,
-                        TicketHistory = dataSet2,
-                        TicketStatus = dataSet4,
-                        userid = userId,
-                        roleid = userRoleId,
-                        TicketType = dataSet5
+                        command5.CommandType = CommandType.StoredProcedure;
+                        SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
+                        dataAdapter5.Fill(dataSet5);
 
-                    };
-                    // Replace with your tracking number variable or value
-                    ViewData["TicketNo"] = ticketid;
-                    string category = "";
+                        command3.CommandType = CommandType.StoredProcedure;
+                        command3.Parameters.AddWithValue("@TicketID", ticketid);
+                        string consignmentNumber;
 
-                    if (dataSet1.Tables.Count > 0)
-                    {
-                        DataTable dataTable = dataSet1.Tables[0]; // Assuming the first table in dataSet1 contains the data
+                        // Execute the stored procedure and store the result in the variable
+                        object result = command3.ExecuteScalar();
+                        consignmentNumber = result.ToString(); // Replace 'int' with the appropriate data type
 
-                        // Check if the DataTable has at least one row
-                        if (dataTable.Rows.Count > 0)
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
+                        using (SqlCommand command1 = new SqlCommand("sp_GetRequestDetails", conn1))
+                        using (SqlCommand command2 = new SqlCommand("sp_GetTicketHistory", conn1))
+                        using (SqlCommand command4 = new SqlCommand("sp_careconnect_Get_Ticket_Status", conn1))
                         {
-                            // Access the "Category" value from the first row directly
-                            category = dataTable.Rows[0]["Category"].ToString();
+                            command.CommandType = CommandType.StoredProcedure;
+                            command1.CommandType = CommandType.StoredProcedure;
+                            command2.CommandType = CommandType.StoredProcedure;
+                            command4.CommandType = CommandType.StoredProcedure;
+
+                            SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                            SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                            SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+                            SqlDataAdapter dataAdapter4 = new SqlDataAdapter(command4);
+
+                            command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                            command1.Parameters.AddWithValue("@TicketID", ticketid);
+                            command2.Parameters.AddWithValue("@TicketID", ticketid);
+
+                            DataSet dataSet3 = new DataSet();
+                            DataSet dataSet4 = new DataSet();
+                            dataAdapter.Fill(dataSet3);
+                            dataAdapter1.Fill(dataSet1);
+                            dataAdapter2.Fill(dataSet2);
+                            dataAdapter4.Fill(dataSet4);
+
+                            var userId = HttpContext.Session.GetString("LoginId"); // Change this to your actual session key
+                            var userRoleId = HttpContext.Session.GetString("RoleID"); // Change this to your actual session key
+
+                            TicketDetailsViewModel model = new TicketDetailsViewModel
+                            {
+                                BookingDetail = dataSet3,
+                                TicketDetails = dataSet1,
+                                TicketHistory = dataSet2,
+                                TicketStatus = dataSet4,
+                                userid = userId,
+                                roleid = userRoleId,
+                                TicketType = dataSet5
+                            };
+
+                            ViewData["TicketNo"] = ticketid;
+                            string category = "";
+
+                            if (dataSet1.Tables.Count > 0)
+                            {
+                                DataTable dataTable = dataSet1.Tables[0]; // Assuming the first table in dataSet1 contains the data
+
+                                // Check if the DataTable has at least one row
+                                if (dataTable.Rows.Count > 0)
+                                {
+                                    // Access the "Category" value from the first row directly
+                                    category = dataTable.Rows[0]["Category"].ToString();
+                                }
+                            }
+
+                            ViewData["TicketCategory"] = category;
+                            string dataSetJson = JsonConvert.SerializeObject(dataSet1);
+                            HttpContext.Session.SetString("Data1", dataSetJson);
+                            string RoleID = HttpContext.Session.GetString("RoleID");
+                            string UserName = HttpContext.Session.GetString("UserName");
+
+                            ViewData["RoleID"] = RoleID;
+                            ViewBag.UserName = UserName;
+
+                            return View("TicketDetails", model);
                         }
                     }
-
-                    ViewData["TicketCategory"] = category;
-                    ViewBag.TrackingData = dataSet1;
-
-
-
-                    DataSet dataSet = dataSet1; // Replace with your code to obtain the DataSet object
-
-                    string dataSetJson = JsonConvert.SerializeObject(dataSet);
-
-                    HttpContext.Session.SetString("Data1", dataSetJson);
-                    string RoleID = HttpContext.Session.GetString("RoleID");
-                    string UserName = HttpContext.Session.GetString("UserName");
-
-                    ViewData["RoleID"] = RoleID;
-
-
-                    ViewBag.UserName = UserName;
-
-                    //HttpContext.Session["Data1"] = dataSet1;
-                    //Session["Data1"] = dataSet1;
-                    //HttpContext.Session["dasd"] = dataSet1;
-                    //Session["Data1"] = dataSet1;
-                    return View("TicketDetails", model);
                 }
             }
-
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
+
 
         public void InsertTrackingHistory(string LoginId, string trackingid)
         {
             db _db = new db();
             using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
             {
+                if (conn.State != ConnectionState.Open)
+                    conn.Open();
                 SqlCommand cmd = new SqlCommand("SP_Insert_Tracking_History", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("LoginId", LoginId);
                 cmd.Parameters.AddWithValue("TrackingID", trackingid);
-                conn.Close();
-                conn.Open();
                 cmd.ExecuteNonQuery();
-                conn.Close();
+
             }
         }
         public ActionResult GetTrackingGenerateDetails(string tracking)
@@ -1800,29 +1802,37 @@ namespace PLIC_Web_Poratal.Controllers
 
         public IActionResult Tracking()
         {
-            string password = HttpContext.Session.GetString("Password");
-            List<Policy1> policies = new List<Policy1>();
-            SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
-
-            if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+            try
             {
-                string RoleID = HttpContext.Session.GetString("RoleID");
-                ViewData["RoleID"] = RoleID;
-                ViewBag.Role = RoleID;
-                //string RoleID = HttpContext.Session.GetString("RoleID");
-                string UserName = HttpContext.Session.GetString("UserName");
+                string password = HttpContext.Session.GetString("Password");
+                List<Policy1> policies = new List<Policy1>();
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                {
+                    if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                    {
+                        string RoleID = HttpContext.Session.GetString("RoleID");
+                        ViewData["RoleID"] = RoleID;
+                        // ViewBag.Role = RoleID;
+                        //string RoleID = HttpContext.Session.GetString("RoleID");
+                        string UserName = HttpContext.Session.GetString("UserName");
 
-                ViewData["RoleID"] = RoleID;
+                        ViewBag.RoleID = RoleID;
 
 
-                ViewBag.UserName = UserName;
+                        ViewBag.UserName = UserName;
 
-                conn.Close();
-                return View("~/Views/Home/Tracking.cshtml", policies);
+                        //conn.Close();
+                        return View("~/Views/Home/Tracking.cshtml", policies);
+                    }
+                }
+
+                return RedirectToAction("Login", "Account");
             }
+            catch (Exception ex)
+            {
 
-            return RedirectToAction("Login", "Account");
-
+                throw ex;
+            }
         }
 
 
@@ -2179,45 +2189,43 @@ namespace PLIC_Web_Poratal.Controllers
         public IActionResult TicketGenerate(string trackingNumber)
         {
             // HttpContext.Session.Clear();
-            // Route for Reneval Vouchers
+            // Route for Renewal Vouchers
             // changed by Aizaz and Imran Dated 17 Feb 22
             string password = HttpContext.Session.GetString("Password");
             List<Policy1> policies = new List<Policy1>();
-            SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
-            // string policyQuery = "select PolicyNo,IID from Insurant where NIC=@CNIC and Phone=@MobileNo";
-            //string sqlquery = "select count(*) from Insurant";
-            if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+
+            using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
             {
-                if (HttpContext.Session.GetString("RoleID") == "4")
+                // string policyQuery = "select PolicyNo,IID from Insurant where NIC=@CNIC and Phone=@MobileNo";
+                //string sqlquery = "select count(*) from Insurant";
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
                 {
-                    TempData["AlertMessage"] = "Your Are Not Authorize to Generate a Ticket.!";
-                    string url = $"/Home/Tracking";
-                    return Redirect(url);
+                    if (HttpContext.Session.GetString("RoleID") == "4")
+                    {
+                        TempData["AlertMessage"] = "You are not authorized to generate a ticket!";
+                        string url = $"/Home/Tracking";
+                        return Redirect(url);
+                    }
+                    else
+                    {
+                        conn.Close();
+                        string trackingNumbernew = trackingNumber; // Replace with your tracking number variable or value
+                        ViewData["TrackingNumber"] = trackingNumbernew;
+                        string RoleID = HttpContext.Session.GetString("RoleID");
+                        string UserName = HttpContext.Session.GetString("UserName");
+
+                        ViewData["RoleID"] = RoleID;
+                        ViewBag.UserName = UserName;
+
+                        return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
                 }
-
-
-                else
-                {
-                    conn.Close();
-                    string trackingNumbernew = trackingNumber; // Replace with your tracking number variable or value
-                    ViewData["TrackingNumber"] = trackingNumbernew;
-                    string RoleID = HttpContext.Session.GetString("RoleID");
-                    string UserName = HttpContext.Session.GetString("UserName");
-
-                    ViewData["RoleID"] = RoleID;
-
-
-                    ViewBag.UserName = UserName;
-
-
-                    return View("~/Views/Home/TicketGenerate.cshtml");
-                }
-
             }
 
             return RedirectToAction("Login", "Account");
             // return View("~/Views/Account/Login.cshtml");
         }
+
 
 
 
@@ -2246,7 +2254,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpPost]
-        public ActionResult CreateTicket(CreateTicketModel createTicketModel)
+        public async Task<ActionResult> CreateTicket(CreateTicketModel createTicketModel)
         {
             SqlTransaction _Transaction = null;
             try
@@ -2256,7 +2264,7 @@ namespace PLIC_Web_Poratal.Controllers
                 {
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
-                        conn.Open();
+                        await conn.OpenAsync();
                         SqlCommand cmd = new SqlCommand("InsertTicket", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
@@ -2330,7 +2338,7 @@ namespace PLIC_Web_Poratal.Controllers
                         //conn.Open();
 
 
-                        cmd.ExecuteNonQuery();
+                        await cmd.ExecuteNonQueryAsync();
 
 
 
@@ -2470,7 +2478,8 @@ namespace PLIC_Web_Poratal.Controllers
                                     if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
                                     {
                                         // Call your send email function
-                                        SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
+                                       // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
+                                        await SendEmailAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
                                     }
                                     else
                                     {
@@ -2502,7 +2511,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                                     // conn1.Close();
                                     //conn1.Open();
-                                    cmd1.ExecuteNonQuery();
+                                    await cmd1.ExecuteNonQueryAsync();
 
 
 
@@ -2545,7 +2554,7 @@ namespace PLIC_Web_Poratal.Controllers
                                                 cmd2.Parameters.AddWithValue("@ErrorCode", statusCode);
                                                 //conn1.Close();
                                                 //conn1.Open();
-                                                cmd2.ExecuteNonQuery();
+                                                await cmd2.ExecuteNonQueryAsync();
 
 
 
@@ -2576,7 +2585,7 @@ namespace PLIC_Web_Poratal.Controllers
                                                 cmd3.Parameters.AddWithValue("@MobileNo", complainerCell);
                                                 cmd3.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
                                                 cmd3.Parameters.AddWithValue("@ErrorCode", statusCode);
-                                                cmd3.ExecuteNonQuery();
+                                                await cmd3.ExecuteNonQueryAsync();
                                                 int ticketupdateno = ticketID; // Replace with your tracking number variable or value
                                                 ViewData["TicketUpdateNo"] = ticketupdateno;
 
@@ -3004,7 +3013,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult SearchTicketDetail(CreateTicketModel createTicketModel)
         {
             try
@@ -3063,7 +3072,7 @@ namespace PLIC_Web_Poratal.Controllers
                 return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
             }
         }
-        [HttpPost]
+        [HttpGet]
         public ActionResult GetCRMReport(CreateTicketModel createTicketModel)
         {
             try
@@ -3892,7 +3901,7 @@ namespace PLIC_Web_Poratal.Controllers
 
             return true;
         }
-        public ActionResult UpdateTicketEmail(EmailTicketModel EmailTicketModel)
+        public async Task< ActionResult> UpdateTicketEmail(EmailTicketModel EmailTicketModel)
         {
             try
             {
@@ -3952,7 +3961,7 @@ namespace PLIC_Web_Poratal.Controllers
                     if (IsValidEmail(EmailTicketModel.emailto) && IsValidEmail(EmailTicketModel.emailcc))
                     {
                         // Call your send email function
-                        SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, subject, textBody);
+                      await  SendEmailAsync(EmailTicketModel.emailto, EmailTicketModel.emailcc, subject, textBody);
                     }
                     else
                     {
@@ -3996,7 +4005,7 @@ namespace PLIC_Web_Poratal.Controllers
                         //cmd.Parameters.Add(ticketExistsParam);
                         conn.Close();
                         conn.Open();
-                        cmd.ExecuteNonQuery();
+                       await cmd.ExecuteNonQueryAsync();
 
                         // Check if the ticket already exists in your database
                         //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
@@ -4140,7 +4149,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             cmd1.Parameters.AddWithValue("@ErrorCode", statusCode);
                                             conn1.Close();
                                             conn1.Open();
-                                            cmd1.ExecuteNonQuery();
+                                            await cmd1.ExecuteNonQueryAsync();
 
 
 
@@ -4228,7 +4237,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             cmd1.Parameters.AddWithValue("@ErrorCode", statusCode);
                                             conn1.Close();
                                             conn1.Open();
-                                            cmd1.ExecuteNonQuery();
+                                            await cmd1.ExecuteNonQueryAsync();
 
 
 
@@ -4386,7 +4395,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             cmd1.Parameters.AddWithValue("@ErrorCode", statusCode);
                                             conn1.Close();
                                             conn1.Open();
-                                            cmd1.ExecuteNonQuery();
+                                            await cmd1.ExecuteNonQueryAsync();
 
 
 
@@ -4429,7 +4438,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             //cmd.Parameters.Add(ticketExistsParam);
                                             conn.Close();
                                             conn.Open();
-                                            cmd.ExecuteNonQuery();
+                                            await cmd.ExecuteNonQueryAsync();
 
                                             // Check if the ticket already exists in your database
                                             //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
@@ -4474,7 +4483,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             cmd1.Parameters.AddWithValue("@ErrorCode", statusCode);
                                             conn1.Close();
                                             conn1.Open();
-                                            cmd1.ExecuteNonQuery();
+                                            await cmd1.ExecuteNonQueryAsync();
 
 
 
@@ -4537,33 +4546,30 @@ namespace PLIC_Web_Poratal.Controllers
                 });
             }
         }
-        public void SendEmail(string toEmail, string ccEmail, string subject, string EmailBody)
+
+        public async Task SendEmailAsync(string toEmail, string ccEmail, string subject, string EmailBody)
         {
             try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("mail.daewoofastex.pk");
+                using (MailMessage mail = new MailMessage())
+                using (SmtpClient SmtpServer = new SmtpClient("mail.daewoofastex.pk"))
+                {
+                    mail.From = new MailAddress("careconnect@daewoofastex.pk");
+                    mail.To.Add(toEmail);
+                    mail.CC.Add("asharib.kamal@daewoo.com.pk");
+                    mail.CC.Add("amir.saleem@daewoo.com.pk");
+                    mail.IsBodyHtml = true;
+                    mail.Subject = subject;
+                    mail.Body = EmailBody;
 
-                mail.From = new MailAddress("careconnect@daewoofastex.pk");
-                mail.To.Add(toEmail); // Set the 'To' email address
-                mail.CC.Add("asharib.kamal@daewoo.com.pk"); // Set the 'CC' email address
-                mail.CC.Add("amir.saleem@daewoo.com.pk"); // Set the 'CC' email address
-                mail.IsBodyHtml = true;
+                    SmtpServer.UseDefaultCredentials = false;
+                    SmtpServer.Timeout = int.MaxValue;
+                    SmtpServer.Port = 587;
+                    SmtpServer.Credentials = new NetworkCredential("careconnect@daewoofastex.pk", "Wateen@786786");
+                    SmtpServer.EnableSsl = false;
 
-                mail.Subject = subject; // Set the subject of the email
-
-                mail.Body = EmailBody;
-
-
-
-                SmtpServer.UseDefaultCredentials = false;
-                SmtpServer.Timeout = int.MaxValue;
-                //SmtpServer.Port = 25;
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential("careconnect@daewoofastex.pk", "Wateen@786786");
-                SmtpServer.EnableSsl = false;
-
-                SmtpServer.Send(mail); // Send the email
+                    await SmtpServer.SendMailAsync(mail); // Send the email asynchronously
+                }
             }
             catch (Exception ex)
             {
@@ -4571,6 +4577,7 @@ namespace PLIC_Web_Poratal.Controllers
                 // Handle any exceptions that occur during the sending of the email
             }
         }
+
 
 
 

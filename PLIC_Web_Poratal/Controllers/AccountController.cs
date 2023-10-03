@@ -319,7 +319,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                                 HttpContext.Session.SetString("AdminName", HttpContext.Session.GetString("UserName"));
                                 ViewBag.AdminName = HttpContext.Session.GetString("AdminName");
-                                ViewBag.SysAdmin= HttpContext.Session.GetInt32("Sysadmin");
+                                ViewBag.SysAdmin = HttpContext.Session.GetInt32("Sysadmin");
                                 AdminLoggingHistory(userId);
                                 ModelState.Clear();
                                 return RedirectToAction("AdminDashboard", "Admin");
@@ -770,9 +770,14 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
         //------------------------------Get OTP-----------------------------------------------
-        [HttpPost]
+        [HttpGet]
         public string GetOtp(string ID)
         {
+
+            string LoginId;
+            string UserName;
+            string password;
+            string RoleID;
             string[] dataID = ID.Split('ǁ');
             //return "/Account/OTP";
 
@@ -790,118 +795,81 @@ namespace PLIC_Web_Poratal.Controllers
             //if (acc.MobileNo.Length != null)
             if (acc.Password.Length >= 3 && acc.UserName.Length > 3)
             {
-                SqlConnection conn = new SqlConnection(db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                string connectionString = db.GetConfiguration().GetConnectionString("DefaultConnection");
                 string sqlquery = "select top 1 userid,LoginId,Password,role_id from CRM_SYS_Users where LoginId='" + acc.UserName + "'";
 
-
-                //select top 1 LoginId,Password from CRM_SYS_Users where LoginId = @LoginId and Password = @Password
-
-                conn.Close();
-                conn.Open();
-                SqlCommand comm = new SqlCommand(sqlquery, conn);
-                SqlDataReader sdr = comm.ExecuteReader();
-
-                while (sdr.Read())
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string LoginId = sdr.GetValue(0).ToString();
-                    string UserName = sdr.GetValue(1).ToString();
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
 
-                    password = sdr.GetValue(2).ToString();
-                    string RoleID = sdr.GetValue(3).ToString();
-                    if (password==acc.Password)
+                    using (SqlCommand comm = new SqlCommand(sqlquery, conn))
                     {
-
-
-                        HttpContext.Session.SetString("LoginId", LoginId);
-                        HttpContext.Session.SetString("UserName", acc.UserName);
-                        HttpContext.Session.SetString("Password", acc.Password);
-                        HttpContext.Session.SetString("RoleID", RoleID);
-                    }
-                }
-
-                if (!sdr.HasRows)
-                {
-                    conn.Close();
-                    return "LoginId";
-
-                }
-                else
-                {
-                    if (password == acc.Password)
-                    {
-                        conn.Close();
-                        
-
-                        HttpContext.Session.SetString("LoginId", HttpContext.Session.GetString("LoginId"));
-                        string LoginId = HttpContext.Session.GetString("LoginId");
-                        string UserName = HttpContext.Session.GetString("UserName");
-                        string Password = HttpContext.Session.GetString("Password");
-                        string RoleID = HttpContext.Session.GetString("RoleID");
-                        ViewData["RoleID"] = RoleID;
-                        ViewBag.Role = RoleID;
-
-
-                        var viewModel = new CareConnect.Models.UserViewModel
+                        using (SqlDataReader sdr = comm.ExecuteReader())
                         {
-                            LoginId = LoginId,
-                            UserName = UserName,
-                            Password = password,
-                            RoleID = RoleID
-                        };
+                            while (sdr.Read())
+                            {
+                                LoginId = sdr.GetValue(0).ToString();
+                                UserName = sdr.GetValue(1).ToString();
+                                password = sdr.GetValue(2).ToString();
+                                RoleID = sdr.GetValue(3).ToString();
 
-                        //TempData["UserViewModel"] = viewModel;
-                        //ViewBag.RoleID = HttpContext.Session.GetString("RoleID");
-                        LoggingHistory(LoginId,RoleID, Password);
-                        return "/Home/Menu";
+                                if (password == acc.Password)
+                                {
+                                    HttpContext.Session.SetString("LoginId", LoginId);
+                                    HttpContext.Session.SetString("UserName", acc.UserName);
+                                    HttpContext.Session.SetString("Password", acc.Password);
+                                    HttpContext.Session.SetString("RoleID", RoleID);
+
+                                    if (!sdr.HasRows)
+                                    {
+                                        return "LoginId";
+                                    }
+                                    else
+                                    {
+                                        if (password == acc.Password)
+                                        {
+                                            HttpContext.Session.SetString("LoginId", HttpContext.Session.GetString("LoginId"));
+                                            LoginId = HttpContext.Session.GetString("LoginId");
+                                            UserName = HttpContext.Session.GetString("UserName");
+                                            password = HttpContext.Session.GetString("Password");
+                                            RoleID = HttpContext.Session.GetString("RoleID");
+                                            ViewData["RoleID"] = RoleID;
+                                            ViewBag.Role = RoleID;
+
+                                            var viewModel = new CareConnect.Models.UserViewModel
+                                            {
+                                                LoginId = LoginId,
+                                                UserName = UserName,
+                                                Password = password,
+                                                RoleID = RoleID
+                                            };
+
+                                            // TempData["UserViewModel"] = viewModel;
+                                             ViewBag.RoleID = HttpContext.Session.GetString("RoleID");
+                                            LoggingHistory(LoginId, RoleID, password);
+                                            return "/Home/Menu";
+                                        }
+                                        return "Password";
+                                    }
+                                    
+                                }
+                              
+                            }
+                            return "Password";
+                        }
+                        
                     }
-                    conn.Close();
-                    return "Password";
+                   
                 }
-
-
-
-
-
-                //if (!sdr.HasRows)
-                //{
-                //    conn.Close();
-                //    SqlConnection conn1 = new SqlConnection(db.GetConfiguration().GetConnectionString("DefaultConnection"));
-                //    string sqlquery1 = "select Password from WebPortalCustomerLogin where CNIC='" + acc.CNIC + "'";
-                //    SqlCommand comm1 = new SqlCommand(sqlquery1, conn1);
-                //    conn1.Open();
-                //    SqlDataReader sdr1 = comm1.ExecuteReader();
-                //    while (sdr1.Read())
-                //    {
-                //        password = sdr1.GetValue(0).ToString();
-                //    }
-                //    if (!sdr1.HasRows)
-                //    {
-                //        conn1.Close();
-                //        return "CNIC";
-                //    }
-                //    else if (password != acc.MobileNo)
-                //    {
-                //        conn1.Close();
-                //        HttpContext.Session.SetString("CNICno", acc.CNIC.Trim());
-                //        return "Password";
-                //    }
-                //    return "";
-                //}
-                //else
-                //{
-                //    conn.Close();
-                //    HttpContext.Session.SetString("CNIC", HttpContext.Session.GetString("NIC"));
-                //    string cnic = HttpContext.Session.GetString("NIC");
-                //    string phone = HttpContext.Session.GetString("Mobile");
-                //    LoggingHistory(cnic, phone);
-                //    return "/Home/Menu";
-                //}
+             
             }
             else
             {
                 return "";
             }
         }
+
 
         [HttpPost]
         public IActionResult Verify(Account acc)
@@ -1153,7 +1121,7 @@ namespace PLIC_Web_Poratal.Controllers
         //}
 
         //--------------------------------Logging History-----------------------------------------
-        public void LoggingHistory(string LoginId,string roleid, string Password)
+        public void LoggingHistory(string LoginId, string roleid, string Password)
         {
             db _db = new db();
             using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))

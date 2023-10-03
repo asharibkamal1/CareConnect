@@ -132,7 +132,7 @@
     <div class="col-6">
         <h4 id=reportTitle>Products</h4>
     </div>
-   
+
 </div>
 <div class="row">
     <div class="col-6">
@@ -142,7 +142,7 @@
     <div class="col-6">
         <canvas id="productBarChart" width="850" height="350"></canvas>
     </div>
-  
+
 </div>
 
 
@@ -260,14 +260,18 @@
     <script src="~/js/chatbot.js"></script>
 } *@
 <!-- Include SweetAlert CSS and JS -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 
-<link rel="stylesheet" href="~/css/chatbot.css">
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
 
 <script>
     debugger
@@ -1121,6 +1125,66 @@
                 //     }
                 // });
 
+
+
+
+                // debugger
+                // myChartall = new Chart(ctxall, {
+                //     type: 'doughnut',
+                //     data: {
+                //         labels: chartDataall.map(item => item.categoryDescription),
+                //         datasets: [{
+                //             label: 'Total Tickets',
+                //             data: chartDataall.map(item => item.totalTicket),
+                //             borderWidth: 1,
+                //             backgroundColor: [
+                //                 'rgba(75, 192, 192, 1)',
+                //                 'rgba(255, 99, 132, 1)',
+                //                 'rgba(54, 162, 235, 1)',
+                //                 'rgba(255, 206, 86, 1)',
+                //                 'rgba(255, 159, 64, 1)',
+                //                 'rgba(128, 0, 128, 1)',
+                //             ],
+                //         }]
+                //     },
+                //     options: {
+                //         responsive: true,
+                //         maintainAspectRatio: false,
+                //         width: 800,
+                //         height: 200,
+                //         plugins: {
+                //             datalabels: {
+                //                 display: true, // Make sure it's set to true
+                //                 color: 'white', // Customize the font color of data labels
+                //                 formatter: (value, context) => {
+                //                     const label = context.chart.data.labels[context.dataIndex];
+                //                     return `${label}: ${value}`; // Customize the format of the data label
+                //                 },
+                //             },
+                //             legend: {
+                //                 display: false, // Hide the legend
+                //             },
+                //         },
+                //     },
+                // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 myChartall = new Chart(ctxall, {
                     type: 'doughnut',
                     data: {
@@ -1325,9 +1389,9 @@
                             data: chartDataComplaintspie.map(item => item.totalTicket),
                             borderWidth: 1,
                             //backgroundColor: commonBarColors[2], // Bar fill color
-                           // borderColor: commonBorderColors[2], // Bar bor....der color
-                           // barPercentage: 0.5,
-                           // minBarLength: 5,
+                            // borderColor: commonBorderColors[2], // Bar bor....der color
+                            // barPercentage: 0.5,
+                            // minBarLength: 5,
                         }]
                     },
                     options: {
@@ -1383,7 +1447,7 @@
                 //         }]
                 //     },
                 //     options: {
-                    
+
                 //         responsive: true,
                 //         maintainAspectRatio: false,
                 //         width: 800,

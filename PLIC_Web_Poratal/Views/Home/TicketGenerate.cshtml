@@ -183,7 +183,7 @@ $(document).ready(function () {
     $.ajax({
         url: '/Home/GetTrackingGenerateDetails',
         type: 'POST',
-        data: { tracking: '@ViewBag.TrackingNumber' },
+            data: { tracking: @ViewData["TrackingNumber"] },
         success: function (result) {
             debugger;
             // Render the partial view with the result

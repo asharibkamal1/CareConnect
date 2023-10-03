@@ -225,7 +225,7 @@ $(document).ready(function(){
     $("#notifyMe").notifyMe();
 
     (function() {
-
+        debugger
         var dlgtrigger = document.querySelector( '[data-dialog]' ),
             somedialog = document.getElementById( dlgtrigger.getAttribute( 'data-dialog' ) ),
             dlg = new DialogFx( somedialog );
