@@ -9,6 +9,7 @@
         background-color: #ffd700; /* change this to the desired highlight color */
         color: black; /* change this to the desired text color */
     }
+
     .even-row {
         background-color: #e8e854; /* set the background color for even rows */
         color: #000000; /* set the text color for even rows */
@@ -19,6 +20,7 @@
         background-color: #755555; /* set the background color for odd rows */
         color: #000000; /* set the text color for odd rows */
     }
+
     .custom-checkbox input[type="checkbox"] {
         display: none;
     }
@@ -93,6 +95,10 @@
                         <input type="checkbox" id="myCheckbox">
                         <label for="myCheckbox">Track With Ticket ID</label>
                     </div>
+               @*      <div class="custom-checkbox col-lg-2 col-md-2 col-sm-2">
+                        <input type="checkbox" id="myCheckboxmanual">
+                        <label for="myCheckboxmanual">Track With Manual#</label>
+                    </div> *@
                 </div>
                 <span class="text-danger"></span>
             </div>
@@ -119,12 +125,19 @@
     $(document).ready(function () {
         debugger
     @*var userRoleID = @ViewData["RoleID"];*@
-        var userRoleID = @ViewBag.RoleID;
+            var userRoleID = @ViewBag.RoleID;
 
         $('.loader').hide();
         hideLoader();
         debugger
 
+    });
+
+    $('#tracking').keyup(function (event) {
+        if (event.keyCode === 13) {
+            // Enter key (key code 13) was pressed, trigger the click event on #btnSubmit
+            $('#btnSubmit').click();
+        }
     });
     $('#btnSubmit').click(function (event) {
 
@@ -179,7 +192,7 @@
         //            hideLoader(); // Hide the loader
         //        }
         //    });
-        //} 
+        //}
 
         const isChecked = myCheckbox.checked;
         debugger
@@ -188,10 +201,84 @@
         $.ajax({
             url: '/Home/GetTrackingDetails',
             type: 'GET',
-            data: { tracking: trackingNumber,
+            data: {
+                tracking: trackingNumber,
                 isCheckboxChecked: isChecked
-            
-            
+
+
+            },
+            success: function (result) {
+                debugger
+
+                // Create a temporary element to parse the HTML string
+                var tempElement = $('<div/>').html(result);
+                var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
+                // Set the value in the input field with the ID "tracking"
+                $('#tracking').val(cnValue);
+                hideLoader(); // Hide the loader
+
+                debugger
+                $('#trackingDetailsContainer').html(result);
+                var hasData = $('#receiverTable tbody tr').length > 0;
+                debugger
+
+                if (hasData) {
+                    debugger
+
+                    if (userRoleID === 4) {
+                        debugger
+                        $('#additionalButton').remove();
+                    }
+
+                    else {
+                        debugger
+                        var additionalButtonExists = $('#additionalButton').length > 0;
+                        if (!additionalButtonExists) {
+                            var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                + 'Ticket Generate'
+                                + '</button>';
+                            $('#btnSubmit').after(additionalButton);
+                            document.getElementById('additionalButton').addEventListener('click', function () {
+                                debugger
+
+                                var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
+                                window.open(url, '_blank');
+                            });
+                        }
+                    }
+                }
+                else {
+
+                    $('#additionalButton').remove();
+
+                }
+            }, complete: function () {
+
+            },
+            error: function () {
+                Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
+                hideLoader(); // Hide the loader
+            }
+        });
+
+
+
+        //when manual no check box is check
+
+
+        const ismanualChecked = myCheckboxmanual.checked;
+        debugger
+        var trackingNumber = $('#tracking').val();
+        debugger
+        $.ajax({
+            url: '/Home/GetTrackingDetailsManual',
+            type: 'GET',
+            data: {
+                tracking: trackingNumber,
+                ismanualCheckboxChecked: ismanualChecked
+
+
             },
             success: function (result) {
                 debugger

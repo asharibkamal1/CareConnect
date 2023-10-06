@@ -1,0 +1,124 @@
+﻿@model CareConnect.Models.ReportViewModel
+
+
+
+<div class="card">
+
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Agents Activity Report Detail</h3>
+
+    </div>
+    <div class="card-body">
+        @if (Model.Report_rpt_ticketdetails != null && Model.Report_rpt_ticketdetails.Tables.Count > 0 )
+        {
+            <div class="dt-buttons"></div>
+            <table id="bookingstatusTable"  class="display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        @foreach (System.Data.DataColumn column in Model.Report_rpt_ticketdetails.Tables[0].Columns)
+                        {
+                            <th>@column.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.Report_rpt_ticketdetails.Tables[0].Rows)
+                    {
+                        <tr>
+                            @foreach (var item in row.ItemArray)
+                            {
+                                <td>
+                                @*     @if (row.Table.Columns.IndexOf("TicketId") == Array.IndexOf(row.ItemArray, item))
+                                    {
+                                        <a class="ticketLink" href="/Home/GetTicketDetails?ticketno=@item.ToString()" target="_blank">@item.ToString()</a>
+                                    }
+                                    else *@
+                                   
+                                        @item.ToString()
+                                  
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Records Found.</p>
+        }
+    </div>
+
+
+
+
+
+</div>
+<br />
+
+
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+<!-- Include pdfMake library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+
+<!-- Include DataTables and Buttons extensions -->
+
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<!-- Add TableExport library -->
+@* <script src="https://cdn.datatables.net/1.11.10/js/jquery.dataTables.min.js"></script> *@
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#bookingstatusTable').DataTable({
+            scrollX: '400px',
+            scrollY: '900px',
+            scrollCollapse: true,
+            pageLength: 100,
+            dom: 'Bfrtip', // 'B' for buttons
+            buttons: [
+                'copy', 'excel', 'print'
+            ],
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            }
+        });
+    });
+    //$(document).on('click', '.detailButton', function () {
+    //    debugger
+    //    var ticketId = $(this).data('ticketid');
+    //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
+
+    //    window.open(url, '_blank');
+
+    //});
+</script>
+
+
+
+
+
+
+
+

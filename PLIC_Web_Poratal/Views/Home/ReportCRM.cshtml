@@ -189,7 +189,7 @@
         debugger
         // Calculate one week ago date
         var oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        oneWeekAgo.setDate(oneWeekAgo.getDate());
 
         // Format the date in YYYY-MM-DD format
         var formattedDate = oneWeekAgo.toISOString().split('T')[0];
@@ -198,7 +198,7 @@
         document.getElementById('datefrom').value = formattedDate;
         document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
 
-       
+           
     });
 
     $('#btnSearch').click(function () {
@@ -271,7 +271,7 @@
         debugger
         $.ajax({
             url: '/Home/GetCRMReport',
-            type: 'POST',
+            type: 'GET',
             data: ticketData,
             success: function (result) {
                 debugger

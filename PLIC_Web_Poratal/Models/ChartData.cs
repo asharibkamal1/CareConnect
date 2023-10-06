@@ -9,6 +9,7 @@ namespace CareConnect.Models
     {
         public int TotalTicket { get; set; }
         public string MHeading { get; set; }
+        public string region { get; set; }
         public int Closed { get; set; }
         public int IP { get; set; }
         public string CategoryDescription { get; set; }

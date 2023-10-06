@@ -181,6 +181,9 @@
     <!-- Box icon CSS   -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
 
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
     <div class="wrapper">
@@ -292,6 +295,11 @@
                                         <a asp-action="ReportTerminalAddress" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "#0565B7" : "default");">
                                             <i class="nav-icon fa fa-fw fa-address-book"></i>
                                             <p>FRN/Agent Address</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-action="ReportAgents" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fa fa-fw fa-box-open"></i>Agents Activity
                                         </a>
                                     </li>
                                 </ul>

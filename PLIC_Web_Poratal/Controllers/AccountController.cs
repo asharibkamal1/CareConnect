@@ -770,7 +770,7 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
         //------------------------------Get OTP-----------------------------------------------
-        [HttpGet]
+       // [HttpGet]
         public string GetOtp(string ID)
         {
 
