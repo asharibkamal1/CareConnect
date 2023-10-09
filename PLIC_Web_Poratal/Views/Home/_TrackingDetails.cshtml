@@ -10,11 +10,15 @@
     </div>
     <div class="card-body">
         <ul class="nav nav-pills nav-tabs" role="tablist">
+
             <li class="nav-item">
-                <a class="nav-link active" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Receiver Detail</a>
+                <a class="nav-link active" id="TicketTableTabButton" data-toggle="pill" href="#TicketTableTabContent">Ticket Details</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="secondTableTabButton" data-toggle="pill" href="#secondTableTabContent">Sender Detail</a>
+                <a class="nav-link" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Consignee</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="secondTableTabButton" data-toggle="pill" href="#secondTableTabContent">Shipper</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="OrderTableTabButton" data-toggle="pill" href="#OrderTableTabContent">Order Detail</a>
@@ -25,9 +29,7 @@
             <li class="nav-item">
                 <a class="nav-link" id="ItemTableTabButton" data-toggle="pill" href="#ItemTableTabContent">Item Detail</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="TicketTableTabButton" data-toggle="pill" href="#TicketTableTabContent">Ticket Details</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" id="HistoryTableTabButton" data-toggle="pill" href="#HistoryTableTabContent">Tracking History</a>
             </li>
@@ -36,7 +38,7 @@
 
 
         <div class="tab-content mt-3">
-            <div id="receiverTabContent" class="tab-pane fade show active">
+            <div id="receiverTabContent" class="tab-pane fade">
                 <table id="receiverTable" class="display" style="width:100%">
                     <thead>
                         <tr>
@@ -166,7 +168,7 @@
 
 
             @*-----Ticket Detials-----------*@
-            <div id="TicketTableTabContent" class="tab-pane fade">
+            <div id="TicketTableTabContent" class="tab-pane fade show active">
                 <table id="TicketTable" width="100%" class="display">
                     <thead>
                         <tr>
@@ -347,50 +349,50 @@
         // Function to generate a random color
 
 
-@* 
-        function getRandomColor() {
+    @*
+            function getRandomColor() {
             var letters = '0123456789ABCDEF';
             var color = '#';
             for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
+            color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
-        } *@
-        function getRandomLightColor() {
-            // Generate light shades for R, G, and B channels (between 200 and 255)
-            var r = Math.floor(Math.random() * 56) + 200;  // Red channel
-            var g = Math.floor(Math.random() * 56) + 200;  // Green channel
-            var b = Math.floor(Math.random() * 56) + 200;  // Blue channel
+            } *@
+            function getRandomLightColor() {
+                // Generate light shades for R, G, and B channels (between 200 and 255)
+                var r = Math.floor(Math.random() * 56) + 200;  // Red channel
+                var g = Math.floor(Math.random() * 56) + 200;  // Green channel
+                var b = Math.floor(Math.random() * 56) + 200;  // Blue channel
 
-            // Convert the RGB values to a hex color code
-            var color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+                // Convert the RGB values to a hex color code
+                var color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
 
-            return color;
-        }
+                return color;
+            }
 
 
-      @*       function getRandomColor() {
-                var colors = ['#0565B7', '#28a745']; // Define your two random colors here
-                var randomIndex = Math.floor(Math.random() * colors.length);
-                return colors[randomIndex];
+    @*       function getRandomColor() {
+            var colors = ['#0565B7', '#28a745']; // Define your two random colors here
+            var randomIndex = Math.floor(Math.random() * colors.length);
+            return colors[randomIndex];
             } *@
 
-        // Iterate through each row in the table
-        $('#bookingstatusTable tbody tr').each(function () {
-            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+            // Iterate through each row in the table
+            $('#bookingstatusTable tbody tr').each(function () {
+                var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
 
-            // Check if this barcode value has been encountered before
-            if (barcodeColors[barcodeValue] === undefined) {
-                // If not encountered before, generate a random color and store it
+                // Check if this barcode value has been encountered before
+                if (barcodeColors[barcodeValue] === undefined) {
+                    // If not encountered before, generate a random color and store it
                     barcodeColors[barcodeValue] = getRandomLightColor();
-       @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
-                barcodeCell.addClass('highlighted'); *@
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                        barcodeCell.addClass('highlighted'); *@
 
-            }
+                }
 
-            // Apply the background color to highlight rows with the same barcode value
-            $(this).css('background-color', barcodeColors[barcodeValue]);
-        });
+                // Apply the background color to highlight rows with the same barcode value
+                $(this).css('background-color', barcodeColors[barcodeValue]);
+            });
 
         // Iterate through each row in the table
         $('#hdstatusTable tbody tr').each(function () {
@@ -403,14 +405,14 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                }
+                    }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
         });
 
 
-      
+
         debugger
         $('#receiverTable').DataTable({
             scrollX: true,
@@ -518,30 +520,30 @@
                 }
             }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-        });
-        $('#hdstatusTable').DataTable({
-            scrollX: '400px',
-            scrollY: '400px', // Specify the desired height of the scrollable area
-            scrollCollapse: true,
-            pageLength: 100,
-            ordering: false,
-             language: {
-                paginate: {
-                    first: 'First',
-                    previous: 'Previous',
-                    next: 'Next',
-                    last: 'Last'
-                }
-            }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
+            });
+    $('#hdstatusTable').DataTable({
+        scrollX: '400px',
+        scrollY: '400px', // Specify the desired height of the scrollable area
+        scrollCollapse: true,
+        pageLength: 100,
+        ordering: false,
+        language: {
+            paginate: {
+                first: 'First',
+                previous: 'Previous',
+                next: 'Next',
+                last: 'Last'
+            }
+        }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-        });
-        $(document).on('click', '.detailButton', function () {
-            debugger
-            var ticketId = $(this).data('ticketid');
-            var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
-            window.location.href = url;
-        });
+            });
+    $(document).on('click', '.detailButton', function () {
+        debugger
+        var ticketId = $(this).data('ticketid');
+        var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
+        window.location.href = url;
     });
+        });
 </script>
 
 

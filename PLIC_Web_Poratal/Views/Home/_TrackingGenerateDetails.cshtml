@@ -1,7 +1,7 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
 @Html.ValidationSummary(true)
 
-<div class="card">
+<div class="card" hidden>
     <div class="card-header" style="background-color: #0565B7;color:white">
         <h3 class="card-title">Booking Detail</h3>
     </div>
@@ -67,10 +67,10 @@
             </div>
 
             <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Ticket Type:</label>
+                <label for="TicketTypeDropdown">Source:</label>
                 <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
 
-                    <option value="">Select Ticket Type</option>
+                    <option value="">Select Source</option>
                     @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
                     {
                         <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
