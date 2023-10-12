@@ -2,6 +2,16 @@
 <!-- Render the dropdown list with TicketCatType data -->
 
 <div class="ROW">
+    <div id="locationDropdownContainer"  class="col-md-6 col-sm-6">
+
+        <label for="location">Location:</label>
+        <select class="form-control" id="LocationDropdown" name="location">
+            @foreach (System.Data.DataRow catRow in Model.Sub_Terminal.Tables[0].Rows)
+            {
+                <option value="@catRow["Sub_Terminal_Id"]">@catRow["Sub_Terminal_Name"]</option>
+            }
+        </select>
+    </div>
     <div class="col-md-6 col-sm-6">
 
         <label for="TicketTypeDropdown">Region:</label>
@@ -12,7 +22,7 @@
             }
         </select>
     </div>
-    <div class="col-md-6 col-sm-6">
+    <div id="userEmailDropdownContainer" class="col-md-8 col-sm-8 ">
         <label for="TicketTypeDropdown">User Email:</label>
         <select class="form-control" id="useremail" name="email">
             @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
@@ -21,6 +31,7 @@
             }
         </select>
     </div>
+
 </div>
 <br />
 

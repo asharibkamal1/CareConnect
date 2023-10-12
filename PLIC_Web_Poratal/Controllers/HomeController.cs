@@ -1793,11 +1793,13 @@ namespace PLIC_Web_Poratal.Controllers
             try
             {
                 DataSet dataSet = new DataSet();
+                DataSet dataSet1 = new DataSet();
 
 
 
 
                 using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
 
 
                 {
@@ -1805,20 +1807,32 @@ namespace PLIC_Web_Poratal.Controllers
                     if (conn1.State != ConnectionState.Open)
                         conn1.Open();
 
-
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
                     SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Region_By_ID", conn1);
+                    SqlCommand command2 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn);
 
                     command1.CommandType = CommandType.StoredProcedure;
+                    command2.CommandType = CommandType.StoredProcedure;
 
                     SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+
+                    string type = "ALL";
+
+                    command2.Parameters.AddWithValue("@terminal_id", CityID);
+                    command2.Parameters.AddWithValue("@type", type);
 
                     command1.Parameters.AddWithValue("@City_Id", CityID);
 
                     dataAdapter1.Fill(dataSet);
+                    dataAdapter2.Fill(dataSet1);
 
                     TrackingGenerateViewModel model = new TrackingGenerateViewModel
                     {
-                        RegionDS = dataSet
+                        RegionDS = dataSet,
+                        Sub_Terminal = dataSet1
+
                     };
 
                     return PartialView("_CityRegion", model);
@@ -2169,7 +2183,65 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
+        public IActionResult AccountOpening()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
 
+                    {
+                        conn1.Open();
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Opening_Type_DropDownData", conn1);
+                        command.CommandType = CommandType.StoredProcedure;
+                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                        //dataAdapter.Fill(dataSet);
+                        dataAdapter1.Fill(dataSet1);
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            AccountOpening = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        //return PartialView("_TicketSearchCatagory", model);
+                        return View("~/Views/Home/AccountOpening.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
 
 
         public IActionResult Report()
@@ -3141,8 +3213,152 @@ namespace PLIC_Web_Poratal.Controllers
             }
 
         }
+        [HttpPost]
+        public async Task<ActionResult> CreateAccountOpening(CreateAccountOpeningModel CreateAccountOpeningModel)
+        {
+            SqlTransaction _Transaction = null;
+            try
+            {
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            conn.Open();
+                        SqlCommand cmd = new SqlCommand("InsertAccount_Opening_Record", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlTransaction transaction = conn.BeginTransaction();
+                        cmd.Transaction = transaction;
+                        cmd.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("LoginId"));
+                        cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@accounttype", CreateAccountOpeningModel.accounttype);
+                        cmd.Parameters.AddWithValue("@accounttypename", CreateAccountOpeningModel.accounttypename);
+                        cmd.Parameters.AddWithValue("@customername", CreateAccountOpeningModel.customername);
+                        cmd.Parameters.AddWithValue("@city", CreateAccountOpeningModel.city);
+                        cmd.Parameters.AddWithValue("@cityname", CreateAccountOpeningModel.cityname);
 
 
+                        cmd.Parameters.AddWithValue("@region", CreateAccountOpeningModel.region);
+                        cmd.Parameters.AddWithValue("@regionname", CreateAccountOpeningModel.regionname);
+                        cmd.Parameters.AddWithValue("@contactno", CreateAccountOpeningModel.contact);
+                        cmd.Parameters.AddWithValue("@avgship", CreateAccountOpeningModel.avgship);
+                        cmd.Parameters.AddWithValue("@avgwgt", CreateAccountOpeningModel.avgwgt);
+                        cmd.Parameters.AddWithValue("@businessnature", CreateAccountOpeningModel.businessnature);
+                        cmd.Parameters.AddWithValue("@emailaddress", CreateAccountOpeningModel.emailaddress);
+                        cmd.Parameters.AddWithValue("@frnbusinesslocation", CreateAccountOpeningModel.frnbusinesslocation);
+                        cmd.Parameters.AddWithValue("@frnownproperty", CreateAccountOpeningModel.frnownproperty);
+                        cmd.Parameters.AddWithValue("@remarks", CreateAccountOpeningModel.Remarks);
+
+
+
+                        SqlParameter ticketIDParam = new SqlParameter("@AccountID", SqlDbType.Int);
+                        ticketIDParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketIDParam);
+
+
+                        //cmd.Parameters.Add("@AccountID", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add("@toemail", SqlDbType.VarChar, 255).Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add("@ccemail", SqlDbType.VarChar, 255).Direction = ParameterDirection.Output;
+
+
+                        //cmd.ExecuteNonQuery();
+
+                        await cmd.ExecuteNonQueryAsync();
+
+  
+
+                        // Retrieve the values of @toemail and @ccemail
+                        string toemail = cmd.Parameters["@toemail"].Value.ToString();
+                        string ccemail = cmd.Parameters["@ccemail"].Value.ToString();
+
+
+
+
+                        int AccountID = (int)cmd.Parameters["@AccountID"].Value;
+                        string accounttype = (string)cmd.Parameters["@accounttypename"].Value;
+                        string customername = (string)cmd.Parameters["@customername"].Value;
+                        string contactno = (string)cmd.Parameters["@contactno"].Value;
+                        string avgship = (string)cmd.Parameters["@avgship"].Value;
+                        string avgwgt = (string)cmd.Parameters["@avgwgt"].Value;
+                        string businessnature = (string)cmd.Parameters["@businessnature"].Value;
+                        string emailaddress = (string)cmd.Parameters["@emailaddress"].Value;
+                        string frnbusinesslocation = (string)cmd.Parameters["@frnbusinesslocation"].Value;
+                        int frnownproperty = (int)cmd.Parameters["@frnownproperty"].Value;
+                        string remarks = (string)cmd.Parameters["@remarks"].Value;
+                        string contact = (string)cmd.Parameters["@contactno"].Value;
+
+
+                        string subject;
+                        subject = " (Care Connect) Request for " + CreateAccountOpeningModel.accounttypename + "";
+
+
+                        string textBody = " Dear Sir,</br></br> We have provided you the necessary requirements for opening an " + CreateAccountOpeningModel.accounttypename + " of Daewoo FastEx. For further procedure kindly make contact with customer. </br></br><table border=" + 1 + " cellpadding=" + 1 + " cellspacing=" + 1 + " width = " + 600 + " colspan=2>";
+                        textBody += "<tr> <td><b>Customer Name</b></td> <td>" + CreateAccountOpeningModel.customername + "</td> </tr> ";
+                        textBody += "<tr> <td><b>Contact No</b></td>  <td>" + CreateAccountOpeningModel.contact + "</td>  </tr> ";
+                        textBody += "<tr> <td><b>City</b></td>  <td>" + CreateAccountOpeningModel.cityname + "</td>  </tr>";
+                        textBody += "<tr><td><b>Region</b></td> <td>" + CreateAccountOpeningModel.regionname + "</td> </tr> ";
+                        textBody += "<tr><td><b>Avg Shipment Per Week</b></td>  <td>" + CreateAccountOpeningModel.avgship + "</td> </tr> ";
+                        textBody += "<tr> <td><b>Avg Weight Per Shipment</b></td>  <td>" + CreateAccountOpeningModel.avgwgt + "</td> </tr> ";
+                        textBody += "<tr> <td><b>Business Nature</b></td>  <td>" + CreateAccountOpeningModel.businessnature + "</td> </tr> ";
+                        textBody += "<tr><td><b>Email Address:</b></td> <td>" + CreateAccountOpeningModel.emailaddress + "</td> </tr> ";
+                        textBody += "<tr><td><b>Franchise Business Loc:</b></td> <td>" + CreateAccountOpeningModel.frnbusinesslocation + "</td> </tr> ";
+                        textBody += "<tr><td><b>Franchise Own Property:</b></td> <td> " + CreateAccountOpeningModel.frnownproperty + "   </td> </tr> ";
+                        textBody += "</tr>";
+                        textBody += "</table> ";
+
+
+                        textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + CreateAccountOpeningModel.Remarks + "<tr><td> </table> \n" +
+                                "</br><table> <tr><td>\n" +
+
+                                "Kindly Login Care Connect Portal URL. https://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
+
+                               "<tr><td>\n" +
+                               "Best regards,</br> </td></tr>\n" +
+                               "<tr><td>\n" +
+                               "MIS Department</br> </td></tr>\n" +
+
+                               "<tr style=font-size:10px><td>\n" +
+                               "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
+                               " </table>";
+
+
+                        if (toemail != null)
+                        {
+
+
+
+                            if (IsValidEmail(toemail))
+                            {
+                                // Call your send email function
+                                await SendEmailAsync(toemail, ccemail, subject, textBody);
+                            }
+                            else
+                            {
+
+                                return Json(new { success = false, message = "Email Address is Not Valid." });
+                            }
+                        }
+
+
+                        int accountid = AccountID; // Replace with your tracking number variable or value
+                        ViewData["AccountID"] = accountid;
+
+                        transaction.Commit();
+                        return Json(new { success = true, data = accountid, message = "Account Created Successfully." });
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { success = false, message = "Error Creating Account.", error = ex.Message });
+            }
+
+        }
 
         //[HttpGet]
 
@@ -4739,10 +4955,12 @@ namespace PLIC_Web_Poratal.Controllers
                 using (MailMessage mail = new MailMessage())
                 using (SmtpClient SmtpServer = new SmtpClient("mail.daewoofastex.pk"))
                 {
+
+
                     mail.From = new MailAddress("careconnect@daewoofastex.pk");
-                    mail.To.Add(toEmail);
-                    mail.CC.Add("asharib.kamal@daewoo.com.pk");
-                    mail.CC.Add("amir.saleem@daewoo.com.pk");
+                    mail.To.Add("asharib.kamal@daewoo.com.pk");
+                    mail.CC.Add("amir.saleem@daewoo.com.pk,asharib.kamal@daewoo.com.pk");
+                
                     mail.IsBodyHtml = true;
                     mail.Subject = subject;
                     mail.Body = EmailBody;

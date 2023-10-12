@@ -237,31 +237,67 @@
 
 <br />
 
+<div class="row">
 
-<div class="card">
+    <div class="col-9">
 
-    <div class="card-header" style="background-color: #0565B7;color:white">
-        <h3 class="card-title">Booking Detail</h3>
+        <div class="card">
 
-    </div>
-    <div class="card-body">
-        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[0].Rows)
-        {
-            <div class="row">
-                @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[0].Columns)
+            <div class="card-header" style="background-color: #0565B7;color:white">
+                <h3 class="card-title">Booking Detail</h3>
+
+            </div>
+            <div class="card-body">
+                @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[0].Rows)
                 {
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="control-label">@column.ColumnName:</label>
-                            <input type="text" class="form-control" value="@row[column.ColumnName]" readonly />
-                        </div>
+                    <div class="row">
+                        @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[0].Columns)
+                        {
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">@column.ColumnName:</label>
+                                    <input type="text" class="form-control" value="@row[column.ColumnName]" readonly />
+                                </div>
+                            </div>
+                        }
                     </div>
                 }
             </div>
-        }
+
+        </div>
+    </div>
+
+    <div class="col-3">
+
+        <div class="card">
+
+            <div class="card-header" style="background-color: #0565B7;color:white">
+                <h3 class="card-title">Transit Detail</h3>
+
+            </div>
+            <div class="card-body">
+                @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[8].Rows)
+                {
+                    <div class="row">
+                        @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[8].Columns)
+                        {
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">@column.ColumnName:</label>
+                                    <input type="text" class="form-control" value="@row[column.ColumnName]" readonly />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
     </div>
 
 </div>
+
+
 <div class="card">
 
     <div class="card-header" style="background-color: #0565B7;color:white">
@@ -388,7 +424,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                         barcodeCell.addClass('highlighted'); *@
 
-                }
+                        }
 
                 // Apply the background color to highlight rows with the same barcode value
                 $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -405,7 +441,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                    }
+                            }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -504,6 +540,8 @@
             }, dom: 'lfrt' // 'lrtip' Hide search box and page number
 
         });
+
+
         $('#bookingstatusTable').DataTable({
             scrollX: '400px',
             scrollY: '400px', // Specify the desired height of the scrollable area
@@ -520,7 +558,10 @@
                 }
             }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-            });
+                    });
+
+
+
     $('#hdstatusTable').DataTable({
         scrollX: '400px',
         scrollY: '400px', // Specify the desired height of the scrollable area
@@ -536,14 +577,14 @@
             }
         }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-            });
+                    });
     $(document).on('click', '.detailButton', function () {
         debugger
         var ticketId = $(this).data('ticketid');
         var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
         window.location.href = url;
     });
-        });
+                });
 </script>
 
 

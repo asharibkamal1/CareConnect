@@ -1,0 +1,432 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "AccountOpening";
+
+}
+
+@model CareConnect.Models.TrackingGenerateViewModel
+@Html.ValidationSummary(true)
+<div class="card">
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Account Opening</h3>
+    </div>
+    <div class="card-body">
+        <!-- Render the dropdown list with TicketCatType data -->
+
+        <div class="row">
+
+
+            <div class="col-md-auto col-12">
+                <label for="accounttype">Account Type:</label>
+                <select class="form-control" id="AccountTypeDropdown" name="accounttype">
+                    <option value="">Select Account Type</option>
+                    @foreach (System.Data.DataRow catRow in Model.AccountOpening.Tables[0].Rows)
+                    {
+
+
+                        <option value="@catRow["Opening_Type_Id"]">@catRow["Opening_Type"]</option>
+
+                    }
+                </select>
+
+                <span class="text-danger" id="accounttypeDropdownError" style="display: none;">Please select Account Type.</span>
+            </div>
+            <div class="col-md-auto col-12">
+                <div class="form-group">
+                    <label for="customername">Customer Name:</label>
+
+                    <input type="text" id="txtcustomername" name="customername" class="form-control" placeholder="Enter Customer Name">
+                    <span class="text-danger" id="customerError" style="display: none;">Please Enter Customer Name</span>
+                </div>
+            </div>
+
+            <div class="col-md-auto col-12">
+
+                <label for="TicketTypeDropdown">City:</label>
+                <select class="form-control" id="CityDropdown" name="city ">
+                    <option value="">Select City</option>
+                    @foreach (System.Data.DataRow catRow in Model.AccountOpening.Tables[1].Rows)
+                    {
+                        <option value="@catRow["city_id"]">@catRow["city_name"]</option>
+                    }
+                </select>
+                <span class="text-danger" id="cityDropdownError" style="display: none;">Please select City.</span>
+            </div>
+
+            <div class="col-md-4 col-12">
+
+                <div id="regionContainer">
+                </div>
+                <span class="text-danger" id="regionerror" style="display: none;">Please select Region.</span>
+            </div>
+
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-auto col-12">
+                <div class="form-group">
+                    <label for="contactno">Contact No:</label>
+
+                    <input type="text" id="txtcontactno" name="Remarks" class="form-control" placeholder="Enter Contact No">
+                    <span class="text-danger" id="contactError" style="display: none;">Please Enter Contact No.</span>
+                </div>
+            </div>
+            <div class="col-md-auto col-12 hidedivfrn">
+                <div class="form-group">
+                    <label for="avgship">Avg Ship/week:</label>
+
+                    <input type="text" id="txtavgship" name="avgship" class="form-control" placeholder="Enter Avg Ship">
+                    <span class="text-danger" id="avgshipError" style="display: none;">Please Enter Avg Ship.</span>
+                </div>
+            </div>
+            <div class="col-md-auto col-12 hidedivfrn">
+                <div class="form-group">
+                    <label for="avgwgt">Avg Wgt/ship:</label>
+
+                    <input type="text" id="txtavgwgt" name="avgwgt" class="form-control" placeholder="Enter Avg Wgt">
+                    <span class="text-danger" id="avgwgtError" style="display: none;">Please Enter Avg Weight.</span>
+                </div>
+            </div>
+            <div class="col-md-auto col-12 hidedivfrn">
+                <div class="form-group">
+                    <label for="businessnature">Business Nature:</label>
+
+                    <input type="text" id="txtbusinessnature" name="businessnature" class="form-control" placeholder="Enter Business Nature">
+                    <span class="text-danger" id="businessnatureError" style="display: none;">Please Enter Business Nature.</span>
+                </div>
+            </div>  <div class="col-md-auto col-12">
+                <div class="form-group">
+                    <label for="emailaddress">Email Address:</label>
+
+                    <input type="text" id="txtemailaddress" name="emailaddress" class="form-control" placeholder="Enter Email Address">
+                    <span class="text-danger" id="emailaddressError" style="display: none;">Please Enter Email Address.</span>
+                </div>
+            </div>
+            <div class="col-md-auto col-12 hidediv">
+                <div class="form-group">
+                    <label for="businesslocation">Frn Business Location:</label>
+
+                    <input type="text" id="txtbusinesslocation" name="businesslocation" class="form-control" placeholder="Enter Business Location">
+                    <span class="text-danger" id="businesslocationError" style="display: none;">Please Enter Business Location.</span>
+                </div>
+            </div>
+            <div class="col-md-auto col-12 hidediv">
+                <div class="form-group">
+                    <label for="frnownproperty">FRN Own Property:</label>
+
+                    <input type="text" id="txtfrnownproperty" name="frnownproperty" class="form-control" placeholder="Enter Frn Own Property">
+                    <span class="text-danger" id="frnownpropertyError" style="display: none;">Please Enter Frn Own Property.</span>
+                </div>
+            </div>
+
+            <div class="col-md-auto col-12">
+                <div class="form-group">
+                    <label for="TicketTypeDropdown">Remarks:</label>
+
+                    <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
+                    <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-auto col-12">
+                <button class="btn btn-success float-Right" id="btnCreateAccount">Create Account</button>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $('#txtavgship').on('input', function () {
+            // Remove non-numeric characters using a regular expression
+            $(this).val($(this).val().replace(/\D/g, ''));
+
+            // You can also use the following line to allow decimal numbers:
+            // $(this).val($(this).val().replace(/[^0-9.]/g, ''));
+        });
+
+        $('#txtavgwgt').on('input', function () {
+            // Remove non-numeric characters using a regular expression
+            $(this).val($(this).val().replace(/\D/g, ''));
+
+            // You can also use the following line to allow decimal numbers:
+            // $(this).val($(this).val().replace(/[^0-9.]/g, ''));
+        });
+
+
+
+
+        // Event listener for category selection
+        $('#AccountTypeDropdown').change(function () {
+            debugger
+            var selectedaccounttypeid = $(this).val();
+            if (selectedaccounttypeid === '2') {
+                // If selectedCategory is 1, hide the div
+                $('.hidediv').hide();
+                $('#txtbusinesslocation').val('');
+                $('#txtfrnownproperty').val('');
+            } else {
+                // If selectedCategory is not 1, show the div
+                $('.hidediv').show();
+            }
+
+            if (selectedaccounttypeid === '1') {
+                // If selectedCategory is 1, hide the div
+                $('.hidedivfrn').hide();
+                $('#txtavgship').val('');
+                $('#txtavgwgt').val('');
+                $('#txtbusinessnature').val('');
+            } else {
+                // If selectedCategory is not 1, show the div
+                $('.hidedivfrn').show();
+            }
+            // // Clear the subcategory container
+            // $('#subcategoryContainer').html('');
+
+            // debugger
+            // // Make AJAX call to fetch subcategories based on the selected category
+            // $.ajax({
+            //     url: '/Home/GetSubcategoriesServiceRequest',
+            //     type: 'POST',
+            //     data: { category: selectedCategory },
+            //     success: function (result) {
+            //         // Render the subcategory dropdown
+            //         $('#subcategoryContainer').html(result);
+            //     },
+            //     error: function (xhr, status, error) {
+            //         Swal.fire('Error', 'Please Select Valid Account Type: ' + error, 'error');
+            //     }
+            // });
+        });
+
+
+
+        $('#CityDropdown').change(function () {
+            debugger
+            var selectedCity = $(this).val();
+
+            // Clear the subcategory container
+            $('#regionContainer').html('');
+
+            debugger
+
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetRegion',
+                type: 'POST',
+                data: { CityID: selectedCity },
+                success: function (result) {
+                    debugger
+                    // Render the subcategory dropdown
+                    $('#regionContainer').html(result);
+
+                    // Hide the element after it's been added to the DOM
+                    $('#userEmailDropdownContainer').hide();
+                    $('#locationDropdownContainer').hide();
+
+                    // Render the modified HTML (without the user email dropdown) in #regionContainer
+
+
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
+                }
+            });
+        });
+
+
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#btnCreateAccount').click(function () {
+            debugger
+            var AccontType = $('#AccountTypeDropdown').val();
+            var AccountTypeName = $('#AccountTypeDropdown option:selected').text();;
+            var CustomerName = $('#txtcustomername').val();
+            var City = $('#CityDropdown').val();
+            var CityName = $('#CityDropdown option:selected').text();;
+
+
+            var region = $('#regionContainer').find('#RegionDropdown').val();
+            var regionName = $('#regionContainer').find('#RegionDropdown option:selected').text();
+            var contact = $('#txtcontactno').val();
+            var avgship = $('#txtavgship').val();
+            var avgwgt = $('#txtavgwgt').val();
+            var businessnature = $('#txtbusinessnature').val();
+            var emailaddress = $('#txtemailaddress').val();
+            var frnbusinesslocation = $('#txtbusinesslocation').val();
+            var frnownproperty = $('#txtfrnownproperty').val();
+            var RemarksValue = $('#txtremarks').val();
+
+            debugger
+            var pattern = /^92\d{10}$/;
+
+
+
+            if (AccontType === '') {
+                $('#accounttypeDropdownError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#accounttypeDropdownError').hide();
+            }
+            if (CustomerName === '') {
+                $('#customerError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#customerError').hide();
+            }
+            if (City === '') {
+                $('#cityDropdownError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#cityDropdownError').hide();
+            }
+
+
+
+            if (region === '0') {
+                $('#regionDropdownError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#regionDropdownError').hide();
+            }
+
+
+            if (contact === '') {
+                $('#contactError').show();
+                return false; // Prevent form submission if barcode is not selected
+            } else {
+                $('#contactError').hide();
+            }
+
+
+            if (AccontType === '1') {
+
+            }
+            else if (AccontType=== '2') {
+
+                if (avgship === '') {
+                    $('#avgshipError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#avgshipError').hide();
+                }
+
+                if (avgwgt === '') {
+                    $('#avgwgtError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#avgwgtError').hide();
+                }
+                if (businessnature === '') {
+                    $('#businessnatureError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#businessnatureError').hide();
+                }
+            }
+
+       
+
+
+            // if (emailaddress === '') {
+            //     $('#emailaddressError').show();
+            //     return false; // Prevent form submission if barcode is not selected
+            // } else {
+            //     $('#emailaddressError').hide();
+            // }
+
+
+            // if (frnbusinesslocation === '') {
+            //     $('#frnbusinesslocationError').show();
+            //     return false; // Prevent form submission if barcode is not selected
+            // } else {
+            //     $('#frnbusinesslocationError').hide();
+            // }
+
+            // if (frnownproperty === '') {
+            //     $('#frnownpropertyError').show();
+            //     return false; // Prevent form submission if barcode is not selected
+            // } else {
+            //     $('#frnownpropertyError').hide();
+            // }
+
+
+            debugger
+            var AccountOpeningData = {
+
+                accounttype: AccontType,
+                accounttypename: AccountTypeName,
+                customername: CustomerName,
+                city: City,
+                cityname: CityName,
+                region: region,
+                regionname: regionName,
+                contact: contact,
+                avgship: avgship,
+                avgwgt: avgwgt,
+                businessnature: businessnature,
+                emailaddress: emailaddress,
+                frnbusinesslocation: frnbusinesslocation,
+                frnownproperty: frnownproperty,
+                Remarks: RemarksValue,
+
+            };
+            debugger
+            $.ajax({
+                url: '/Home/CreateAccountOpening',
+                type: 'POST',
+                data: AccountOpeningData,
+                success: function (response) {
+                    debugger
+                    // Check if the ticket was created successfully
+                    if (response.success) {
+                        // Show a success message using SweetAlert
+                        Swal.fire('Success', response.message, 'success');
+                        var ticketno = response.data;
+
+                        $('#AccountTypeDropdown').val(''),
+                            $('#txtcustomername').val(''),
+                            $('#CityDropdown').val(''),
+                            $('#txtcontactno').val(''),
+                            $('#txtavgship').val(''),
+                            $('#txtavgwgt').val(''),
+                            $('#txtbusinessnature').val(''),
+                            $('#txtemailaddress').val(''),
+                            $('#txtbusinesslocation').val(''),
+                            $('#txtfrnownproperty').val(''),
+                            $('#txtremarks').val('')
+                    }
+                    else {
+                        // Show an error message using SweetAlert
+                        // Swal.fire('Error', 'Error Creating Account Opening:   \n ' + response.error, 'error');
+                        Swal.fire('Error', response.message, 'Error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', 'Error Creating Account Opening: ' + error, 'error');
+                }
+            });
+        });
+    });
+</script>
+
+
+
+

@@ -91,7 +91,7 @@
 
         .main {
             /*            margin-left: 10%;
-                                                                    */ border: 1px solid;
+                                                                                            */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -156,7 +156,7 @@
                 try
                 {
                     //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
-                    if(Model.roleid=="2")          
+                    if (Model.roleid == "2")
                     {
                         <li class="nav-item">
                             <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
@@ -164,7 +164,7 @@
                     }
                     else
                     {
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -590,9 +590,9 @@
 
             @*----------------- tracking detail----------*@
 
-            <div id="trackingTableTabContent" class="tab-pane show fade">
+            <div id="trackingTableTabContent" class="tab-pane show ">
                 <table id="TrackingTable" class="display" style="width:100%">
-                    <thead>
+                    <thead style="width:100%">
                         <tr>
                             @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[6].Columns)
                             {
@@ -620,7 +620,7 @@
             @*------------------ hd detail-----------------*@
 
             <div id="hdTableTabContent" class="tab-pane fade show">
-                <table id="HDTable" class="display" style="width:100%">
+                <table id="HDTable" class="display">
                     <thead>
                         <tr>
                             @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[7].Columns)
@@ -697,9 +697,80 @@
         // Construct the dynamic message
         var dynamicRemarks = `Your ${dynamicComplaint} with Ticket ID ${dynamicTicketID} has been resolved. For more details, please call on 042-111-007-009. Thanks`;
 
+
+
+
+
         // Set the dynamic message in the remarks field
         $('#txtremarkssms').val(dynamicRemarks);
+
+
+
         var autocompleteData = []; // Initialize an empty array
+
+        var barcodeColors = {}; // Create an object to store barcode colors
+
+        // Function to generate a random color
+
+
+    @*
+            function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+            } *@
+            function getRandomLightColor() {
+                // Generate light shades for R, G, and B channels (between 200 and 255)
+                var r = Math.floor(Math.random() * 56) + 200;  // Red channel
+                var g = Math.floor(Math.random() * 56) + 200;  // Green channel
+                var b = Math.floor(Math.random() * 56) + 200;  // Blue channel
+
+                // Convert the RGB values to a hex color code
+                var color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+
+                return color;
+            }
+
+        // Iterate through each row in the table
+        $('#HDTable tbody tr').each(function () {
+            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+            // Check if this barcode value has been encountered before
+            if (barcodeColors[barcodeValue] === undefined) {
+                // If not encountered before, generate a random color and store it
+                barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                    barcodeCell.addClass('highlighted'); *@
+
+                     }
+
+            // Apply the background color to highlight rows with the same barcode value
+            $(this).css('background-color', barcodeColors[barcodeValue]);
+        });
+
+
+        // Iterate through each row in the table
+        $('#TrackingTable tbody tr').each(function () {
+            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+            // Check if this barcode value has been encountered before
+            if (barcodeColors[barcodeValue] === undefined) {
+                // If not encountered before, generate a random color and store it
+                barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                    barcodeCell.addClass('highlighted'); *@
+
+                         }
+
+            // Apply the background color to highlight rows with the same barcode value
+            $(this).css('background-color', barcodeColors[barcodeValue]);
+        });
+
+
+
         $.ajax({
             url: "/Home/getemailaddresses",
             type: "POST",
@@ -741,120 +812,96 @@
                 }
             }
         });
+    
 
-        $('#TrackingTable').DataTable({
-            scrollX: '300px',
-            scrollY: '300px', // Specify the desired height of the scrollable area
-            scrollCollapse: true,
-            language: {
-                paginate: {
-                    first: 'First',
-                    previous: 'Previous',
-                    next: 'Next',
-                    last: 'Last'
-                }
+
+
+    // $('#HDTable').DataTable({
+    //     scrollX: '300px',
+    //     scrollY: '300px', // Specify the desired height of the scrollable area
+    //     scrollCollapse: true,
+    //     language: {
+    //         paginate: {
+    //             first: 'First',
+    //             previous: 'Previous',
+    //             next: 'Next',
+    //             last: 'Last'
+    //         }
+    //     }
+
+    // });
+
+
+    $('#HDTable').DataTable({
+        scrollX: '400px',
+        scrollY: '400px', // Specify the desired height of the scrollable area
+        scrollCollapse: true,
+        ordering: false,
+        pageLength: 100,
+
+        language: {
+            paginate: {
+                first: 'First',
+                previous: 'Previous',
+                next: 'Next',
+                last: 'Last'
             }
+        }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-        });
-        $('#HDTable').DataTable({
-            scrollX: '300px',
-            scrollY: '300px', // Specify the desired height of the scrollable area
-            scrollCollapse: true,
-            language: {
-                paginate: {
-                    first: 'First',
-                    previous: 'Previous',
-                    next: 'Next',
-                    last: 'Last'
-                }
+    });
+
+    $('#TrackingTable').DataTable({
+        scrollX: '400px',
+        scrollY: '400px', // Specify the desired height of the scrollable area
+        scrollCollapse: true,
+        ordering: false,
+        pageLength: 100,
+
+        language: {
+            paginate: {
+                first: 'First',
+                previous: 'Previous',
+                next: 'Next',
+                last: 'Last'
             }
+        }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-        });
-        $('#btnupdate').click(function () {
-            //console.log("button is clisked");
-            debugger
+    });
 
-            var ticketData = {
 
-                remarks: $('#txtremarks').val(),
-                ticketdid: @ViewData["TicketNo"],
-                activity: "Update",
-                userid: "",
+    $('#btnupdate').click(function () {
+        //console.log("button is clisked");
+        debugger
 
-            };
-            var RemarksValue = $('#txtremarks').val();
+        var ticketData = {
 
-            if (RemarksValue === '') {
-                $('#RemarksError').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#RemarksError').hide();
-            }
+            remarks: $('#txtremarks').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "Update",
+            userid: "",
 
-            $.ajax({
-                url: '/Home/UpdateTicket',
-                type: 'POST',
-                data: ticketData,
-                success: function (response) {
-                    debugger
-                    // Check if the ticket was created successfully
-                    if (response.success) {
-                        // Show a success message using SweetAlert
-                        Swal.fire('Success', response.message, 'success');
-                        var ticketno = response.data;
+        };
+        var RemarksValue = $('#txtremarks').val();
+
+        if (RemarksValue === '') {
+            $('#RemarksError').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksError').hide();
+        }
+
+        $.ajax({
+            url: '/Home/UpdateTicket',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
     @*// var ticketno = @ViewData["TicketNo"];*@
-                            // var ticketno = $('#tracking').val();
-
-                            // Construct the URL with the tracking number as a query parameter
-                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
-
-                            // Open the new view in a new window/tab
-                            // window.open(url, '_blank');
-                            $('#txtremarks').val('');
-
-                    }
-                    else {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Show an error message using SweetAlert
-                    Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
-                }
-            });
-
-        });
-
-
-        $('#btnemail').click(function () {
-            debugger
-            //console.log("button is clisked");
-            debugger
-
-            var ticketData = {
-
-                emailto: $('#autocompletetoemail').val(),
-                emailcc: $('#autocompletefromemail').val(),
-                ticketdid: @ViewData["TicketNo"],
-                activity: "Email",
-                userid: "",
-                remarks: $('#txtremarksemail').val()
-
-            };
-
-
-            $.ajax({
-                url: '/Home/UpdateTicketEmail',
-                type: 'POST',
-                data: ticketData,
-                success: function (response) {
-                    debugger
-                    // Check if the ticket was created successfully
-                    if (response.success) {
-                        // Show a success message using SweetAlert
-                        Swal.fire('Success', response.message, 'success');
-
                         // var ticketno = $('#tracking').val();
 
                         // Construct the URL with the tracking number as a query parameter
@@ -862,354 +909,406 @@
 
                         // Open the new view in a new window/tab
                         // window.open(url, '_blank');
-                        $('#autocompletetoemail').val('');
-                        $('#autocompletefromemail').val('');
-                        $('#txtremarksemail').val('');
+                        $('#txtremarks').val('');
 
-
-                    }
-                    else {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Show an error message using SweetAlert
-                    Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
                 }
-            });
-
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
         });
 
-        $('#btnsms').click(function () {
-            debugger
-            //console.log("button is clisked");
-            debugger
-
-            var ticketData = {
+    });
 
 
-                complainercell: $('#txtcomplainercell').val(),
-                ticketdid: @ViewData["TicketNo"],
-                activity: "SMS",
-                userid: "",
-                remarks: $('#txtremarkssms').val()
+    $('#btnemail').click(function () {
+        debugger
+        //console.log("button is clisked");
+        debugger
 
-            };
+        var ticketData = {
 
-            debugger
-            $.ajax({
-                url: '/Home/UpdateTicketSMS',
-                type: 'POST',
-                data: ticketData,
-                success: function (response) {
-                    debugger
-                    // Check if the ticket was created successfully
-                    if (response.success) {
-                        // Show a success message using SweetAlert
-                        Swal.fire('Success', response.message, 'success');
+            emailto: $('#autocompletetoemail').val(),
+            emailcc: $('#autocompletefromemail').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "Email",
+            userid: "",
+            remarks: $('#txtremarksemail').val()
+
+        };
 
 
+        $.ajax({
+            url: '/Home/UpdateTicketEmail',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
 
-                        // $('#txtremarkssms').val('');
+                    // var ticketno = $('#tracking').val();
+
+                    // Construct the URL with the tracking number as a query parameter
+                    // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+
+                    // Open the new view in a new window/tab
+                    // window.open(url, '_blank');
+                    $('#autocompletetoemail').val('');
+                    $('#autocompletefromemail').val('');
+                    $('#txtremarksemail').val('');
 
 
-                    }
-                    else {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Show an error message using SweetAlert
-                    Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
                 }
-            });
-
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
         });
 
+    });
 
-        $('#btnclosing').click(function () {
-            debugger
-            var RemarksValue = $('#txtremarksclosing').val();
+    $('#btnsms').click(function () {
+        debugger
+        //console.log("button is clisked");
+        debugger
 
-
-            if (RemarksValue === '') {
-                $('#RemarksErrorclosing').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#RemarksErrorclosing').hide();
-            }
-            //console.log("button is clisked");
-            debugger
-
-            var ticketData = {
+        var ticketData = {
 
 
-                //complainercell: $('#txtcomplainercell').val(),
-                ticketdid: @ViewData["TicketNo"],
-                activity: "close",
-                userid: "",
-                remarks: $('#txtremarksclosing').val()
+            complainercell: $('#txtcomplainercell').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "SMS",
+            userid: "",
+            remarks: $('#txtremarkssms').val()
 
-            };
+        };
 
-            debugger
-            $.ajax({
-                url: '/Home/TicketClosing',
-                type: 'POST',
-                data: ticketData,
-                success: function (response) {
-                    debugger
-                    // Check if the ticket was created successfully
-                    if (response.success) {
-                        // Show a success message using SweetAlert
-                        Swal.fire('Success', response.message, 'success');
+        debugger
+        $.ajax({
+            url: '/Home/UpdateTicketSMS',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
 
 
 
-                        $('#txtremarksclosing').val('');
+                    // $('#txtremarkssms').val('');
 
 
-                    }
-                    else {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Show an error message using SweetAlert
-                    Swal.fire('Error', 'Error Closing Ticket: ' + error, 'error');
                 }
-            });
-
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
         });
 
+    });
 
-        $('#btnclosed').click(function () {
-            debugger
-            var TicketStatus = $('#TicketStatusDropdown option:selected').text();
-            var TicketStatusid = $('#TicketStatusDropdown').val();
-            // var City = $('#citydropdown').val();
-            var City = $('#citydropdown').find('#citysubdropdown').val();
 
-            if (TicketStatusid === "0") {
-                $('#ticketstatuserror').show();
-                return false;
-            } else {
-                $('#ticketstatuserror').hide();
+    $('#btnclosing').click(function () {
+        debugger
+        var RemarksValue = $('#txtremarksclosing').val();
+
+
+        if (RemarksValue === '') {
+            $('#RemarksErrorclosing').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorclosing').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+
+            //complainercell: $('#txtcomplainercell').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "close",
+            userid: "",
+            remarks: $('#txtremarksclosing').val()
+
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/TicketClosing',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+
+
+
+                    $('#txtremarksclosing').val('');
+
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Closing Ticket: ' + error, 'error');
             }
-            //console.log("button is clisked");
-            debugger
-            var RemarksValue = $('#txtremarksclosed').val();
+        });
+
+    });
+
+
+    $('#btnclosed').click(function () {
+        debugger
+        var TicketStatus = $('#TicketStatusDropdown option:selected').text();
+        var TicketStatusid = $('#TicketStatusDropdown').val();
+        // var City = $('#citydropdown').val();
+        var City = $('#citydropdown').find('#citysubdropdown').val();
+
+        if (TicketStatusid === "0") {
+            $('#ticketstatuserror').show();
+            return false;
+        } else {
+            $('#ticketstatuserror').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+        var RemarksValue = $('#txtremarksclosed').val();
 
 
 
-            if (RemarksValue === '') {
-                $('#RemarksErrorclosed').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#RemarksErrorclosed').hide();
-            }
+        if (RemarksValue === '') {
+            $('#RemarksErrorclosed').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorclosed').hide();
+        }
 
-            if (City === "0") {
-                $('#citydropdownerror').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#citydropdownerror').hide();
-            }
-            debugger
-            if (TicketStatusid === 0) {
-                return false;
-            }
-
-
+        if (City === "0") {
+            $('#citydropdownerror').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#citydropdownerror').hide();
+        }
+        debugger
+        if (TicketStatusid === 0) {
+            return false;
+        }
 
 
-            var ticketData = {
 
-                remarks: RemarksValue,
-                ticketdid: @ViewData["TicketNo"],
-                activity: TicketStatus,
-                userid: "",
-                city: City,
 
-            };
-            $.ajax({
-                url: '/Home/TickedClosed',
-                type: 'POST',
-                data: ticketData,
-                success: function (response) {
-                    debugger
-                    // Check if the ticket was created successfully
-                    if (response.success) {
-                        // Show a success message using SweetAlert
-                        Swal.fire('Success', response.message, 'success');
-                        var ticketno = response.data;
+        var ticketData = {
+
+            remarks: RemarksValue,
+            ticketdid: @ViewData["TicketNo"],
+            activity: TicketStatus,
+            userid: "",
+            city: City,
+
+        };
+        $.ajax({
+            url: '/Home/TickedClosed',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
     @*// var ticketno = @ViewData["TicketNo"];*@
-                            // var ticketno = $('#tracking').val();
+                        // var ticketno = $('#tracking').val();
 
-                            // Construct the URL with the tracking number as a query parameter
-                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
-                            // Open the new view in a new window/tab
-                            // window.open(url, '_blank');
-                            $('#txtremarksclosed').val('');
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarksclosed').val('');
 
-                    }
-                    else {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Show an error message using SweetAlert
-                    Swal.fire('Error', 'Error Closing the ticket: ' + error, 'error');
                 }
-            });
-
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Closing the ticket: ' + error, 'error');
+            }
         });
 
-        $('#btnreopen').click(function () {
-            debugger
+    });
 
-            var TicketTypeDropdown = $('#TicketTypeDropdown option:selected').text();
-            var TicketTypeDropdownid = $('#TicketTypeDropdown').val();
-            // var City = $('#citydropdown').val();
-            //var City = $('#citydropdown').find('#citysubdropdown').val();
+    $('#btnreopen').click(function () {
+        debugger
 
-            if (TicketTypeDropdownid === "0") {
-                $('#TicketTypeDropdownError').show();
-                return false;
-            } else {
-                $('#TicketTypeDropdownError').hide();
-            }
-            //console.log("button is clisked");
-            debugger
-            var RemarksValue = $('#txtremarksreopen').val();
+        var TicketTypeDropdown = $('#TicketTypeDropdown option:selected').text();
+        var TicketTypeDropdownid = $('#TicketTypeDropdown').val();
+        // var City = $('#citydropdown').val();
+        //var City = $('#citydropdown').find('#citysubdropdown').val();
 
-
-
-            if (RemarksValue === '') {
-                $('#RemarksErrorreopen').show();
-                return false; // Prevent form submission if barcode is not selected
-            } else {
-                $('#RemarksErrorreopen').hide();
-            }
-
-            //if (City === "0") {
-            //    $('#citydropdownerror').show();
-            //    return false; // Prevent form submission if barcode is not selected
-            //} else {
-            //    $('#citydropdownerror').hide();
-            //}
-            debugger
-            if (TicketTypeDropdownid === 0) {
-                return false;
-            }
+        if (TicketTypeDropdownid === "0") {
+            $('#TicketTypeDropdownError').show();
+            return false;
+        } else {
+            $('#TicketTypeDropdownError').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+        var RemarksValue = $('#txtremarksreopen').val();
 
 
 
+        if (RemarksValue === '') {
+            $('#RemarksErrorreopen').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorreopen').hide();
+        }
 
-            var ticketData = {
+        //if (City === "0") {
+        //    $('#citydropdownerror').show();
+        //    return false; // Prevent form submission if barcode is not selected
+        //} else {
+        //    $('#citydropdownerror').hide();
+        //}
+        debugger
+        if (TicketTypeDropdownid === 0) {
+            return false;
+        }
 
-                remarks: RemarksValue,
-                ticketdid: @ViewData["TicketNo"],
-                //activity: TicketStatusreopen,
-                userid: "",
-                complainercell: $('#txtcomplainercell').val(),
-                TicketTypeDropdownid: TicketTypeDropdownid,
 
-            };
-            $.ajax({
-                url: '/Home/TicketReopen',
-                type: 'POST',
-                data: ticketData,
-                success: function (response) {
-                    debugger
-                    // Check if the ticket was created successfully
-                    if (response.success) {
-                        // Show a success message using SweetAlert
-                        Swal.fire('Success', response.message, 'success');
-                        var ticketno = response.data;
+
+
+        var ticketData = {
+
+            remarks: RemarksValue,
+            ticketdid: @ViewData["TicketNo"],
+            //activity: TicketStatusreopen,
+            userid: "",
+            complainercell: $('#txtcomplainercell').val(),
+            TicketTypeDropdownid: TicketTypeDropdownid,
+
+        };
+        $.ajax({
+            url: '/Home/TicketReopen',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
     @*// var ticketno = @ViewData["TicketNo"];*@
-                            // var ticketno = $('#tracking').val();
+                        // var ticketno = $('#tracking').val();
 
-                            // Construct the URL with the tracking number as a query parameter
-                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
-                            // Open the new view in a new window/tab
-                            // window.open(url, '_blank');
-                            $('#txtremarksreopen').val('');
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarksreopen').val('');
 
-                    }
-                    else {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', response.message, 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Show an error message using SweetAlert
-                    Swal.fire('Error', 'Error Reopen the Ticket: ' + error, 'error');
                 }
-            });
-
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Reopen the Ticket: ' + error, 'error');
+            }
         });
 
+    });
 
-        // Event listener for category selection
-        $('#TicketStatusDropdown').change(function () {
 
-            debugger
-            var selectedCategory = $(this).val();
-            var TicketStatus = $('#TicketStatusDropdown option:selected').text();
-            var TicketStatusid = $('#TicketStatusDropdown').val();
+    // Event listener for category selection
+    $('#TicketStatusDropdown').change(function () {
 
-            if (TicketStatusid === "0") {
-                $('#ticketstatuserror').show();
-                return false;
-            } else {
-                $('#ticketstatuserror').hide();
+        debugger
+        var selectedCategory = $(this).val();
+        var TicketStatus = $('#TicketStatusDropdown option:selected').text();
+        var TicketStatusid = $('#TicketStatusDropdown').val();
+
+        if (TicketStatusid === "0") {
+            $('#ticketstatuserror').show();
+            return false;
+        } else {
+            $('#ticketstatuserror').hide();
+        }
+
+
+        // Target the div element
+        var citydropdown = document.getElementById("citydropdown");
+
+        // Check the condition and hide the div if necessary
+        if (TicketStatusid != 2) {
+            citydropdown.style.display = "none";
+        } else {
+            citydropdown.style.display = "block";
+        }
+
+
+        if (TicketStatusid != "2") {
+
+            return false;
+        }
+
+
+
+        // Clear the subcategory container
+        $('#citydropdown').html('');
+
+        debugger
+        // Make AJAX call to fetch subcategories based on the selected category
+        $.ajax({
+            url: '/Home/GetCities',
+            type: 'POST',
+            data: { ticketstatus: TicketStatusid },
+            success: function (result) {
+                // Render the subcategory dropdown
+                $('#citydropdown').html(result);
+            },
+            error: function (xhr, status, error) {
+                Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
             }
-
-
-            // Target the div element
-            var citydropdown = document.getElementById("citydropdown");
-
-            // Check the condition and hide the div if necessary
-            if (TicketStatusid != 2) {
-                citydropdown.style.display = "none";
-            } else {
-                citydropdown.style.display = "block";
-            }
-
-
-            if (TicketStatusid != "2") {
-
-                return false;
-            }
-
-
-
-            // Clear the subcategory container
-            $('#citydropdown').html('');
-
-            debugger
-            // Make AJAX call to fetch subcategories based on the selected category
-            $.ajax({
-                url: '/Home/GetCities',
-                type: 'POST',
-                data: { ticketstatus: TicketStatusid },
-                success: function (result) {
-                    // Render the subcategory dropdown
-                    $('#citydropdown').html(result);
-                },
-                error: function (xhr, status, error) {
-                    Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
-                }
-            });
         });
     });
+                });
 </script>
 
 
