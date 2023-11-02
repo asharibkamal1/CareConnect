@@ -16,3 +16,43 @@
         </div>
 
     </div>
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        $('#citysubdropdown').change(function () {
+            debugger
+            var selectedCity = $(this).val();
+
+            // Clear the subcategory container
+            $('#regionContainer').html('');
+
+            debugger
+
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetRegiondropdown',
+                type: 'POST',
+                data: { CityID: selectedCity },
+                success: function (result) {
+                    debugger
+                    // Render the subcategory dropdown
+                    $('#regionContainer').html(result);
+
+                    // Hide the element after it's been added to the DOM
+                    $('#userEmailDropdownContainer').hide();
+                    $('#locationDropdownContainer').hide();
+
+                    // Render the modified HTML (without the user email dropdown) in #regionContainer
+
+
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
+                }
+            });
+        });
+    });
+</script>
+ 

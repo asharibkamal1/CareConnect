@@ -1,0 +1,229 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+    ViewData["Title"] = "Account Open";
+}
+<h1 id="reportTitle">Account Opening Report</h1>
+<br />
+<div class="row">
+    <!-- left column -->
+
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <!-- jquery validation -->
+
+
+
+
+        <div class="form-group">
+
+            <div class="row">
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Account Type:</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <select class="form-control" id="AccountTypeDropdown" name="accounttype">
+                        <option value="">Select Account Type</option>
+                        @foreach (System.Data.DataRow catRow in Model.AccountOpening.Tables[0].Rows)
+                        {
+
+
+                            <option value="@catRow["Opening_Type_Id"]">@catRow["Opening_Type"]</option>
+
+                        }
+                    </select>
+
+                    <span class="text-danger" id="accounttypeDropdownError" style="display: none;">Please select Account Type.</span>
+                </div>
+
+                
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Date From:</label>
+
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="date" id="datefrom" name="datefrom" class="form-control" autofocus />
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Date To:</label>
+
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="date" id="dateto" name="dateto" class="form-control" autofocus />
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <button class="btn btn-success float-left" id="btnReport">Report</button>
+                </div>
+            </div>
+            <div> <br /></div>
+            <span class="text-danger"></span>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table id="ReportaDataTable" class="table table-striped table-bordered" style="width:100%"></table>
+</div>
+
+<script>
+    debugger
+    function showLoader() {
+        // Add the loader and blur the page
+        $('body').addClass('blur');
+        $('body').append('<div class="loader-container"><div class="loader"></div></div>');
+    }
+
+    function hideLoader() {
+        // Remove the loader and remove the blur from the page
+        $('body').removeClass('blur');
+        $('.loader-container').remove();
+    }
+
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        // Calculate one week ago date
+        var oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        // Format the date in YYYY-MM-DD format
+        var formattedDate = oneWeekAgo.toISOString().split('T')[0];
+
+        // Set the default date values in the input fields
+        document.getElementById('datefrom').value = formattedDate;
+        document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
+
+        $('#btnReport').click(function () {
+            debugger
+
+            var openingtypeid = $('#AccountTypeDropdown').val();
+            var datefrom = $('#datefrom').val();
+            var dateto = $('#dateto').val();
+            if (datefrom == "") {
+                datefrom = null;
+            }
+            if (dateto == "") {
+                dateto = null;
+
+            } else {
+
+            }
+
+
+
+            $.ajax({
+                url: '/Home/GetAccountOpenDateWise',
+                type: 'GET',
+                data: {
+                    Opening_Type_Id: openingtypeid,
+                    datefrom: datefrom,
+                    dateto: dateto
+                },
+
+                success: function (response) {
+                    debugger
+                    var jsonResponse = JSON.parse(response);
+                    var obj = jsonResponse.Report_rpt_ticketdetails.Table;
+
+                    $('#ReportaDataTable').empty();
+                    var tableHeaders = '<thead><tr>' +
+                        '<th>SNO</th>' +
+                        '<th>Customer_Name</th>' +
+                        '<th>Contact_No</th>' +
+                        '<th>Region</th>' +
+                        '<th>CreatedOn</th>' +
+                        '<th>Avg_Ship_Per_Week</th>' +
+                        '<th>Avg_Wgt_Per_Shipment</th>' +
+                        '<th>Business_Nature</th>' +
+                        '<th>Email_Address</th>' +
+                        '<th>FRN_Business_Loc</th>' +
+                        '<th>FRN_Own_Property</th>' +
+                        '<th>Remarks</th>';
+                        // '<th>OpeningComment</th>' +
+                        // '<th>UserName</th>' +
+                        // '</tr></thead>';
+
+                    // Create table body
+                    var tableBody = '<tbody>';
+                    debugger
+                    for (var i = 0; i < obj.length; i++) {
+                        var row = obj[i];
+                        tableBody +=
+                            '<tr>' +
+                            '<td>' + row.SNO + '</td>' +
+                            '<td>' + row.Customer_Name + '</td>' +
+                            '<td>' + row.Contact_No + '</td>' +
+                            '<td>' + row.Region + '</td>' +
+                            '<td>' + row.CreatedOn + '</td>' +
+                            '<td>' + row.Avg_Ship_Per_Week + '</td>' +
+                            '<td>' + row.Avg_Wgt_Per_Shipment + '</td>' +
+                            '<td>' + row.Business_Nature + '</td>' +
+                            '<td>' + row.Email_Address + '</td>' +
+                            '<td>' + row.FRN_Business_Loc + '</td>' +
+                            '<td>' + row.FRN_Own_Property + '</td>' +
+                            '<td>' + row.Remarks + '</td>' +
+                            // '<td>' + row.OpeningComment + '</td>' +
+                            // '<td>' + row.UserName + '</td>' +
+                            '</tr>';
+                    }
+                    debugger
+                    tableBody += '</tbody>';
+                    debugger
+
+                    // Append table headers and body to the table
+                    $('#ReportaDataTable').append(tableHeaders + tableBody);
+                    $('#ReportaDataTable').DataTable().destroy();
+                    debugger
+                    // Initialize DataTables
+
+
+                    $('#ReportaDataTable').DataTable({
+                        scrollX: '400px',
+                        scrollY: '400px', // Specify the desired height of the scrollable area
+                        scrollCollapse: true,
+                        language: {
+                            paginate: {
+                                first: 'First',
+                                previous: 'Previous',
+                                next: 'Next',
+                                last: 'Last'
+                            }
+                        }
+
+                    });
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+
+
+
+
+
+
+

@@ -17,6 +17,7 @@ namespace CareConnect.Models
         public string Gender { get; set; }
         public string Remarks { get; set; }
         public int tickettype { get; set; }
+        public int Opening_Type_Id { get; set; }
         public int ticketcatagory { get; set; }
         public string ticketcatagoryName { get; set; }
         public int ticketsubcatagory { get; set; }
@@ -26,7 +27,9 @@ namespace CareConnect.Models
         public int agent { get; set; }
         public int agentref { get; set; }
         public int priority { get; set; }
+        public string TicketPriorityName { get; set; }
         public int city { get; set; }
+        public string locationname { get; set; }
         public int barcode { get; set; }
         public string gender { get; set; }
         public string cgnno { get; set; }

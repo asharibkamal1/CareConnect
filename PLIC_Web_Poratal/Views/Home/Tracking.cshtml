@@ -95,10 +95,10 @@
                         <input type="checkbox" id="myCheckbox">
                         <label for="myCheckbox">Track With Ticket ID</label>
                     </div>
-               @*      <div class="custom-checkbox col-lg-2 col-md-2 col-sm-2">
+                    <div class="custom-checkbox col-lg-2 col-md-2 col-sm-2">
                         <input type="checkbox" id="myCheckboxmanual">
                         <label for="myCheckboxmanual">Track With Manual#</label>
-                    </div> *@
+                    </div>
                 </div>
                 <span class="text-danger"></span>
             </div>
@@ -125,7 +125,7 @@
     $(document).ready(function () {
         debugger
     @*var userRoleID = @ViewData["RoleID"];*@
-            var userRoleID = @ViewBag.RoleID;
+                    var userRoleID = @ViewBag.RoleID;
 
         $('.loader').hide();
         hideLoader();
@@ -155,185 +155,225 @@
             $('#additionalButton').remove();
             return;
         }
-        //debugger
-        //const isChecked = myCheckbox.checked;
-        //if (isChecked) {
-        //    debugger
-        //    // Make an AJAX request to your Home controller action method
-        //    $.ajax({
-        //        url: '/Home/GetConsignmentNumberByTicketID', // Adjust the URL accordingly
-        //        type: 'GET',
-        //        data: { ticketid: trackingNumber },
-        //        success: function (result) {
-        //            debugger
-        //            if (result.consignmentNo) {
-        //                debugger
-        //                // Store the ConsignmentNo in a variable
-        //                var trackingNumber = result.consignmentNo;
-        //                debugger
-        //                // Now you can use the consignmentNo variable as needed
-
-        //                debugger
-        //                // Example: Update an HTML element with the value
-        //                $('#tracking').val(trackingNumber);
-
-        //            } else {
-        //                debugger
-        //                // Handle the case where ConsignmentNo is not found in the response
-
-        //                Swal.fire('Error', 'ConsignmentNo not found in response.', 'error');
-        //            } debugger
-        //            // Display the consignment number in the result div
-
-        //        },
-        //        error: function () {
-        //            //consignmentResult.textContent = "Error fetching consignment number.";
-        //            Swal.fire('Error', 'Error occurred while consignment number.', 'error');
-        //            hideLoader(); // Hide the loader
-        //        }
-        //    });
-        //}
-
-        const isChecked = myCheckbox.checked;
+        
         debugger
-        var trackingNumber = $('#tracking').val();
-        debugger
-        $.ajax({
-            url: '/Home/GetTrackingDetails',
-            type: 'GET',
-            data: {
-                tracking: trackingNumber,
-                isCheckboxChecked: isChecked
+        if (myCheckbox.checked) {
 
 
-            },
-            success: function (result) {
-                debugger
 
-                // Create a temporary element to parse the HTML string
-                var tempElement = $('<div/>').html(result);
-                var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
-                // Set the value in the input field with the ID "tracking"
-                $('#tracking').val(cnValue);
-                hideLoader(); // Hide the loader
+            const isChecked = myCheckbox.checked;
+            debugger
+            var trackingNumber = $('#tracking').val();
+            debugger
+            $.ajax({
+                url: '/Home/GetTrackingDetails',
+                type: 'GET',
+                data: {
+                    tracking: trackingNumber,
+                    isCheckboxChecked: isChecked
 
-                debugger
-                $('#trackingDetailsContainer').html(result);
-                var hasData = $('#receiverTable tbody tr').length > 0;
-                debugger
 
-                if (hasData) {
+                },
+                success: function (result) {
                     debugger
 
-                    if (userRoleID === 4) {
-                        debugger
-                        $('#additionalButton').remove();
-                    }
+                    // Create a temporary element to parse the HTML string
+                    var tempElement = $('<div/>').html(result);
+                    var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
+                    // Set the value in the input field with the ID "tracking"
+                    $('#tracking').val(cnValue);
+                    hideLoader(); // Hide the loader
 
-                    else {
-                        debugger
-                        var additionalButtonExists = $('#additionalButton').length > 0;
-                        if (!additionalButtonExists) {
-                            var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
-                                + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
-                                + 'Ticket Generate'
-                                + '</button>';
-                            $('#btnSubmit').after(additionalButton);
-                            document.getElementById('additionalButton').addEventListener('click', function () {
-                                debugger
-
-                                var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
-                                window.open(url, '_blank');
-                            });
-                        }
-                    }
-                }
-                else {
-
-                    $('#additionalButton').remove();
-
-                }
-            }, complete: function () {
-
-            },
-            error: function () {
-                Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
-                hideLoader(); // Hide the loader
-            }
-        });
-
-
-
-        //when manual no check box is check
-
-
-        const ismanualChecked = myCheckboxmanual.checked;
-        debugger
-        var trackingNumber = $('#tracking').val();
-        debugger
-        $.ajax({
-            url: '/Home/GetTrackingDetailsManual',
-            type: 'GET',
-            data: {
-                tracking: trackingNumber,
-                ismanualCheckboxChecked: ismanualChecked
-
-
-            },
-            success: function (result) {
-                debugger
-
-                // Create a temporary element to parse the HTML string
-                var tempElement = $('<div/>').html(result);
-                var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
-                // Set the value in the input field with the ID "tracking"
-                $('#tracking').val(cnValue);
-                hideLoader(); // Hide the loader
-
-                debugger
-                $('#trackingDetailsContainer').html(result);
-                var hasData = $('#receiverTable tbody tr').length > 0;
-                debugger
-
-                if (hasData) {
+                    debugger
+                    $('#trackingDetailsContainer').html(result);
+                    var hasData = $('#receiverTable tbody tr').length > 0;
                     debugger
 
-                    if (userRoleID === 4) {
+                    if (hasData) {
                         debugger
-                        $('#additionalButton').remove();
-                    }
 
-                    else {
-                        debugger
-                        var additionalButtonExists = $('#additionalButton').length > 0;
-                        if (!additionalButtonExists) {
-                            var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
-                                + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
-                                + 'Ticket Generate'
-                                + '</button>';
-                            $('#btnSubmit').after(additionalButton);
-                            document.getElementById('additionalButton').addEventListener('click', function () {
-                                debugger
+                        if (userRoleID === 4) {
+                            debugger
+                            $('#additionalButton').remove();
+                        }
 
-                                var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
-                                window.open(url, '_blank');
-                            });
+                        else {
+                            debugger
+                            var additionalButtonExists = $('#additionalButton').length > 0;
+                            if (!additionalButtonExists) {
+                                var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                    + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                    + 'Ticket Generate'
+                                    + '</button>';
+                                $('#btnSubmit').after(additionalButton);
+                                document.getElementById('additionalButton').addEventListener('click', function () {
+                                    debugger
+
+                                    var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
+                                    window.open(url, '_blank');
+                                });
+                            }
                         }
                     }
+                    else {
+
+                        $('#additionalButton').remove();
+
+                    }
+                }, complete: function () {
+
+                },
+                error: function () {
+                    Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
+                    hideLoader(); // Hide the loader
                 }
-                else {
+            });
 
-                    $('#additionalButton').remove();
+        } else if (myCheckboxmanual.checked) {
+            debugger
 
+            //when manual no check box is check
+
+
+            const ismanualChecked = myCheckboxmanual.checked;
+            debugger
+            var trackingNumber = $('#tracking').val();
+            debugger
+            $.ajax({
+                url: '/Home/GetTrackingDetailsManual',
+                type: 'GET',
+                data: {
+                    tracking: trackingNumber,
+                    ismanualCheckboxChecked: ismanualChecked
+
+
+                },
+                success: function (result) {
+                    debugger
+
+                    // Create a temporary element to parse the HTML string
+                    var tempElement = $('<div/>').html(result);
+                    var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
+                    // Set the value in the input field with the ID "tracking"
+                    $('#tracking').val(cnValue);
+                    hideLoader(); // Hide the loader
+
+                    debugger
+                    $('#trackingDetailsContainer').html(result);
+                    var hasData = $('#receiverTable tbody tr').length > 0;
+                    debugger
+
+                    if (hasData) {
+                        debugger
+
+                        if (userRoleID === 4) {
+                            debugger
+                            $('#additionalButton').remove();
+                        }
+
+                        else {
+                            debugger
+                            var additionalButtonExists = $('#additionalButton').length > 0;
+                            if (!additionalButtonExists) {
+                                var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                    + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                    + 'Ticket Generate'
+                                    + '</button>';
+                                $('#btnSubmit').after(additionalButton);
+                                document.getElementById('additionalButton').addEventListener('click', function () {
+                                    debugger
+
+                                    var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
+                                    window.open(url, '_blank');
+                                });
+                            }
+                        }
+                    }
+                    else {
+
+                        $('#additionalButton').remove();
+
+                    }
+                }, complete: function () {
+
+                },
+                error: function () {
+                    Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
+                    hideLoader(); // Hide the loader
                 }
-            }, complete: function () {
+            });
 
-            },
-            error: function () {
-                Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
-                hideLoader(); // Hide the loader
-            }
-        });
+        }else{
+
+            const isChecked = myCheckbox.checked;
+            debugger
+            var trackingNumber = $('#tracking').val();
+            debugger
+            $.ajax({
+                url: '/Home/GetTrackingDetails',
+                type: 'GET',
+                data: {
+                    tracking: trackingNumber,
+                    isCheckboxChecked: isChecked
+
+
+                },
+                success: function (result) {
+                    debugger
+
+                    // Create a temporary element to parse the HTML string
+                    var tempElement = $('<div/>').html(result);
+                    var cnValue = tempElement.find('#itemTable tbody tr:first-child td:nth-child(2)').text();
+                    // Set the value in the input field with the ID "tracking"
+                    $('#tracking').val(cnValue);
+                    hideLoader(); // Hide the loader
+
+                    debugger
+                    $('#trackingDetailsContainer').html(result);
+                    var hasData = $('#receiverTable tbody tr').length > 0;
+                    debugger
+
+                    if (hasData) {
+                        debugger
+
+                        if (userRoleID === 4) {
+                            debugger
+                            $('#additionalButton').remove();
+                        }
+
+                        else {
+                            debugger
+                            var additionalButtonExists = $('#additionalButton').length > 0;
+                            if (!additionalButtonExists) {
+                                var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                    + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                    + 'Ticket Generate'
+                                    + '</button>';
+                                $('#btnSubmit').after(additionalButton);
+                                document.getElementById('additionalButton').addEventListener('click', function () {
+                                    debugger
+
+                                    var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
+                                    window.open(url, '_blank');
+                                });
+                            }
+                        }
+                    }
+                    else {
+
+                        $('#additionalButton').remove();
+
+                    }
+                }, complete: function () {
+
+                },
+                error: function () {
+                    Swal.fire('Error', 'Error occurred while retrieving tracking details.', 'error');
+                    hideLoader(); // Hide the loader
+                }
+            });
+
+        }
     });
     function showLoader() {
         // Add the loader and blur the page

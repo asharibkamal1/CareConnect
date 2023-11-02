@@ -299,12 +299,14 @@
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="ReportAgents" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-box-open"></i>Agents Activity
+                                            <i class="nav-icon fa fa-fw fa-box-open"></i>
+                                            <p>Agents Activity</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-action="AccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-book-reader"></i>Account Opening
+                                            <i class="nav-icon fa fa-book-reader"></i>
+                                            <p>Account Opening</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -315,6 +317,23 @@
                                             <p>Reports</p>
                                         </a>
                                         <ul class="submenu" nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                                            <li class="no-marker">
+                                                <a asp-action="ReportCRM" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>CRM
+                                                </a>
+                                            </li>
+
+                                            <li class="no-marker">
+                                                <a asp-action="ReportAccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>
+
+                                                    <p>Account Opening</p>
+                                                </a>
+                                            </li>
+                                            
                                             <li class="no-marker">
                                                 <a asp-action="Report" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
                                                     <i class="nav-icon fas fa-dot-circle"></i>Track Detail
@@ -332,12 +351,7 @@
                                                     <i class="nav-icon fas fa-dot-circle"></i>Ticket Close
                                                 </a>
                                             </li>
-                                            <li class="no-marker">
-                                                <a asp-action="ReportCRM" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#0565B7" : "default");">
-
-                                                    <i class="nav-icon fas fa-dot-circle"></i>CRM
-                                                </a>
-                                            </li>
+                       
                                         </ul>
                                     </li>
                                 </ul>

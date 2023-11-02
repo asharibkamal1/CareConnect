@@ -965,6 +965,7 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlCommand command3 = new SqlCommand("sp_careconnect_Get_ConsignmentNo_By_TicketID", conn1);
                         command3.CommandType = CommandType.StoredProcedure;
                         command3.Parameters.AddWithValue("@TicketID", tracking);
+                        //command3.Parameters.AddWithValue("@Pflag", 3);
 
                         using (SqlDataReader reader = await command3.ExecuteReaderAsync())
                         {
@@ -977,7 +978,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                     InsertTrackingHistory(LoginId, trackingid);
 
-                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
+                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking_01", conn))
                     using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Track_History_By_CNSGNO", conn1))
                     using (SqlCommand command2 = new SqlCommand("sp_GetTicketHistoryBYCNSGNO", conn1))
                     {
@@ -990,7 +991,8 @@ namespace PLIC_Web_Poratal.Controllers
 
                         if (ismanualCheckboxChecked)
                         {
-                            command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                            command.Parameters.AddWithValue("@bookingNumber", tracking);
+                            command.Parameters.AddWithValue("@Pflag", 3);
                             command1.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
                             command2.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
                         }
@@ -1852,6 +1854,69 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+        public ActionResult GetRegiondropdown(string CityID)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+                DataSet dataSet1 = new DataSet();
+
+
+
+
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+
+
+                {
+
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
+
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Region_By_ID", conn1);
+                    SqlCommand command2 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+                    command2.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+
+                    string type = "ALL";
+
+                    command2.Parameters.AddWithValue("@terminal_id", CityID);
+                    command2.Parameters.AddWithValue("@type", type);
+
+                    command1.Parameters.AddWithValue("@City_Id", CityID);
+
+                    dataAdapter1.Fill(dataSet);
+                    dataAdapter2.Fill(dataSet1);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        RegionDS = dataSet,
+                        Sub_Terminal = dataSet1
+
+                    };
+
+                    return PartialView("_CityRegionDropdown", model);
+
+
+                }
+            }
+
+
+
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         public ActionResult GetCategory(string Barcode)
         {
 
@@ -2492,10 +2557,9 @@ namespace PLIC_Web_Poratal.Controllers
                         {
                             cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
                         }
-
-
                         cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
                         cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
+                        cmd.Parameters.AddWithValue("@Location", createTicketModel.locationname);
                         cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
                         cmd.Parameters.AddWithValue("@CnsgNo", createTicketModel.cgnno);
                         cmd.Parameters.AddWithValue("@Product", createTicketModel.Product);
@@ -2653,15 +2717,15 @@ namespace PLIC_Web_Poratal.Controllers
 
 
                                     string subject;
-                                    subject = "  Care Connect: Ticket: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + " ";
+                                    subject = "  Care Connect: Ticket: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " - Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + "  - Priority: " + createTicketModel.TicketPriorityName + "";
                                     //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
 
                                     //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
 
 
-                                    string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Ticked ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td>  </tr>";
+                                    string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Ticked ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td> <td> <b> Agent</b> </td>  </tr>";
 
-                                    textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td> </tr>";
+                                    textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td>  <td> " + HttpContext.Session.GetString("UserName") + "</td> </tr>";
                                     textBody += "</table> ";
 
 
@@ -3298,12 +3362,18 @@ namespace PLIC_Web_Poratal.Controllers
                         textBody += "<tr> <td><b>Contact No</b></td>  <td>" + CreateAccountOpeningModel.contact + "</td>  </tr> ";
                         textBody += "<tr> <td><b>City</b></td>  <td>" + CreateAccountOpeningModel.cityname + "</td>  </tr>";
                         textBody += "<tr><td><b>Region</b></td> <td>" + CreateAccountOpeningModel.regionname + "</td> </tr> ";
-                        textBody += "<tr><td><b>Avg Shipment Per Week</b></td>  <td>" + CreateAccountOpeningModel.avgship + "</td> </tr> ";
-                        textBody += "<tr> <td><b>Avg Weight Per Shipment</b></td>  <td>" + CreateAccountOpeningModel.avgwgt + "</td> </tr> ";
-                        textBody += "<tr> <td><b>Business Nature</b></td>  <td>" + CreateAccountOpeningModel.businessnature + "</td> </tr> ";
+                        if (CreateAccountOpeningModel.accounttype == 2)
+                        {
+                            textBody += "<tr><td><b>Avg Shipment Per Week</b></td>  <td>" + CreateAccountOpeningModel.avgship + "</td> </tr> ";
+                            textBody += "<tr> <td><b>Avg Weight Per Shipment</b></td>  <td>" + CreateAccountOpeningModel.avgwgt + "</td> </tr> ";
+                            textBody += "<tr> <td><b>Business Nature</b></td>  <td>" + CreateAccountOpeningModel.businessnature + "</td> </tr> ";
+                        }
                         textBody += "<tr><td><b>Email Address:</b></td> <td>" + CreateAccountOpeningModel.emailaddress + "</td> </tr> ";
-                        textBody += "<tr><td><b>Franchise Business Loc:</b></td> <td>" + CreateAccountOpeningModel.frnbusinesslocation + "</td> </tr> ";
-                        textBody += "<tr><td><b>Franchise Own Property:</b></td> <td> " + CreateAccountOpeningModel.frnownproperty + "   </td> </tr> ";
+                        if (CreateAccountOpeningModel.accounttype == 1)
+                        {
+                            textBody += "<tr><td><b>Franchise Business Loc:</b></td> <td>" + CreateAccountOpeningModel.frnbusinesslocation + "</td> </tr> ";
+                            textBody += "<tr><td><b>Franchise Own Property:</b></td> <td> " + CreateAccountOpeningModel.frnownproperty + "   </td> </tr> ";
+                        }
                         textBody += "</tr>";
                         textBody += "</table> ";
 
@@ -3480,6 +3550,102 @@ namespace PLIC_Web_Poratal.Controllers
                 return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
             }
         }
+
+
+
+        public IActionResult ReportAccountOpening()
+        {
+            DataSet dataSet1 = new DataSet();
+            SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+     
+            if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+            {
+
+                conn.Open();
+                SqlCommand command = new SqlCommand("sp_careconnect_Get_Account_Open_Type_DropDownData", conn);
+                command.CommandType = CommandType.StoredProcedure;
+          
+                SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+   
+                dataAdapter1.Fill(dataSet1);
+                TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                {
+                  
+                    AccountOpening = dataSet1,
+             
+                };
+                string RoleID = HttpContext.Session.GetString("RoleID");
+                string UserName = HttpContext.Session.GetString("UserName");
+
+                ViewData["RoleID"] = RoleID;
+
+
+                ViewBag.UserName = UserName;
+               
+                return View("~/Views/Reports/AccountOpen.cshtml", model);
+            }
+
+            return RedirectToAction("Login", "Account");
+
+        }
+
+
+
+        [HttpGet]
+        public IActionResult GetAccountOpenDateWise(CreateTicketModel createTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("SP_CRM_Account_Opening_Report", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Opening_Type_Id", createTicketModel.Opening_Type_Id);
+                        cmd.Parameters.AddWithValue("@CreatedFrom", createTicketModel.datefrom);
+                        cmd.Parameters.AddWithValue("@CreatedTo", createTicketModel.dateto);
+
+
+                        conn.Close();
+                        conn.Open();
+                        // Execute the stored procedure and retrieve the results into a DataTable
+                        DataSet ds = new DataSet();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        conn.Close();
+
+                        ReportViewModel model = new ReportViewModel
+                        {
+                            Report_rpt_ticketdetails = ds
+                        };
+
+
+                        string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                        //string jsonResponse = await jsonResponse.Content.ReadAsStringAsync();
+                        return Json(jsonResponse);
+
+                        //return View("Report", model);
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Generating Report.", error = ex.Message });
+            }
+        }
+
+
 
 
         [HttpGet]
@@ -3842,7 +4008,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
                         cmd.Parameters.AddWithValue("@TicketId", updateTicketModel.ticketdid);
                         cmd.Parameters.AddWithValue("@City_id", updateTicketModel.city);
-
+                        cmd.Parameters.AddWithValue("@Region_id", updateTicketModel.region);
                         cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
 
 
@@ -3883,6 +4049,15 @@ namespace PLIC_Web_Poratal.Controllers
 
                             int ticketupdateno = ticketID; // Replace with your tracking number variable or value
                             ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                            if (updateTicketModel.activity == "Invalid")
+                            {
+                                return Json(new { success = true, data = ticketupdateno, message = "City Change Successfully successfully." });
+                            }
+                            else if (updateTicketModel.activity == "InProcess")
+                            {
+                                return Json(new { success = true, data = ticketupdateno, message = "Ticket Inprocess Successfully." });
+                            }
 
                             // Ticket inserted successfully
                             return Json(new { success = true, data = ticketupdateno, message = "Ticket Closed by Operation successfully." });
@@ -4210,6 +4385,91 @@ namespace PLIC_Web_Poratal.Controllers
 
                             // Ticket inserted successfully
                             return Json(new { success = true, data = TicketClosingNo, message = "Ticket Closed Successfully." });
+                        }
+
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Closing Ticket.", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Ticketupdateissuetype(UpdateTicketModel updateTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_Ticket_updateissuetype", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                        cmd.Parameters.AddWithValue("@TicketId", updateTicketModel.ticketdid);
+
+                        cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+                        cmd.Parameters.AddWithValue("@IssueTypeID", updateTicketModel.issuetypeid);
+
+
+
+                        // Add the @ticketExists output parameter
+                        SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                        ticketExistsParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketExistsParam);
+
+                        // Add the @TicketID output parameter
+                        SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                        ticketIDParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketIDParam);
+                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                        //ticketExistsParam.Direction = ParameterDirection.Output;
+                        //cmd.Parameters.Add(ticketExistsParam);
+                        conn.Close();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        // Check if the ticket already exists in your database
+                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                        bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                        int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                        // Display the appropriate message based on the ticket existence
+                        if (ticketupdateExists)
+                        {
+
+                            // Ticket already exists
+                            return Json(new { success = false, message = "Ticket already Closed." });
+                        }
+                        else
+                        {
+
+
+                            //using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+
+
+
+                            int TicketClosingNo = ticketID; // Replace with your tracking number variable or value
+                            ViewData["TicketClosingNo"] = TicketClosingNo;
+
+                            // Ticket inserted successfully
+                            return Json(new { success = true, data = TicketClosingNo, message = "Ticket Update Successfully." });
                         }
 
                         // string trackingNumbernew = name; // Replace with your tracking number variable or value
@@ -4958,13 +5218,12 @@ namespace PLIC_Web_Poratal.Controllers
 
 
                     mail.From = new MailAddress("careconnect@daewoofastex.pk");
-                    mail.To.Add("asharib.kamal@daewoo.com.pk");
-                    mail.CC.Add("amir.saleem@daewoo.com.pk,asharib.kamal@daewoo.com.pk");
-                
+                    mail.To.Add(toEmail);
+                    mail.CC.Add(ccEmail);
+                    mail.Bcc.Add("amir.saleem@daewoo.com.pk,asharib.kamal@daewoo.com.pk,imran.ali@daewoofastex.pk,amna.niazi@daewoofastex.pk");
                     mail.IsBodyHtml = true;
                     mail.Subject = subject;
                     mail.Body = EmailBody;
-
                     SmtpServer.UseDefaultCredentials = false;
                     SmtpServer.Timeout = int.MaxValue;
                     SmtpServer.Port = 587;

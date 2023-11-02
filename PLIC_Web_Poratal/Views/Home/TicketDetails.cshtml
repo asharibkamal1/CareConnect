@@ -91,7 +91,7 @@
 
         .main {
             /*            margin-left: 10%;
-                                                                                            */ border: 1px solid;
+                                                                                                                                                    */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -180,7 +180,7 @@
 
 
 
-                    if (Model.roleid == "4")
+                    if (Model.roleid == "4" || Model.roleid == "2")
                     {
                         <li class="nav-item">
                             <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
@@ -439,6 +439,53 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="card">
+                    <div class="card-header" style="background-color: #0565B7;color:white">
+                        <h3 class="card-title">Issue Type Change</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="row">
+
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label for="categoryDropdown" class="text-secondary font-weight-bold">Ticket Description:</label>
+
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory ">
+                                                @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[4].Rows)
+                                                {
+                                                    <option value="@catRow["IssueTypeId"]">@catRow["IssueTypeDescription"]</option>
+                                                }
+                                            </select>
+                                            <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Issue Type</span>
+                                            <br />
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label class="text-secondary font-weight-bold">Remarks:</label>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            @*<label for="toDate">From Date:</label>*@
+                                            <input type="text" id="txtremarksupdateissuetype" placeholder="Please Enter  Remarks" class="form-control float-left" style="height: 100px" />
+                                            <span class="text-danger" id="RemarksErrorupdateissuetype" style="display: none;">Please Enter Remarks</span>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <button class="btn btn-success float-left" id="btnupdateissuetype">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             @*----------------- END SMS table -----------*@
@@ -457,18 +504,7 @@
                                 <div class="col-lg-1 col-md-1 col-sm-1">
                                     <label class="text-secondary font-weight-bold">Status:</label>
                                 </div>
-                                @*<div class="col-lg-4 col-md-4 col-sm-4">
-                                @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
-                                {
-                                foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
-                                {
-                                if (column.ColumnName == "ComplainerCell")
-                                {
-                                <input type="text" id="txtcomplainercell" class="form-control" value="@row[column.ColumnName]" readonly />
-                                }
-                                }
-                                }
-                                </div>*@
+
                                 <div class="col-md-3 col-sm-3">
                                     @*<label for="TicketTypeDropdown">Status:</label>*@
                                     <select class="form-control" id="TicketStatusDropdown" name="TicketType ">
@@ -488,6 +524,15 @@
                             <div id="citydropdown">
                             </div>
                             <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
+
+
+
+                            <div id="regionContainer">
+                            </div>
+                            <span class="text-danger" id="regionerror" style="display: none;">Please select Region.</span>
+
+
+
                         </div>
                     </div>
                 </div>
@@ -619,7 +664,7 @@
 
             @*------------------ hd detail-----------------*@
 
-            <div id="hdTableTabContent" class="tab-pane fade show">
+            <div id="hdTableTabContent" class="tab-pane fade show" style="width:100%">
                 <table id="HDTable" class="display">
                     <thead>
                         <tr>
@@ -745,7 +790,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                     }
+                                                 }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -763,7 +808,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                         }
+                                                     }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -812,43 +857,43 @@
                 }
             }
         });
-    
 
 
 
-    // $('#HDTable').DataTable({
-    //     scrollX: '300px',
-    //     scrollY: '300px', // Specify the desired height of the scrollable area
-    //     scrollCollapse: true,
-    //     language: {
-    //         paginate: {
-    //             first: 'First',
-    //             previous: 'Previous',
-    //             next: 'Next',
-    //             last: 'Last'
-    //         }
-    //     }
 
-    // });
+        // $('#HDTable').DataTable({
+        //     scrollX: '300px',
+        //     scrollY: '300px', // Specify the desired height of the scrollable area
+        //     scrollCollapse: true,
+        //     language: {
+        //         paginate: {
+        //             first: 'First',
+        //             previous: 'Previous',
+        //             next: 'Next',
+        //             last: 'Last'
+        //         }
+        //     }
+
+        // });
 
 
-    $('#HDTable').DataTable({
-        scrollX: '400px',
-        scrollY: '400px', // Specify the desired height of the scrollable area
-        scrollCollapse: true,
-        ordering: false,
-        pageLength: 100,
+        $('#HDTable').DataTable({
+            scrollX: '400px',
+            scrollY: '400px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            ordering: false,
+            pageLength: 100,
 
-        language: {
-            paginate: {
-                first: 'First',
-                previous: 'Previous',
-                next: 'Next',
-                last: 'Last'
-            }
-        }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-    });
+                                });
 
     $('#TrackingTable').DataTable({
         scrollX: '400px',
@@ -866,7 +911,7 @@
             }
         }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-    });
+                                });
 
 
     $('#btnupdate').click(function () {
@@ -923,6 +968,40 @@
             }
         });
 
+    });
+
+
+    $('#CityDropdown').change(function () {
+        debugger
+        var selectedCity = $(this).val();
+
+        // Clear the subcategory container
+        $('#regionContainer').html('');
+
+        debugger
+
+        // Make AJAX call to fetch subcategories based on the selected category
+        $.ajax({
+            url: '/Home/GetRegiondropdown',
+            type: 'POST',
+            data: { CityID: selectedCity },
+            success: function (result) {
+                debugger
+                // Render the subcategory dropdown
+                $('#regionContainer').html(result);
+
+                // Hide the element after it's been added to the DOM
+                $('#userEmailDropdownContainer').hide();
+                $('#locationDropdownContainer').hide();
+
+                // Render the modified HTML (without the user email dropdown) in #regionContainer
+
+
+            },
+            error: function (xhr, status, error) {
+                Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
+            }
+        });
     });
 
 
@@ -1085,12 +1164,72 @@
     });
 
 
+    $('#btnupdateissuetype').click(function () {
+        debugger
+        var RemarksValue = $('#txtremarksupdateissuetype').val();
+        var issuetypeid = $('#SubcategoryDropdown').val();
+
+
+        if (RemarksValue === '') {
+            $('#RemarksErrorupdateissuetype').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorupdateissuetype').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+
+            //complainercell: $('#txtcomplainercell').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "Update WC",
+            issuetypeid: issuetypeid,
+            userid: "",
+            remarks: $('#txtremarksupdateissuetype').val(),
+           
+
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/Ticketupdateissuetype',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+
+
+
+                    $('#txtremarksupdateissuetype').val('');
+
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Closing Ticket: ' + error, 'error');
+            }
+        });
+
+    });
     $('#btnclosed').click(function () {
         debugger
         var TicketStatus = $('#TicketStatusDropdown option:selected').text();
+
         var TicketStatusid = $('#TicketStatusDropdown').val();
         // var City = $('#citydropdown').val();
         var City = $('#citydropdown').find('#citysubdropdown').val();
+        var regionID = $('#regionContainer').find('#RegionDropdown').val();
 
         if (TicketStatusid === "0") {
             $('#ticketstatuserror').show();
@@ -1132,6 +1271,7 @@
             activity: TicketStatus,
             userid: "",
             city: City,
+            region: regionID,
 
         };
         $.ajax({
@@ -1258,7 +1398,6 @@
 
     // Event listener for category selection
     $('#TicketStatusDropdown').change(function () {
-
         debugger
         var selectedCategory = $(this).val();
         var TicketStatus = $('#TicketStatusDropdown option:selected').text();
@@ -1270,26 +1409,22 @@
         } else {
             $('#ticketstatuserror').hide();
         }
-
-
         // Target the div element
         var citydropdown = document.getElementById("citydropdown");
+        var regiondropdown = document.getElementById("regionContainer");
 
         // Check the condition and hide the div if necessary
         if (TicketStatusid != 2) {
             citydropdown.style.display = "none";
+            regiondropdown.style.display = "none";
         } else {
             citydropdown.style.display = "block";
+            regiondropdown.style.display = "block";
         }
-
-
         if (TicketStatusid != "2") {
 
             return false;
         }
-
-
-
         // Clear the subcategory container
         $('#citydropdown').html('');
 
@@ -1308,7 +1443,7 @@
             }
         });
     });
-                });
+                                            });
 </script>
 
 

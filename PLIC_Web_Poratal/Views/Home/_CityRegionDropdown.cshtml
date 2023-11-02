@@ -1,0 +1,56 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+<!-- Render the dropdown list with TicketCatType data -->
+
+
+ @*  
+    <div class="col-md-auto  col-sm-12">
+
+        <label for="TicketTypeDropdown">Region:</label>
+        <select class="form-control" id="RegionDropdown" name="region">
+            @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
+            {
+                <option value="@catRow["region_id"]">@catRow["region_name"]</option>
+            }
+        </select>
+    </div>
+ *@
+
+<div class="row">
+    <div class="col-lg-1 col-md-1 col-sm-1">
+        <label class="text-secondary font-weight-bold">Region:</label>
+    </div>
+    <div class="col-md-3 col-sm-3">
+        <select class="form-control" id="RegionDropdown" name="region ">
+            @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
+            {
+                <option value="@catRow["region_id"]">@catRow["region_name"]</option>
+            }
+        </select>
+        <span class="text-danger" id="regionDropdownError" style="display: none;">Please select Region</span>
+   
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

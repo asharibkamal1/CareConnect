@@ -115,6 +115,7 @@
                 <div id="regionContainer">
                 </div>
                 <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
+                <span class="text-danger" id="locationError" style="display: none;">Please select Location.</span>
             </div>
             <div class="col-md-2 col-sm-2">
 
@@ -379,7 +380,11 @@
             var RemarksValue = $('#txtremarks').val();
             var TicketDescription = $('#txtremarks').val();
             var TicketPriority = $('#PriorityDropdown').val();
+            var TicketPriorityName = $('#PriorityDropdown option:selected').text();
             var City = $('#CityDropdown').val();
+            var locationid = $('#regionContainer').find('#LocationDropdown').val();
+            
+            var locationname = $('#regionContainer').find('#LocationDropdown option:selected').text();
             var region = $('#regionContainer').find('#RegionDropdown').val();
 
             var UserEmail = $('#regionContainer').find('#useremail option:selected').text();
@@ -466,6 +471,23 @@
                 } else {
                     $('#priorityError').hide();
                 }
+                if (locationname === '') {
+                    $('#locationError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#locationError').hide();
+                }
+
+
+                if (locationid === '0') {
+                    $('#locationError').show();
+                    return false; // Prevent form submission if barcode is not selected
+                } else {
+                    $('#locationError').hide();
+                }
+                
+
+                
                 if (City === '') {
                     $('#cityError').show();
                     return false; // Prevent form submission if barcode is not selected
@@ -565,7 +587,9 @@
                 Gender: Gender,
                 issendsms: isChecked,
                 priority: TicketPriority,
+                TicketPriorityName: TicketPriorityName,
                 city: City,
+                locationname: locationname,
                 region: region,
                 UserEmail: UserEmail,
                 cgnno: @ViewData["TrackingNumber"],
