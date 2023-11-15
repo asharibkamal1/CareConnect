@@ -1,0 +1,1460 @@
+﻿@model CareConnect.Models.TicketDetailsViewModel
+@*---   bootstrap Tabs Code Start ------*@
+
+@{
+    ViewData["Title"] = "Claim Detail";
+
+}
+<head>
+    @*@{
+    Layout = null;
+
+    ViewData["Title"] = "Policy";
+    //string policy;
+    }*@
+    <title>Claim</title>
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery UI library -->
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .btn-add {
+            background: #EBFFFF;
+            color: #006060;
+            border-color: #006060;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .radio-group label {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            }
+
+                .radio-group label input[type="radio"] {
+                    display: none;
+                }
+
+                .radio-group label span {
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    border: 2px solid #ccc;
+                    margin-right: 5px;
+                }
+
+                .radio-group label input[type="radio"]:checked + span {
+                    background-color: #0565B7;
+                    border-color: #0565B7;
+                }
+
+        .btn-add:hover {
+            background: #006060;
+        }
+
+        .btn-add img:hover {
+            background-color: #006060;
+        }
+
+
+
+
+        .nav-pills .nav-link.active {
+            background-color: #0565B7;
+            color: white;
+        }
+
+
+
+
+        .main {
+            /*            margin-left: 10%;
+                                                                                                                                                    */ border: 1px solid;
+            /*min-height: stretch;*/
+            /*padding: 10px;*/
+            width: 80%;
+            height: 100%;
+        }
+
+        .policies {
+            background-color: #107773;
+            border-color: #488c6c;
+            color: white;
+            font-family: sans-serif;
+            font-size: 18px;
+            padding: 7px 15px;
+            margin: 0px
+        }
+
+        .list {
+            padding-left: 10px;
+        }
+
+        .test {
+            background-color: #107773;
+        }
+
+        .test1 {
+            background-color: lightgrey;
+        }
+
+        .portlet-body {
+            margin-left: 0px;
+        }
+
+        .excel {
+            background-color: #0565B7 !important;
+            color: white !important;
+            margin-left: 40px;
+            height: 35px;
+        }
+    </style>
+</head>
+
+<div class="card">
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Tracking Detail</h3>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-pills nav-tabs" role="tablist">
+            @*<li class="nav-item">
+            <a class="nav-link active" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Ticket Detail</a>
+            </li>*@
+
+            <li class="nav-item">
+                <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" href="#secondTableTabContent">History Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="updateTableTabButton" data-toggle="pill" href="#updateTableTabContent">Update Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="emailTableTabButton" data-toggle="pill" href="#emailTableTabContent">Email</a>
+            </li>
+            @{
+                try
+                {
+                    //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+                    if (Model.roleid == "2")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
+                        </li>
+                    }
+                    else
+                    {
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception here
+                    throw ex;
+                }
+            }
+            @{
+                try
+                {
+
+
+
+
+                    if (Model.roleid == "4" || Model.roleid == "2")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
+                        </li>
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            @{
+                try
+                {
+
+
+
+                    @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
+                        </li>
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            }
+
+
+            <li class="nav-item">
+                <a class="nav-link" id="trackingTableTabButton" data-toggle="pill" href="#trackingTableTabContent">Tracking Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="hdTableTabButton" data-toggle="pill" href="#hdTableTabContent">HD Status Detail</a>
+            </li>
+        </ul>
+
+
+
+        @*----------------- history table -----------*@
+
+        <div class="tab-content mt-3">
+            <div id="secondTableTabContent" class="tab-pane show fade active">
+                <table id="senderTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.TicketHistory.Tables[0].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.TicketHistory.Tables[0].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*----------------- end history table -----------*@
+
+
+
+
+            @*----------------- Update table -----------*@
+
+            <div id="updateTableTabContent" class="tab-pane fade show">
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="txtremarks" placeholder="Please Type Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
+                                    <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
+                                </div>
+
+
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <button class="btn btn-success float-left" id="btnupdate">Update</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+            @*----------------- Email table -----------*@
+
+            <div id="emailTableTabContent" class="tab-pane fade show">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">To Email:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="autocompletetoemail" placeholder="Please Type Email Address" class="form-control float-left" autofocus name="email" />
+                                    <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address.</span>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">CC Email:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="autocompletefromemail" placeholder="Please Type from Email Address" class="form-control float-left" />
+                                    <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="txtremarksemail" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+
+                                </div>
+
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <button class="btn btn-success float-left" id="btnemail">Send Email</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            @*----------------- SMS table -----------*@
+
+            <div id="smsTableTabContent" class="tab-pane fade show">
+
+                <div class="card">
+                    <div class="card-header" style="background-color: #0565B7;color:white">
+                        <h3 class="card-title">Send SMS</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label class="text-secondary font-weight-bold">Complainer Cell:</label>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            @if (Model.TicketDetails.Tables[0].Rows.Count > 0)
+                                            {
+                                                <input type="text" id="txtcomplainercell" class="form-control" value="@Model.TicketDetails.Tables[0].Rows[0]["ComplainerCell"]" readonly />
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label class="text-secondary font-weight-bold">SMS Remarks:</label>
+
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            @*<label for="toDate">From Date:</label>*@
+                                            <input type="text" id="txtremarkssms" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+
+                                        </div>
+
+
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <button class="btn btn-success float-left" id="btnsms">Send SMS</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header" style="background-color: #0565B7;color:white">
+                        <h3 class="card-title">Closing</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label class="text-secondary font-weight-bold">Closing Remarks:</label>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            @*<label for="toDate">From Date:</label>*@
+                                            <input type="text" id="txtremarksclosing" placeholder="Please Enter Closing Remarks" class="form-control float-left" style="height: 100px" />
+                                            <span class="text-danger" id="RemarksErrorclosing" style="display: none;">Please Enter Closing Remarks</span>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <button class="btn btn-success float-left" id="btnclosing">Closing</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header" style="background-color: #0565B7;color:white">
+                        <h3 class="card-title">Issue Type Change</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="row">
+
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label for="categoryDropdown" class="text-secondary font-weight-bold">Claim Description:</label>
+
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory ">
+                                                @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[4].Rows)
+                                                {
+                                                    <option value="@catRow["IssueTypeId"]">@catRow["IssueTypeDescription"]</option>
+                                                }
+                                            </select>
+                                            <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Issue Type</span>
+                                            <br />
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label class="text-secondary font-weight-bold">Remarks:</label>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            @*<label for="toDate">From Date:</label>*@
+                                            <input type="text" id="txtremarksupdateissuetype" placeholder="Please Enter  Remarks" class="form-control float-left" style="height: 100px" />
+                                            <span class="text-danger" id="RemarksErrorupdateissuetype" style="display: none;">Please Enter Remarks</span>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <button class="btn btn-success float-left" id="btnupdateissuetype">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*----------------- END SMS table -----------*@
+
+
+
+
+
+            @*----------------- close table -----------*@
+
+            <div id="closeTableTabContent" class="tab-pane fade show">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Status:</label>
+                                </div>
+
+                                <div class="col-md-3 col-sm-3">
+                                    @*<label for="TicketTypeDropdown">Status:</label>*@
+                                    <select class="form-control" id="TicketStatusDropdown" name="TicketType ">
+
+                                        <option value="0">Select Ticket Status</option>
+                                        @foreach (System.Data.DataRow catRow in Model.TicketStatus.Tables[0].Rows)
+                                        {
+                                            <option value="@catRow["Status_ID"]">@catRow["ticket_status"]</option>
+                                        }
+                                    </select>
+                                    <span class="text-danger" id="ticketstatuserror" style="display: none;">Please select Ticket Status.</span>
+                                </div>
+
+                            </div>
+
+
+                            <div id="citydropdown">
+                            </div>
+                            <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
+
+
+
+                            <div id="regionContainer">
+                            </div>
+                            <span class="text-danger" id="regionerror" style="display: none;">Please select Region.</span>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="txtremarksclosed" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+                                    <span class="text-danger" id="RemarksErrorclosed" style="display: none;">Please Enter Remarks.</span>
+                                </div>
+
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <button class="btn btn-success float-left" id="btnclosed">Closed</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*----------------- END close table -----------*@
+
+
+            @*----------------- Reopen table -----------*@
+
+            <div id="reopenTableTabContent" class="tab-pane fade show">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Ticket Type:</label>
+                                </div>
+
+                                <div class="col-md-3 col-sm-3">
+
+                                    <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
+
+                                        <option value="">Select Ticket Type</option>
+                                        @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
+                                        {
+                                            <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
+                                        }
+                                    </select>
+                                    <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
+                                </div>
+
+                            </div>
+
+
+                            <div id="citydropdown">
+                            </div>
+                            <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="txtremarksreopen" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+                                    <span class="text-danger" id="RemarksErrorreopen" style="display: none;">Please Enter Remarks.</span>
+                                </div>
+
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <button class="btn btn-success float-left" id="btnreopen">Reopen</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*----------------- END Reopen table -----------*@
+
+
+
+
+
+
+            @*----------------- tracking detail----------*@
+
+            <div id="trackingTableTabContent" class="tab-pane show ">
+                <table id="TrackingTable" class="display" style="width:100%">
+                    <thead style="width:100%">
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[6].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[6].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @*-----------------END Tracking table -----------*@
+
+
+            @*------------------ hd detail-----------------*@
+
+            <div id="hdTableTabContent" class="tab-pane fade show" style="width:100%">
+                <table id="HDTable" class="display">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[7].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[7].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @*-----------------END hd table -----------*@
+
+
+        </div>
+    </div>
+</div>
+@*---------------Ticket Detail---------------*@
+
+<div class="card">
+
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Ticket Detail</h3>
+
+    </div>
+    <div class="card-body">
+        <!-- Add a span element with an ID to hold the "Category" value -->
+        <span id="categoryValue" style="display: none;">@Model.TicketDetails.Tables[0].Rows[0]["Category"].ToString()</span>
+
+        @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
+        {
+            <div class="row">
+                @foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
+                {
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">@column.ColumnName:</label>
+                            <input type="text" class="form-control" value="@row[column.ColumnName]" readonly />
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+
+
+
+</div>
+@*---   bootstrap Tabs Code END ------*@
+
+<br />
+
+<script>
+    $(document).ready(function () {
+        debugger
+        var categoryValue = document.getElementById("categoryValue").innerText;
+
+        // Get the dynamic values (complaint and ticket ID) from somewhere (e.g., backend, user input, etc.)
+        var dynamicComplaint = categoryValue;
+        var dynamicTicketID = @ViewData["TicketNo"];
+
+        // Construct the dynamic message
+        var dynamicRemarks = `Your ${dynamicComplaint} with Ticket ID ${dynamicTicketID} has been resolved. For more details, please call on 042-111-007-009. Thanks`;
+
+
+
+
+
+        // Set the dynamic message in the remarks field
+        $('#txtremarkssms').val(dynamicRemarks);
+
+
+
+        var autocompleteData = []; // Initialize an empty array
+
+        var barcodeColors = {}; // Create an object to store barcode colors
+
+        // Function to generate a random color
+
+
+    @*
+            function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+            } *@
+            function getRandomLightColor() {
+                // Generate light shades for R, G, and B channels (between 200 and 255)
+                var r = Math.floor(Math.random() * 56) + 200;  // Red channel
+                var g = Math.floor(Math.random() * 56) + 200;  // Green channel
+                var b = Math.floor(Math.random() * 56) + 200;  // Blue channel
+
+                // Convert the RGB values to a hex color code
+                var color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+
+                return color;
+            }
+
+        // Iterate through each row in the table
+        $('#HDTable tbody tr').each(function () {
+            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+            // Check if this barcode value has been encountered before
+            if (barcodeColors[barcodeValue] === undefined) {
+                // If not encountered before, generate a random color and store it
+                barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                    barcodeCell.addClass('highlighted'); *@
+
+                                                 }
+
+            // Apply the background color to highlight rows with the same barcode value
+            $(this).css('background-color', barcodeColors[barcodeValue]);
+        });
+
+
+        // Iterate through each row in the table
+        $('#TrackingTable tbody tr').each(function () {
+            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+            // Check if this barcode value has been encountered before
+            if (barcodeColors[barcodeValue] === undefined) {
+                // If not encountered before, generate a random color and store it
+                barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                    barcodeCell.addClass('highlighted'); *@
+
+                                                     }
+
+            // Apply the background color to highlight rows with the same barcode value
+            $(this).css('background-color', barcodeColors[barcodeValue]);
+        });
+
+
+
+        $.ajax({
+            url: "/Home/getemailaddresses",
+            type: "POST",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    debugger
+                    var autocompleteData = response.data;
+                    debugger
+                    $("#autocompletetoemail, #autocompletefromemail").autocomplete({
+                        source: autocompleteData,
+                        minLength: 2,
+                        delay: 300,
+                        select: function (event, ui) {
+                            console.log("Selected item:", ui.item.value);
+                        }
+                    });
+                } else {
+                    // Handle the case when the server request is not successful
+                    console.error("Error: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle the AJAX request error
+                console.error("AJAX Error: " + error);
+            }
+        });
+
+        $('#senderTable').DataTable({
+            scrollX: '300px',
+            scrollY: '300px',
+            scrollCollapse: true,
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            }
+        });
+
+
+
+
+        // $('#HDTable').DataTable({
+        //     scrollX: '300px',
+        //     scrollY: '300px', // Specify the desired height of the scrollable area
+        //     scrollCollapse: true,
+        //     language: {
+        //         paginate: {
+        //             first: 'First',
+        //             previous: 'Previous',
+        //             next: 'Next',
+        //             last: 'Last'
+        //         }
+        //     }
+
+        // });
+
+
+        $('#HDTable').DataTable({
+            scrollX: '400px',
+            scrollY: '400px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            ordering: false,
+            pageLength: 100,
+
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
+
+                                });
+
+    $('#TrackingTable').DataTable({
+        scrollX: '400px',
+        scrollY: '400px', // Specify the desired height of the scrollable area
+        scrollCollapse: true,
+        ordering: false,
+        pageLength: 100,
+
+        language: {
+            paginate: {
+                first: 'First',
+                previous: 'Previous',
+                next: 'Next',
+                last: 'Last'
+            }
+        }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
+
+                                });
+
+
+    $('#btnupdate').click(function () {
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+            remarks: $('#txtremarks').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "Update",
+            userid: "",
+
+        };
+        var RemarksValue = $('#txtremarks').val();
+
+        if (RemarksValue === '') {
+            $('#RemarksError').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksError').hide();
+        }
+
+        $.ajax({
+            url: '/Home/UpdateTicket',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                        // var ticketno = $('#tracking').val();
+
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarks').val('');
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+
+    $('#CityDropdown').change(function () {
+        debugger
+        var selectedCity = $(this).val();
+
+        // Clear the subcategory container
+        $('#regionContainer').html('');
+
+        debugger
+
+        // Make AJAX call to fetch subcategories based on the selected category
+        $.ajax({
+            url: '/Home/GetRegiondropdown',
+            type: 'POST',
+            data: { CityID: selectedCity },
+            success: function (result) {
+                debugger
+                // Render the subcategory dropdown
+                $('#regionContainer').html(result);
+
+                // Hide the element after it's been added to the DOM
+                $('#userEmailDropdownContainer').hide();
+                $('#locationDropdownContainer').hide();
+
+                // Render the modified HTML (without the user email dropdown) in #regionContainer
+
+
+            },
+            error: function (xhr, status, error) {
+                Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
+            }
+        });
+    });
+
+
+    $('#btnemail').click(function () {
+        debugger
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+            emailto: $('#autocompletetoemail').val(),
+            emailcc: $('#autocompletefromemail').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "Email",
+            userid: "",
+            remarks: $('#txtremarksemail').val()
+
+        };
+
+
+        $.ajax({
+            url: '/Home/UpdateTicketEmail',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+
+                    // var ticketno = $('#tracking').val();
+
+                    // Construct the URL with the tracking number as a query parameter
+                    // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+
+                    // Open the new view in a new window/tab
+                    // window.open(url, '_blank');
+                    $('#autocompletetoemail').val('');
+                    $('#autocompletefromemail').val('');
+                    $('#txtremarksemail').val('');
+
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+    $('#btnsms').click(function () {
+        debugger
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+
+            complainercell: $('#txtcomplainercell').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "SMS",
+            userid: "",
+            remarks: $('#txtremarkssms').val()
+
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/UpdateTicketSMS',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+
+
+
+                    // $('#txtremarkssms').val('');
+
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+
+    $('#btnclosing').click(function () {
+        debugger
+        var RemarksValue = $('#txtremarksclosing').val();
+
+
+        if (RemarksValue === '') {
+            $('#RemarksErrorclosing').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorclosing').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+
+            //complainercell: $('#txtcomplainercell').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "close",
+            userid: "",
+            remarks: $('#txtremarksclosing').val()
+
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/TicketClosing',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+
+
+
+                    $('#txtremarksclosing').val('');
+
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Closing Ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+
+    $('#btnupdateissuetype').click(function () {
+        debugger
+        var RemarksValue = $('#txtremarksupdateissuetype').val();
+        var issuetypeid = $('#SubcategoryDropdown').val();
+
+
+        if (RemarksValue === '') {
+            $('#RemarksErrorupdateissuetype').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorupdateissuetype').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+
+        var ticketData = {
+
+
+            //complainercell: $('#txtcomplainercell').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: "Update WC",
+            issuetypeid: issuetypeid,
+            userid: "",
+            remarks: $('#txtremarksupdateissuetype').val(),
+           
+
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/Ticketupdateissuetype',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+
+
+
+                    $('#txtremarksupdateissuetype').val('');
+
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Closing Ticket: ' + error, 'error');
+            }
+        });
+
+    });
+    $('#btnclosed').click(function () {
+        debugger
+        var TicketStatus = $('#TicketStatusDropdown option:selected').text();
+
+        var TicketStatusid = $('#TicketStatusDropdown').val();
+        // var City = $('#citydropdown').val();
+        var City = $('#citydropdown').find('#citysubdropdown').val();
+        var regionID = $('#regionContainer').find('#RegionDropdown').val();
+
+        if (TicketStatusid === "0") {
+            $('#ticketstatuserror').show();
+            return false;
+        } else {
+            $('#ticketstatuserror').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+        var RemarksValue = $('#txtremarksclosed').val();
+
+
+
+        if (RemarksValue === '') {
+            $('#RemarksErrorclosed').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorclosed').hide();
+        }
+
+        if (City === "0") {
+            $('#citydropdownerror').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#citydropdownerror').hide();
+        }
+        debugger
+        if (TicketStatusid === 0) {
+            return false;
+        }
+
+
+
+
+        var ticketData = {
+
+            remarks: RemarksValue,
+            ticketdid: @ViewData["TicketNo"],
+            activity: TicketStatus,
+            userid: "",
+            city: City,
+            region: regionID,
+
+        };
+        $.ajax({
+            url: '/Home/TickedClosed',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                        // var ticketno = $('#tracking').val();
+
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarksclosed').val('');
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Closing the ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+    $('#btnreopen').click(function () {
+        debugger
+
+        var TicketTypeDropdown = $('#TicketTypeDropdown option:selected').text();
+        var TicketTypeDropdownid = $('#TicketTypeDropdown').val();
+        // var City = $('#citydropdown').val();
+        //var City = $('#citydropdown').find('#citysubdropdown').val();
+
+        if (TicketTypeDropdownid === "0") {
+            $('#TicketTypeDropdownError').show();
+            return false;
+        } else {
+            $('#TicketTypeDropdownError').hide();
+        }
+        //console.log("button is clisked");
+        debugger
+        var RemarksValue = $('#txtremarksreopen').val();
+
+
+
+        if (RemarksValue === '') {
+            $('#RemarksErrorreopen').show();
+            return false; // Prevent form submission if barcode is not selected
+        } else {
+            $('#RemarksErrorreopen').hide();
+        }
+
+        //if (City === "0") {
+        //    $('#citydropdownerror').show();
+        //    return false; // Prevent form submission if barcode is not selected
+        //} else {
+        //    $('#citydropdownerror').hide();
+        //}
+        debugger
+        if (TicketTypeDropdownid === 0) {
+            return false;
+        }
+
+
+
+
+        var ticketData = {
+
+            remarks: RemarksValue,
+            ticketdid: @ViewData["TicketNo"],
+            //activity: TicketStatusreopen,
+            userid: "",
+            complainercell: $('#txtcomplainercell').val(),
+            TicketTypeDropdownid: TicketTypeDropdownid,
+
+        };
+        $.ajax({
+            url: '/Home/TicketReopen',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                        // var ticketno = $('#tracking').val();
+
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarksreopen').val('');
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Reopen the Ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+
+    // Event listener for category selection
+    $('#TicketStatusDropdown').change(function () {
+        debugger
+        var selectedCategory = $(this).val();
+        var TicketStatus = $('#TicketStatusDropdown option:selected').text();
+        var TicketStatusid = $('#TicketStatusDropdown').val();
+
+        if (TicketStatusid === "0") {
+            $('#ticketstatuserror').show();
+            return false;
+        } else {
+            $('#ticketstatuserror').hide();
+        }
+        // Target the div element
+        var citydropdown = document.getElementById("citydropdown");
+        var regiondropdown = document.getElementById("regionContainer");
+
+        // Check the condition and hide the div if necessary
+        if (TicketStatusid != 2) {
+            citydropdown.style.display = "none";
+            regiondropdown.style.display = "none";
+        } else {
+            citydropdown.style.display = "block";
+            regiondropdown.style.display = "block";
+        }
+        if (TicketStatusid != "2") {
+
+            return false;
+        }
+        // Clear the subcategory container
+        $('#citydropdown').html('');
+
+        debugger
+        // Make AJAX call to fetch subcategories based on the selected category
+        $.ajax({
+            url: '/Home/GetCities',
+            type: 'POST',
+            data: { ticketstatus: TicketStatusid },
+            success: function (result) {
+                // Render the subcategory dropdown
+                $('#citydropdown').html(result);
+            },
+            error: function (xhr, status, error) {
+                Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
+            }
+        });
+    });
+                                            });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -27,6 +27,9 @@ namespace CareConnect.Models
         public DataSet TrackingHistory { get; set; }
         public DataSet SearchTicketDetail { get; set; }
         public DataSet TerminalAddressReportDS { get; set; }
+        public DataSet ClaimCategoryDS { get; set; }
+
+        
 
     }
 }

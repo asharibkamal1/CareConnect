@@ -125,7 +125,7 @@
     $(document).ready(function () {
         debugger
     @*var userRoleID = @ViewData["RoleID"];*@
-                    var userRoleID = @ViewBag.RoleID;
+                            var userRoleID = @ViewBag.RoleID;
 
         $('.loader').hide();
         hideLoader();
@@ -155,7 +155,7 @@
             $('#additionalButton').remove();
             return;
         }
-        
+
         debugger
         if (myCheckbox.checked) {
 
@@ -195,6 +195,26 @@
                         if (userRoleID === 4) {
                             debugger
                             $('#additionalButton').remove();
+                            //test comment
+                            console.log("test");
+                        }
+                        else if (userRoleID === 14) {
+                            debugger
+                            debugger
+                            var additionalButtonExists = $('#additionalButton').length > 0;
+                            if (!additionalButtonExists) {
+                                var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                    + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                    + 'Generate Claim'
+                                    + '</button>';
+                                $('#btnSubmit').after(additionalButton);
+                                document.getElementById('additionalButton').addEventListener('click', function () {
+                                    debugger
+
+                                    var url = '/Home/GenerateClaim?trackingNumber=' + $('#tracking').val();
+                                    window.open(url, '_blank');
+                                });
+                            }
                         }
 
                         else {
@@ -303,7 +323,7 @@
                 }
             });
 
-        }else{
+        } else {
 
             const isChecked = myCheckbox.checked;
             debugger
@@ -340,7 +360,25 @@
                             debugger
                             $('#additionalButton').remove();
                         }
+                        else if (userRoleID === 14) {
+                            debugger
+                            debugger
+                            var additionalButtonExists = $('#additionalButton').length > 0;
+                            if (!additionalButtonExists) {
+                                var additionalButton = '<button class="btn btn-primary btn-add float-right" id="additionalButton">'
+                                    + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                    + 'Generate Claim'
+                                    + '</button>';
+                                $('#btnSubmit').after(additionalButton);
+                                document.getElementById('additionalButton').addEventListener('click', function () {
+                                    debugger
 
+                                    var url = '/Home/GenerateClaim?trackingNumber=' + $('#tracking').val();
+                                    window.open(url, '_blank');
+                                });
+                            }
+                        }
+                        //comment test
                         else {
                             debugger
                             var additionalButtonExists = $('#additionalButton').length > 0;

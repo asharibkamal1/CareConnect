@@ -9,10 +9,10 @@
 
     </div>
     <div class="card-body">
-        @if (Model.Report_rpt_ticketdetails != null && Model.Report_rpt_ticketdetails.Tables.Count > 0 )
+        @if (Model.Report_rpt_ticketdetails != null && Model.Report_rpt_ticketdetails.Tables.Count > 0)
         {
             <div class="dt-buttons"></div>
-            <table id="bookingstatusTable"  class="display nowrap" style="width:100%">
+            <table id="bookingstatusTable" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
                         @foreach (System.Data.DataColumn column in Model.Report_rpt_ticketdetails.Tables[0].Columns)
@@ -28,19 +28,32 @@
                             @foreach (var item in row.ItemArray)
                             {
                                 <td>
-                                @*     @if (row.Table.Columns.IndexOf("TicketId") == Array.IndexOf(row.ItemArray, item))
-                                    {
-                                        <a class="ticketLink" href="/Home/GetTicketDetails?ticketno=@item.ToString()" target="_blank">@item.ToString()</a>
-                                    }
-                                    else *@
-                                   
-                                        @item.ToString()
-                                  
+                                    @*     @if (row.Table.Columns.IndexOf("TicketId") == Array.IndexOf(row.ItemArray, item))
+                        {
+                        <a class="ticketLink" href="/Home/GetTicketDetails?ticketno=@item.ToString()" target="_blank">@item.ToString()</a>
+                        }
+                        else *@
+
+                                    @item.ToString()
+
                                 </td>
                             }
                         </tr>
                     }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                     
+                       
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <!-- Add more footer cells as needed -->
+                    </tr>
+                </tfoot>
             </table>
         }
         else
@@ -85,8 +98,7 @@
 
 <script>
     $(document).ready(function () {
-
-        $('#bookingstatusTable').DataTable({
+        var table = $('#bookingstatusTable').DataTable({
             scrollX: '400px',
             scrollY: '900px',
             scrollCollapse: true,
@@ -102,17 +114,27 @@
                     next: 'Next',
                     last: 'Last'
                 }
+            },
+            footerCallback: function (row, data, start, end, display) {
+                var api = this.api();
+                api.columns().every(function (index) {
+                    if (index !== 0) { // Exclude first column from sum calculation
+                        var columnData = this.data();
+                        var columnSum = columnData.reduce(function (acc, val) {
+                            return acc + parseFloat(val);
+                        }, 0);
+                        $(this.footer()).html(columnSum);
+                    } else {
+                        $(this.footer()).html('Total');
+                    }
+                });
             }
         });
     });
-    //$(document).on('click', '.detailButton', function () {
-    //    debugger
-    //    var ticketId = $(this).data('ticketid');
-    //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
 
-    //    window.open(url, '_blank');
 
-    //});
+
+
 </script>
 
 
