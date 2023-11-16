@@ -1,0 +1,593 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+
+
+
+
+@*---   bootstrap Tabs Code Start ------*@
+<div class="card">
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Tracking Detail</h3>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-pills nav-tabs" role="tablist">
+
+            <li class="nav-item">
+                <a class="nav-link active" id="TicketTableTabButton" data-toggle="pill" href="#TicketTableTabContent">Ticket Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Consignee</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="secondTableTabButton" data-toggle="pill" href="#secondTableTabContent">Shipper</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="OrderTableTabButton" data-toggle="pill" href="#OrderTableTabContent">Order Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="CustomerTableTabButton" data-toggle="pill" href="#CustomerTableTabContent">Customer Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="ItemTableTabButton" data-toggle="pill" href="#ItemTableTabContent">Item Detail</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="HistoryTableTabButton" data-toggle="pill" href="#HistoryTableTabContent">Tracking History</a>
+            </li>
+        </ul>
+
+
+
+        <div class="tab-content mt-3">
+            <div id="receiverTabContent" class="tab-pane fade">
+                <table id="receiverTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[3].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[3].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+            <div id="secondTableTabContent" class="tab-pane fade">
+                <table id="senderTable" class="display" style="width:100%">
+                    <thead style="width:100%">
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[2].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[2].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+            <div id="OrderTableTabContent" class="tab-pane fade">
+                <table id="OrderTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[4].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[4].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div id="CustomerTableTabContent" class="tab-pane fade">
+                <table id="customerTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[1].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[1].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="ItemTableTabContent" class="tab-pane fade">
+                <table id="itemTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[5].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[5].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            @*-----Ticket Detials-----------*@
+            <div id="TicketTableTabContent" class="tab-pane fade show active">
+                <table id="TicketTable" width="100%" class="display">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                            <th>Action</th> <!-- New column for the "Detail" button -->
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                                <td>
+                                    <button class="detailButton btn btn-primary" data-ticketid="@row["ClaimId"]">Detail</button>
+                                </td> <!-- "Detail" button column -->
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            @*-----tracking History-----------*@
+            <div id="HistoryTableTabContent" class="tab-pane fade">
+                <table id="HistoryTable" width="100%" class="display">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.TrackingHistory.Tables[0].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.TrackingHistory.Tables[0].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+</div>
+@*---   bootstrap Tabs Code END ------*@
+
+
+
+
+<br />
+
+<div class="row">
+
+    <div class="col-9">
+
+        <div class="card">
+
+            <div class="card-header" style="background-color: #0565B7;color:white">
+                <h3 class="card-title">Booking Detail</h3>
+
+            </div>
+            <div class="card-body">
+                @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[0].Rows)
+                {
+                    <div class="row">
+                        @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[0].Columns)
+                        {
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">@column.ColumnName:</label>
+                                    <input type="text" class="form-control" value="@row[column.ColumnName]" readonly />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-3">
+
+        <div class="card">
+
+            <div class="card-header" style="background-color: #0565B7;color:white">
+                <h3 class="card-title">Transit Detail</h3>
+
+            </div>
+            <div class="card-body">
+                @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[8].Rows)
+                {
+                    <div class="row">
+                        @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[8].Columns)
+                        {
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">@column.ColumnName:</label>
+                                    <input type="text" class="form-control" value="@row[column.ColumnName]" readonly />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Tracking Status Detail</h3>
+
+    </div>
+    <div class="card-body">
+
+        <table id="bookingstatusTable" width="100%" class="display">
+            <thead>
+                <tr>
+                    @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[6].Columns)
+                    {
+                        <th>@column.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[6].Rows)
+                {
+                    <tr>
+                        @foreach (var item in row.ItemArray)
+                        {
+                            <td>@item.ToString()</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<br />
+<div class="card">
+
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">HD Status Detail</h3>
+
+    </div>
+    <div class="card-body">
+
+
+        <table id="hdstatusTable" width="100%" class="display">
+            <thead>
+                <tr>
+                    @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[7].Columns)
+                    {
+                        <th>@column.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[7].Rows)
+                {
+                    <tr>
+                        @foreach (var item in row.ItemArray)
+                        {
+                            <td>@item.ToString()</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+
+
+<br />
+
+<script>
+    $(document).ready(function () {
+        debugger
+        var barcodeColors = {}; // Create an object to store barcode colors
+
+        // Function to generate a random color
+
+
+    @*
+            function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+            } *@
+            function getRandomLightColor() {
+                // Generate light shades for R, G, and B channels (between 200 and 255)
+                var r = Math.floor(Math.random() * 56) + 200;  // Red channel
+                var g = Math.floor(Math.random() * 56) + 200;  // Green channel
+                var b = Math.floor(Math.random() * 56) + 200;  // Blue channel
+
+                // Convert the RGB values to a hex color code
+                var color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+
+                return color;
+            }
+
+
+    @*       function getRandomColor() {
+            var colors = ['#0565B7', '#28a745']; // Define your two random colors here
+            var randomIndex = Math.floor(Math.random() * colors.length);
+            return colors[randomIndex];
+            } *@
+
+            // Iterate through each row in the table
+            $('#bookingstatusTable tbody tr').each(function () {
+                var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+                // Check if this barcode value has been encountered before
+                if (barcodeColors[barcodeValue] === undefined) {
+                    // If not encountered before, generate a random color and store it
+                    barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                        barcodeCell.addClass('highlighted'); *@
+
+                        }
+
+                // Apply the background color to highlight rows with the same barcode value
+                $(this).css('background-color', barcodeColors[barcodeValue]);
+            });
+
+        // Iterate through each row in the table
+        $('#hdstatusTable tbody tr').each(function () {
+            var barcodeValue = $(this).find('td:eq(0)').text(); // Assuming barcode is in the first column
+
+            // Check if this barcode value has been encountered before
+            if (barcodeColors[barcodeValue] === undefined) {
+                // If not encountered before, generate a random color and store it
+                barcodeColors[barcodeValue] = getRandomLightColor();
+    @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
+                    barcodeCell.addClass('highlighted'); *@
+
+                            }
+
+            // Apply the background color to highlight rows with the same barcode value
+            $(this).css('background-color', barcodeColors[barcodeValue]);
+        });
+
+
+
+        debugger
+        $('#receiverTable').DataTable({
+            scrollX: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            },
+            dom: 't' // 'lrtip' Hide search box and page number
+        });
+        $('#senderTable').DataTable({
+            scrollX: true,
+            responsive: true, // Enable responsive feature
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            },
+            dom: 't' // 'lrtip' Hide search box and page number
+        });
+        $('#customerTable').DataTable({
+            scrollX: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            },
+            dom: 't' // 'lrtip' Hide search box and page number
+        });
+        $('#OrderTable').DataTable({
+            scrollX: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            },
+            dom: 't' // 'lrtip' Hide search box and page number
+        });
+        $('#itemTable').DataTable({
+            scrollX: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            },
+            dom: 't' // 'lrtip' Hide search box and page number
+
+        });
+        $('#TicketTable').DataTable({
+            scrollX: '200px',
+            scrollY: '200px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            }, dom: 'lfrt' // 'lrtip' Hide search box and page number
+
+        });
+        $('#HistoryTable').DataTable({
+            scrollX: '200px',
+            scrollY: '200px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            }, dom: 'lfrt' // 'lrtip' Hide search box and page number
+
+        });
+
+
+        $('#bookingstatusTable').DataTable({
+            scrollX: '400px',
+            scrollY: '400px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            ordering: false,
+            pageLength: 100,
+
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
+
+                    });
+
+
+
+    $('#hdstatusTable').DataTable({
+        scrollX: '400px',
+        scrollY: '400px', // Specify the desired height of the scrollable area
+        scrollCollapse: true,
+        pageLength: 100,
+        ordering: false,
+        language: {
+            paginate: {
+                first: 'First',
+                previous: 'Previous',
+                next: 'Next',
+                last: 'Last'
+            }
+        }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
+
+                    });
+    $(document).on('click', '.detailButton', function () {
+        debugger
+        var ticketId = $(this).data('ticketid');
+        var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
+        window.location.href = url;
+    });
+                });
+</script>
+
+
+
+
+
+
+
+

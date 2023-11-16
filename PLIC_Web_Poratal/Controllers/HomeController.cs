@@ -932,6 +932,100 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
+        [HttpGet]
+        public async Task<ActionResult> GetClaimDetails(string tracking, bool isCheckboxChecked)
+        {
+            try
+            {
+                string consignmentNumber = "";
+                DataSet dataSet = new DataSet();
+                DataSet dataSet1 = new DataSet();
+                DataSet dataSet2 = new DataSet();
+
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                {
+                    if (conn.State != ConnectionState.Open)
+                        await conn.OpenAsync();
+
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
+
+                    string LoginId = HttpContext.Session.GetString("LoginId");
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string trackingid = tracking;
+
+                    if (isCheckboxChecked)
+                    {
+                        if (conn1.State != ConnectionState.Open)
+                            await conn1.OpenAsync();
+
+                        SqlCommand command3 = new SqlCommand("SP_Get_ConsignmentNo_By_ClaimNo", conn1);
+                        command3.CommandType = CommandType.StoredProcedure;
+                        command3.Parameters.AddWithValue("@ClaimID", tracking);
+
+                        using (SqlDataReader reader = await command3.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                consignmentNumber = reader["ConsignmentNo"].ToString();
+                            }
+                        }
+                    }
+
+                    InsertTrackingHistory(LoginId, trackingid);
+
+                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Track_History_By_CNSGNO", conn1))
+                    using (SqlCommand command2 = new SqlCommand("sp_GetClaimHistoryBYCNSGNO", conn1))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command1.CommandType = CommandType.StoredProcedure;
+                        command2.CommandType = CommandType.StoredProcedure;
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                        SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+
+                        if (isCheckboxChecked)
+                        {
+                            command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                            command1.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
+                            command2.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@bookingNumber", tracking);
+                            command1.Parameters.AddWithValue("@CNSGNO", tracking);
+                            command2.Parameters.AddWithValue("@CNSGNO", tracking);
+                        }
+
+                        // Offload the synchronous Fill method to a background thread
+                        await Task.Run(() =>
+                        {
+                            dataAdapter.Fill(dataSet);
+                            dataAdapter1.Fill(dataSet1);
+                            dataAdapter2.Fill(dataSet2);
+                        });
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            BookingDetail = dataSet,
+                            TrackingHistory = dataSet1,
+                            TicketDetails = dataSet2
+                        };
+
+                        //ViewBag.TrackingData = dataSet;
+                        //ViewBag.RoleId = HttpContext.Session.GetString("RoleID");
+
+                        return PartialView("_ClaimDetails", model);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         [HttpGet]
