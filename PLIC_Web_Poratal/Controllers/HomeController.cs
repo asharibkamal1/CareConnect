@@ -1250,7 +1250,7 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-        public async Task<ActionResult> GetClaimDetails(string ClaimNO)
+        public async Task<ActionResult> GetClaimDetailsbyClaimid(string ticketno)
         {
             try
             {
@@ -1271,7 +1271,7 @@ namespace PLIC_Web_Poratal.Controllers
                         await conn1.OpenAsync();
 
                     string LoginId = HttpContext.Session.GetString("LoginId");
-                    string claimid = ClaimNO;
+                    string claimid = ticketno;
 
 
 
@@ -1584,8 +1584,6 @@ namespace PLIC_Web_Poratal.Controllers
                 return Json(new { Error = ex.Message }); // You can return an error message if needed
             }
         }
-
-
 
 
         public ActionResult GetSubcategories(string category)

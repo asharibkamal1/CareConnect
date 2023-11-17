@@ -632,14 +632,10 @@
                         var ClaimNO = response.data;
                         // var ticketno = @ViewData["TicketNo"];
                         // var ticketno = $('#tracking').val();
-
                         // Construct the URL with the tracking number as a query parameter
-                        var url = '/Home/GetClaimDetails?ClaimNO=' + ClaimNO;
-
-
+                        var url = '/Home/GetClaimDetails?ticketno=' + ClaimNO;
                         // Redirect to the new URL same tab
                         window.location.href = url;
-
                         // Open the new view in a new window/tab
                         //window.open(url, '_blank');
                         $('#TicketTypeDropdown').val(''),
