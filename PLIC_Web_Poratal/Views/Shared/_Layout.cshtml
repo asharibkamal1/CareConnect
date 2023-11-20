@@ -326,6 +326,13 @@
                                             </li>
 
                                             <li class="no-marker">
+                                                <a asp-action="ReportClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>Claim Report
+                                                </a>
+                                            </li>
+
+                                            <li class="no-marker">
                                                 <a asp-action="ReportAccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#0565B7" : "default");">
 
                                                     <i class="nav-icon fas fa-dot-circle"></i>
