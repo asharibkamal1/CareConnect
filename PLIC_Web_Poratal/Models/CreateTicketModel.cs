@@ -65,7 +65,7 @@ namespace CareConnect.Models
         public bool isAGTChecked { get; set; }
         public bool isFRNChecked { get; set; }
      
-        
+        public string claimid { get; set; }
 
 
 

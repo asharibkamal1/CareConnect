@@ -1027,7 +1027,7 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-
+       
         [HttpGet]
         public async Task<ActionResult> GetTrackingDetailsManual(string tracking, bool ismanualCheckboxChecked)
         {
@@ -1250,7 +1250,7 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-        public async Task<ActionResult> GetClaimDetails(string ClaimNO)
+        public async Task<ActionResult> GetClaimDetailsbyClaimid(string ticketno)
         {
             try
             {
@@ -1271,7 +1271,7 @@ namespace PLIC_Web_Poratal.Controllers
                         await conn1.OpenAsync();
 
                     string LoginId = HttpContext.Session.GetString("LoginId");
-                    string claimid = ClaimNO;
+                    string claimid = ticketno;
 
 
 
@@ -1584,8 +1584,6 @@ namespace PLIC_Web_Poratal.Controllers
                 return Json(new { Error = ex.Message }); // You can return an error message if needed
             }
         }
-
-
 
 
         public ActionResult GetSubcategories(string category)
@@ -2436,7 +2434,65 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
+        public IActionResult ReportClaim()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
 
+                    {
+                        conn1.Open();
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
+                        command.CommandType = CommandType.StoredProcedure;
+                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                        //dataAdapter.Fill(dataSet);
+                        dataAdapter1.Fill(dataSet1);
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            TicketCatType = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        //return PartialView("_TicketSearchCatagory", model);
+                        return View("~/Views/Home/ClaimReport.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
 
         public IActionResult ReportTerminalAddress()
         {
@@ -4284,6 +4340,64 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+        public ActionResult GetClaimReport(CreateTicketModel createTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("SP_CRM_Claim_Report", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@CnsgNo", createTicketModel.cgnno);
+                        cmd.Parameters.AddWithValue("@RoleID", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@ClaimId", createTicketModel.claimid);
+                        cmd.Parameters.AddWithValue("@Barcode", createTicketModel.barcode);
+                        cmd.Parameters.AddWithValue("@CategoryID", createTicketModel.ticketcatagory);
+
+                        cmd.Parameters.AddWithValue("@CityID", null);
+                        cmd.Parameters.AddWithValue("@Origin", createTicketModel.Origin);
+                        cmd.Parameters.AddWithValue("@Destination", createTicketModel.Destination);
+                        cmd.Parameters.AddWithValue("@IssueTypeId", createTicketModel.ticketsubcatagory);
+                        cmd.Parameters.AddWithValue("@CreatedFrom", createTicketModel.datefrom);
+                        cmd.Parameters.AddWithValue("@CreatedTo", createTicketModel.dateto);
+                        cmd.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("LoginId"));
+
+                        conn.Close();
+                        conn.Open();
+                        // Execute the stored procedure and retrieve the results into a DataTable
+                        DataSet ds = new DataSet();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        conn.Close();
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            CRMReportDetail = ds,
+                        };
+
+                        ViewBag.TrackingData = ds;
+                        return PartialView("_CRMReportDetail", model);
+
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
+            }
+        }
 
 
         public IActionResult ReportAccountOpening()

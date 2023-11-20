@@ -1,11 +1,9 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
 @Html.ValidationSummary(true)
 @{
-    ViewData["Title"] = "CRM Report";
+    ViewData["Title"] = "Claim Report";
 }
-
-
-<h1 id="reportTitle">CRM Report</h1>
+<h1 id="reportTitle">Claim Report</h1>
 <br />
 <div class="row">
     <!-- left column -->
@@ -48,11 +46,11 @@
                     </div>
 
                     <div class="col-lg-1 col-md-1 col-sm-1">
-                        <label class="text-secondary font-weight-bold">Ticket ID:</label>
+                        <label class="text-secondary font-weight-bold">Claim ID:</label>
 
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
-                        <input id="ticketid" name="ticketid" onkeypress="return onlyNumberKey(event)" placeholder="Please Enter Ticket ID" class="form-control" autofocus />
+                        <input id="claimid" name="claimid" onkeypress="return onlyNumberKey(event)" placeholder="Please Enter Claim ID" class="form-control" autofocus />
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1">
                         <label class="text-secondary font-weight-bold">Barcode:</label>
@@ -98,7 +96,7 @@
 <div class="row">
 
     <div class="col-lg-1 col-md-1 col-sm-1">
-        <label for="categoryDropdown" class="text-secondary font-weight-bold">Ticket Category:</label>
+        <label for="categoryDropdown" class="text-secondary font-weight-bold">Claim Category:</label>
 
     </div>
     <div class="col-md-3 col-sm-3">
@@ -112,7 +110,7 @@
         <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Category.</span>
     </div>
     <div class="col-lg-1 col-md-1 col-sm-1">
-        <label for="categoryDropdown" class="text-secondary font-weight-bold">Ticket Description:</label>
+        <label for="categoryDropdown" class="text-secondary font-weight-bold">Claim Description:</label>
 
     </div>
 
@@ -144,7 +142,7 @@
     <div class="row">
         <br />
     </div>
-    <div id="CRMReportContainer">
+    <div id="ClaimReportContainer">
 
     </div>
 </div>
@@ -164,7 +162,7 @@
 
             // Make AJAX call to fetch subcategories based on the selected category
             $.ajax({
-                url: '/Home/GetSubcategoriesCRM',
+                url: '/Home/GetSubcategoriesClaim',
                 type: 'POST',
                 data: { category: selectedCategory },
                 success: function (result) {
@@ -210,7 +208,7 @@
         var datefrom = $('#datefrom').val();
         var dateto = $('#dateto').val();
         var cngno = $('#cngno').val();
-        var ticketid = $('#ticketid').val();
+        var ClaimId = $('#claimid').val();
         var Barcode = $('#Barcode').val();
         var txtorigin = $('#txtorigin').val();
         var txtDestination = $('#txtDestination').val();
@@ -262,7 +260,7 @@
             datefrom: $('#datefrom').val(),
             dateto: $('#dateto').val(),
             cgnno: $('#cngno').val(),
-            ticketid: $('#ticketid').val(),
+            ClaimId: $('#claimid').val(),
             barcode: $('#Barcode').val(),
             Origin: $('#txtorigin').val(),
             Destination: $('#txtDestination').val(),
@@ -272,7 +270,7 @@
 
         debugger
         $.ajax({
-            url: '/Home/GetCRMReport',
+            url: '/Home/GetClaimReport',
             type: 'GET',
             data: ticketData,
             success: function (result) {
@@ -283,17 +281,17 @@
                 // Show a success message using SweetAlert
                 //Swal.fire('Success', response.message, 'success');
 
-                $('#CRMReportContainer').html(result);
+                $('#ClaimReportContainer').html(result);
 
 
 
-               // $('#categoryDropdown').val(''),
+                $('#categoryDropdown').val(''),
                     $('#cngno').val(''),
-                    $('#ticketid').val(''),
+                    $('#claimid').val(''),
                     $('#Barcode').val(''),
                     $('#txtorigin').val(''),
-                    $('#txtDestination').val('')
-                    //$('#subcategoryContainer').find('#SubcategoryDropdown').val('')
+                    $('#txtDestination').val(''),
+                    $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
             },
             error: function (xhr, status, error) {
                 // Show an error message using SweetAlert
