@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "CRM Report";
 }
+
+
 <h1 id="reportTitle">CRM Report</h1>
 <br />
 <div class="row">
@@ -285,13 +287,13 @@
 
 
 
-                $('#categoryDropdown').val(''),
+               // $('#categoryDropdown').val(''),
                     $('#cngno').val(''),
                     $('#ticketid').val(''),
                     $('#Barcode').val(''),
                     $('#txtorigin').val(''),
-                    $('#txtDestination').val(''),
-                    $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
+                    $('#txtDestination').val('')
+                    //$('#subcategoryContainer').find('#SubcategoryDropdown').val('')
             },
             error: function (xhr, status, error) {
                 // Show an error message using SweetAlert
