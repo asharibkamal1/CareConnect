@@ -1942,6 +1942,54 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+
+
+        public ActionResult GetSubcategoriesClaimReport(string category)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
+
+
+
+
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                {
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Claim_type_description_By_ID", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                    command1.Parameters.AddWithValue("@category_Id", category);
+
+                    dataAdapter1.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        TicketIssueTypeDescription = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_ClaimIssueTypeDescription", model);
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
         public ActionResult GetSubcategoriesServiceRequest(string category)
         {
 
@@ -2447,17 +2495,25 @@ namespace PLIC_Web_Poratal.Controllers
                     DataSet dataSet = new DataSet();
                     DataSet dataSet1 = new DataSet();
                     DataSet dataSet2 = new DataSet();
-                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+                    SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
 
                     {
                         conn1.Open();
-                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
+                        conn.Open();
+
+                        //SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Tracking_Generate", conn1);
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn);
+
+                        //command1.CommandType = CommandType.StoredProcedure;
                         command.CommandType = CommandType.StoredProcedure;
-                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        //SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
                         //command.Parameters.AddWithValue("@bookingNumber", tracking);
-                        //dataAdapter.Fill(dataSet);
-                        dataAdapter1.Fill(dataSet1);
+                        //dataAdapter1.Fill(dataSet2);
+                        dataAdapter.Fill(dataSet1);
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
                             //BookingDetail = dataSet,
@@ -2465,6 +2521,7 @@ namespace PLIC_Web_Poratal.Controllers
                             TicketCatType = dataSet1,
                             //PriorityDS = dataSet1,
                             //CityDS = dataSet1,
+                            ClaimCategoryDS = dataSet1,
                         };
                         //ViewBag.TrackingData = model;
                         //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
