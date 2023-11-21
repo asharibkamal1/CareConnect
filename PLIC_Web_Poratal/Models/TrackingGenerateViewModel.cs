@@ -30,9 +30,10 @@ namespace CareConnect.Models
         public DataSet ClaimCategoryDS { get; set; }
         public DataSet TrackingDetailsforClaimreport {  get; set; }
         public DataSet ClaimIssueTypeDescription { get; set; }
+        public DataSet ClaimDetails { get; set; }
 
 
-
+        
 
     }
 }

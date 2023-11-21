@@ -941,6 +941,7 @@ namespace PLIC_Web_Poratal.Controllers
                 DataSet dataSet = new DataSet();
                 DataSet dataSet1 = new DataSet();
                 DataSet dataSet2 = new DataSet();
+                DataSet dataSet3 = new DataSet();
 
                 using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
@@ -978,25 +979,31 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
                     using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Track_History_By_CNSGNO", conn1))
                     using (SqlCommand command2 = new SqlCommand("sp_GetClaimHistoryBYCNSGNO", conn1))
+                    using (SqlCommand command3 = new SqlCommand("sp_GetTicketHistoryBYCNSGNO", conn1))
+                        
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command1.CommandType = CommandType.StoredProcedure;
                         command2.CommandType = CommandType.StoredProcedure;
+                        command3.CommandType = CommandType.StoredProcedure;
                         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                         SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
                         SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+                        SqlDataAdapter dataAdapter3 = new SqlDataAdapter(command3);
 
                         if (isCheckboxChecked)
                         {
                             command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
                             command1.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
                             command2.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
+                            command3.Parameters.AddWithValue("@CNSGNO", consignmentNumber);
                         }
                         else
                         {
                             command.Parameters.AddWithValue("@bookingNumber", tracking);
                             command1.Parameters.AddWithValue("@CNSGNO", tracking);
                             command2.Parameters.AddWithValue("@CNSGNO", tracking);
+                            command3.Parameters.AddWithValue("@CNSGNO", tracking);
                         }
 
                         // Offload the synchronous Fill method to a background thread
@@ -1005,13 +1012,15 @@ namespace PLIC_Web_Poratal.Controllers
                             dataAdapter.Fill(dataSet);
                             dataAdapter1.Fill(dataSet1);
                             dataAdapter2.Fill(dataSet2);
+                            dataAdapter3.Fill(dataSet3);
                         });
 
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
                             BookingDetail = dataSet,
                             TrackingHistory = dataSet1,
-                            TicketDetails = dataSet2
+                            ClaimDetails = dataSet2,
+                            TicketDetails = dataSet3
                         };
 
                         //ViewBag.TrackingData = dataSet;

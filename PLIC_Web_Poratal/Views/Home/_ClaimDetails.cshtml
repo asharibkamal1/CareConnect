@@ -176,7 +176,7 @@
                 <table id="ClaimTable" width="100%" class="display">
                     <thead>
                         <tr>
-                            @foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
+                            @foreach (System.Data.DataColumn column in Model.ClaimDetails.Tables[0].Columns)
                             {
                                 <th>@column.ColumnName</th>
                             }
@@ -185,7 +185,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
+                        @foreach (System.Data.DataRow row in Model.ClaimDetails.Tables[0].Rows)
                         {
                             <tr>
                                 @foreach (var item in row.ItemArray)
@@ -193,7 +193,7 @@
                                     <td>@item.ToString()</td>
                                 }
                                 <td>
-                                    <button class="detailButton btn btn-primary" data-ticketid="@row["ClaimId"]">Detail</button>
+                                    <button class="ClaimdetailButton btn btn-primary" data-ticketid="@row["ClaimId"]">Detail</button>
                                 </td> <!-- "Detail" button column -->
                             </tr>
                         }
@@ -223,7 +223,7 @@
                                     <td>@item.ToString()</td>
                                 }
                                 <td>
-                                    <button class="detailButton btn btn-primary" data-ticketid="@row["ClaimId"]">Detail</button>
+                                    <button class="detailButton btn btn-primary" data-ticketid="@row["TicketId"]">Detail</button>
                                 </td> <!-- "Detail" button column -->
                             </tr>
                         }
@@ -638,10 +638,17 @@
         }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
                                                                 });
-    $(document).on('click', '.detailButton', function () {
+    $(document).on('click', '.ClaimdetailButton', function () {
         debugger
         var ticketId = $(this).data('ticketid');
         var url = '/Home/GetClaimDetailsbyClaimid?ticketno=' + ticketId;
+        window.location.href = url;
+    });
+
+    $(document).on('click', '.detailButton', function () {
+        debugger
+        var ticketId = $(this).data('ticketid');
+        var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
         window.location.href = url;
     });
                                                             });
