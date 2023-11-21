@@ -102,9 +102,9 @@
     <div class="col-md-3 col-sm-3">
         <select class="form-control" id="categoryDropdown" name="ticketcatagory ">
             <option value="">Select Category</option>
-            @foreach (System.Data.DataRow catRow in Model.TicketCatType.Tables[1].Rows)
+            @foreach (System.Data.DataRow catRow in Model.TicketCatType.Tables[5].Rows)
             {
-                <option value="@catRow["CategoryId"]">@catRow["CategoryDescription"]</option>
+                <option value="@catRow["claimcategoryid"]">@catRow["categoryname"]</option>
             }
         </select>
         <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Category.</span>
@@ -162,7 +162,7 @@
 
             // Make AJAX call to fetch subcategories based on the selected category
             $.ajax({
-                url: '/Home/GetSubcategoriesClaim',
+                url: '/Home/GetSubcategoriesClaimReport',
                 type: 'POST',
                 data: { category: selectedCategory },
                 success: function (result) {
@@ -235,8 +235,8 @@
             cngno = null;
 
         }
-        if (ticketid == "") {
-            ticketid = null;
+        if (ClaimId == "") {
+            ClaimId = null;
 
         }
         if (Barcode == "") {
@@ -285,13 +285,13 @@
 
 
 
-                $('#categoryDropdown').val(''),
+               // $('#categoryDropdown').val(''),
                     $('#cngno').val(''),
                     $('#claimid').val(''),
                     $('#Barcode').val(''),
                     $('#txtorigin').val(''),
-                    $('#txtDestination').val(''),
-                    $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
+                    $('#txtDestination').val('')
+                    //$('#subcategoryContainer').find('#SubcategoryDropdown').val('')
             },
             error: function (xhr, status, error) {
                 // Show an error message using SweetAlert

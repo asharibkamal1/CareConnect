@@ -28,8 +28,11 @@ namespace CareConnect.Models
         public DataSet SearchTicketDetail { get; set; }
         public DataSet TerminalAddressReportDS { get; set; }
         public DataSet ClaimCategoryDS { get; set; }
+        public DataSet TrackingDetailsforClaimreport {  get; set; }
+        public DataSet ClaimIssueTypeDescription { get; set; }
 
-        
+
+
 
     }
 }
