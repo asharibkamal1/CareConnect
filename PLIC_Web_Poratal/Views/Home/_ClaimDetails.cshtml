@@ -11,8 +11,13 @@
     <div class="card-body">
         <ul class="nav nav-pills nav-tabs" role="tablist">
 
+            
             <li class="nav-item">
-                <a class="nav-link active" id="TicketTableTabButton" data-toggle="pill" href="#TicketTableTabContent">Ticket Details</a>
+                <a class="nav-link active" id="TicketTableTabButton" data-toggle="pill" href="#ClaimTableTabContent">Claim Details</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="TicketTableTabButton" data-toggle="pill" href="#TicketTableTabContent">Ticket Details</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Consignee</a>
@@ -165,10 +170,39 @@
                     </tbody>
                 </table>
             </div>
+                   @*-----Claim Detials-----------*@
 
+                 <div id="ClaimTableTabContent" class="tab-pane fade show active">
+                <table id="ClaimTable" width="100%" class="display">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.TicketDetails.Tables[0].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                            <th>Action</th> <!-- New column for the "Detail" button -->
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.TicketDetails.Tables[0].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item.ToString()</td>
+                                }
+                                <td>
+                                    <button class="detailButton btn btn-primary" data-ticketid="@row["ClaimId"]">Detail</button>
+                                </td> <!-- "Detail" button column -->
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
 
             @*-----Ticket Detials-----------*@
-            <div id="TicketTableTabContent" class="tab-pane fade show active">
+            <div id="TicketTableTabContent" class="tab-pane fade">
                 <table id="TicketTable" width="100%" class="display">
                     <thead>
                         <tr>
@@ -525,6 +559,20 @@
 
         });
         $('#TicketTable').DataTable({
+            scrollX: '200px',
+            scrollY: '200px', // Specify the desired height of the scrollable area
+            scrollCollapse: true,
+            language: {
+                paginate: {
+                    first: '',
+                    previous: '',
+                    next: '',
+                    last: ''
+                }
+            }, dom: 'lfrt' // 'lrtip' Hide search box and page number
+
+        });
+               $('#ClaimTable').DataTable({
             scrollX: '200px',
             scrollY: '200px', // Specify the desired height of the scrollable area
             scrollCollapse: true,
