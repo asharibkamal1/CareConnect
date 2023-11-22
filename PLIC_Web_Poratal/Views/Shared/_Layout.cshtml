@@ -330,6 +330,14 @@
                                             <p>Search Ticket</p>
                                         </a>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <a asp-action="SearchClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fa fa-fw fa-search"></i>
+                                            <p>Search Claim</p>
+                                        </a>
+                                    </li>
+
                                     <li class="nav-item">
                                         <a asp-action="ServiceRequest" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#0565B7" : "default");">
                                             <i class="nav-icon fa fa-fw fa-info"></i>

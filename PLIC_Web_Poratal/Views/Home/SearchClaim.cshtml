@@ -1,0 +1,348 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+@Html.ValidationSummary(true)
+@{
+    ViewData["Title"] = "SearchClaim";
+}
+<h1 id="reportTitle">Search Claim Report</h1>
+<br />
+<div class="row">
+    <!-- left column -->
+
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <!-- jquery validation -->
+
+        <form id="trackingForm">
+
+
+            <div class="form-group">
+
+                <div class="row">
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="datefrom" class="text-secondary font-weight-bold">Date From:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input type="date" id="datefrom" name="datefrom" class="form-control" autofocus />
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="toDate" class="text-secondary font-weight-bold">Date To:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-3">
+                        <input type="date" id="dateto" name="dateto" class="form-control" autofocus />
+                    </div>
+                </div>
+                <div><br /></div>
+                <div class="row">
+
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label class="text-secondary font-weight-bold">Consignment No:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input id="cngno" name="consignmentno" onkeypress="return onlyNumberKey(event)" placeholder="Please Enter Consignment NO" class="form-control" autofocus />
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label class="text-secondary font-weight-bold">Claim ID:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input id="claimid" name="claimid" onkeypress="return onlyNumberKey(event)" placeholder="Please Enter Claim ID" class="form-control" autofocus />
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label class="text-secondary font-weight-bold">Barcode:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input id="Barcode" name="Barcode" onkeypress="return onlyNumberKey(event)" placeholder="Please Enter Barcode" class="form-control" autofocus />
+                    </div>
+                </div>
+
+
+                <div> <br /></div>
+
+                <div class="row">
+
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label class="text-secondary font-weight-bold">Origin:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input id="txtorigin" name="origin" placeholder="Please Type Origin" class="form-control" autofocus />
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label class="text-secondary font-weight-bold">Destination:</label>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input id="txtDestination" name="Destination" placeholder="Please Type Destination" class="form-control" autofocus />
+                    </div>
+                </div>
+                <span class="text-danger"></span>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="row">
+    <br />
+</div>
+<div class="row">
+
+    <div class="col-lg-1 col-md-1 col-sm-1">
+        <label for="categoryDropdown" class="text-secondary font-weight-bold">Claim Category:</label>
+
+    </div>
+    <div class="col-md-3 col-sm-3">
+        <select class="form-control" id="categoryDropdown" name="ticketcatagory ">
+            <option value="">Select Category</option>
+            @foreach (System.Data.DataRow catRow in Model.TicketCatType.Tables[5].Rows)
+            {
+                <option value="@catRow["claimcategoryid"]">@catRow["categoryname"]</option>
+            }
+        </select>
+        <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Category.</span>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1">
+        <label for="categoryDropdown" class="text-secondary font-weight-bold">Claim Description:</label>
+
+    </div>
+
+    <div id="subcategoryContainer">
+    </div>
+
+
+</div>
+<div><br /></div>
+
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <button class="btn btn-success float-left" id="btnSearch">Search</button>
+    </div>
+
+</div>
+
+
+@*<div class="row">
+        <div class="card">
+            <div id="trackingDetailsContainer">
+            </div>
+        </div>
+    </div>*@
+
+
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div id="trackingDetailsContainer">
+
+    </div>
+</div>
+
+<div class="loader"></div>
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        // Event listener for category selection
+        $('#categoryDropdown').change(function () {
+            var selectedCategory = $(this).val();
+            debugger
+            // Clear the subcategory container
+            $('#subcategoryContainer').html('');
+
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetSubcategoriesClaimReport',
+                type: 'POST',
+                data: { category: selectedCategory },
+                success: function (result) {
+                    debugger
+                   // var subcatagoryid = '@ViewBag.SubCatagory';
+                    // Render the subcategory dropdown
+                    $('#subcategoryContainer').html(result);
+                      // Set the first option as selected by default
+
+                    debugger
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        debugger
+        // Calculate one week ago date
+        var oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        // Format the date in YYYY-MM-DD format
+        var formattedDate = oneWeekAgo.toISOString().split('T')[0];
+
+        // Set the default date values in the input fields
+        document.getElementById('datefrom').value = formattedDate;
+        document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
+
+       
+    });
+
+    $('#btnSearch').click(function () {
+        debugger
+        var categoryValue = $('#categoryDropdown').val();
+        var subcategoryValue = $('#subcategoryContainer').find('#SubcategoryDropdown').val();
+        var datefrom = $('#datefrom').val();
+        var dateto = $('#dateto').val();
+        var cngno = $('#cngno').val();
+        var claimid = $('#claimid').val();
+        var Barcode = $('#Barcode').val();
+        var txtorigin = $('#txtorigin').val();
+        var txtDestination = $('#txtDestination').val();
+
+        debugger
+        if (categoryValue == "") {
+            categoryValue = null;
+
+        } if (subcategoryValue == "") {
+            subcategoryValue = null;
+
+        }
+
+
+        if (datefrom == "") {
+            datefrom = null;
+
+        }
+        if (dateto == "") {
+            dateto = null;
+
+        }
+        if (cngno == "") {
+            cngno = null;
+
+        }
+        if (claimid == "") {
+            claimid = null;
+
+        }
+        if (Barcode == "") {
+            Barcode = null;
+
+        }
+        if (txtorigin == "") {
+            txtorigin = null;
+
+        }
+        if (txtDestination == "") {
+            txtDestination = null;
+
+        }
+        debugger
+        var ticketData = {
+
+            //tickettype: $('#TicketTypeDropdown').val(),
+            ticketcatagory: $('#categoryDropdown').val(),
+            ticketsubcatagory: $('#subcategoryContainer').find('#SubcategoryDropdown').val(),
+            datefrom: $('#datefrom').val(),
+            dateto: $('#dateto').val(),
+            cgnno: $('#cngno').val(),
+            claimid: $('#claimid').val(),
+            barcode: $('#Barcode').val(),
+            Origin: $('#txtorigin').val(),
+            Destination: $('#txtDestination').val(),
+
+
+        };
+
+        debugger
+        $.ajax({
+            url: '/Home/SearchClaimDetail',
+            type: 'GET',
+            data: ticketData,
+            success: function (result) {
+                debugger
+                // Check if the ticket was created successfully
+
+                debugger;
+                // Show a success message using SweetAlert
+                //Swal.fire('Success', response.message, 'success');
+
+                $('#trackingDetailsContainer').html(result);
+
+
+
+                //$('#categoryDropdown').val(''),
+                    $('#cngno').val(''),
+                    $('#claimid').val(''),
+                    $('#Barcode').val(''),
+                    $('#txtorigin').val(''),
+                    $('#txtDestination').val('')
+                   // $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Searching Claim: ' + error, 'error');
+            }
+        });
+    });
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        $('.loader').hide();
+        hideLoader();
+        debugger
+        @*$.ajax({
+            url: '/Home/GetTicketSearchDetails',
+        type: 'POST',
+       // data: { tracking: '@ViewBag.TrackingNumber' },
+        success: function (result) {
+            debugger
+            // Render the partial view with the result
+            $('#trackingDetailsContainer').html(result);
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText); // Log the server response
+            Swal.fire('Error', 'Error occurred while retrieving tracking details. Error: ' + error, 'error');
+        }
+    });*@
+
+    });
+    function showLoader() {
+        // Add the loader and blur the page
+        $('body').addClass('blur');
+        $('body').append('<div class="loader-container"><div class="loader"></div></div>');
+    }
+
+    function hideLoader() {
+        // Remove the loader and remove the blur from the page
+        $('body').removeClass('blur');
+        $('.loader-container').remove();
+    }
+
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
+
+
+
