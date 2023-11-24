@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 
 using System.Linq;
@@ -3390,28 +3391,7 @@ namespace PLIC_Web_Poratal.Controllers
                     {
                         await conn.OpenAsync();
                         // Process uploaded images
-                        foreach (var image in Images)
-                        {
-                            if (image != null && image.Length > 0)
-                            {
-                                // Generate a unique filename for each image
-                                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-
-                                // Set the path where you want to store the images
-                                var filePath = Path.Combine("wwwroot/images", fileName);
-
-                                // Save the image to the server
-                                using (var stream = new FileStream(filePath, FileMode.Create))
-                                {
-                                    image.CopyTo(stream);
-                                }
-
-                                // Save the image path to the database
-                                // Use ADO.NET or an ORM like Entity Framework to perform database operations
-                                // For simplicity, assuming Ticket model has a property for the image path
-                                createTicketModel.ImagePath = "/images/" + fileName;
-                            }
-                        }
+         
 
                         // Save the rest of the model to the database
                         SqlCommand cmd = new SqlCommand("InsertClaim", conn);
@@ -3475,7 +3455,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@InsuranceAmount", createTicketModel.InsuranceAmount);
                         cmd.Parameters.AddWithValue("@ClaimAmount", createTicketModel.ClaimAmount);
                         cmd.Parameters.AddWithValue("@NegotiatedAmount", createTicketModel.NegotiatedAmount);
-                        cmd.Parameters.AddWithValue("@ImagePath", createTicketModel.ImagePath);
+                        cmd.Parameters.AddWithValue("@ImagePath", null);
 
 
                         cmd.Parameters.AddWithValue("@CreatedOn", DateAndTime.Today);
@@ -3526,7 +3506,50 @@ namespace PLIC_Web_Poratal.Controllers
                                 int ticketno1 = ticketID; // Replace with your tracking number variable or value
                                 int ticketupdateno = ticketID; // Replace with your tracking number variable or value
                                 ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                                // ... (your existing code)
+
+                                // Process uploaded images
+                                foreach (var image in Images)
+                                {
+                                    if (image != null && image.Length > 0)
+                                    {
+                                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                                        var filePath = Path.Combine("wwwroot/images/Claim", fileName);
+
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            image.CopyTo(stream);
+                                        }
+
+                                        // Save the image path to the database
+                                        var imageModel = new ClaimImage
+                                        {
+                                            ClaimId = ticketID, // Use the ClaimID from the output parameter
+                                            ImageUrl = "/images/Claim/" + fileName
+                                        };
+
+                                        // Insert image record into ClaimImages table using the stored procedure
+                                        using (SqlCommand insertImageCmd = new SqlCommand("InsertClaimImages", conn))
+                                        {
+                                            insertImageCmd.CommandType = CommandType.StoredProcedure;
+                                            insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
+                                            insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                            await insertImageCmd.ExecuteNonQueryAsync();
+                                        }
+                                    }
+                                }
+
+                                // ... (your existing code)
+
+
+
+
                                 transaction.Commit();
+
+
+
+
 
                                 //ViewData["TicketNo"] = ticketno1;
                                 return Json(new { success = true, data = ticketupdateno, message = "Claim Created Successfully not send sms." });
@@ -3537,6 +3560,37 @@ namespace PLIC_Web_Poratal.Controllers
                             string pattern = @"^92\d{10}$";
 
                             string complainerCell = ComplainerCell;
+
+                            foreach (var image in Images)
+                            {
+                                if (image != null && image.Length > 0)
+                                {
+                                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                                    var filePath = Path.Combine("wwwroot/images/Claim", fileName);
+
+                                    using (var stream = new FileStream(filePath, FileMode.Create))
+                                    {
+                                        image.CopyTo(stream);
+                                    }
+
+                                    // Save the image path to the database
+                                    var imageModel = new ClaimImage
+                                    {
+                                        ClaimId = ticketID, // Use the ClaimID from the output parameter
+                                        ImageUrl = "/images/Claim/" + fileName
+                                    };
+
+                                    // Insert image record into ClaimImages table using the stored procedure
+                                    using (SqlCommand insertImageCmd = new SqlCommand("InsertClaimImages", conn))
+                                    {
+                                        insertImageCmd.CommandType = CommandType.StoredProcedure;
+                                        insertImageCmd.Transaction = transaction;
+                                        insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
+                                        insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                        await insertImageCmd.ExecuteNonQueryAsync();
+                                    }
+                                }
+                            }
 
                             if (Regex.IsMatch(complainerCell, pattern))
                             {
