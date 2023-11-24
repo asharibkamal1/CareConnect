@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -980,7 +981,7 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Track_History_By_CNSGNO", conn1))
                     using (SqlCommand command2 = new SqlCommand("sp_GetClaimHistoryBYCNSGNO", conn1))
                     using (SqlCommand command3 = new SqlCommand("sp_GetTicketHistoryBYCNSGNO", conn1))
-                        
+
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command1.CommandType = CommandType.StoredProcedure;
@@ -1036,7 +1037,7 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-       
+
         [HttpGet]
         public async Task<ActionResult> GetTrackingDetailsManual(string tracking, bool ismanualCheckboxChecked)
         {
@@ -1392,8 +1393,8 @@ namespace PLIC_Web_Poratal.Controllers
                     conn.Open();
                 SqlCommand cmd = new SqlCommand("SP_Insert_Tracking_History", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("LoginId", LoginId);
-                cmd.Parameters.AddWithValue("TrackingID", trackingid);
+                cmd.Parameters.AddWithValue("@LoginId", LoginId);
+                cmd.Parameters.AddWithValue("@TrackingID", trackingid);
                 cmd.ExecuteNonQuery();
 
             }
@@ -3377,7 +3378,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> CreateClaim(CreateTicketModel createTicketModel)
+        public async Task<ActionResult> CreateClaim(CreateTicketModel createTicketModel, List<IFormFile> Images)
         {
             SqlTransaction _Transaction = null;
             try
@@ -3388,6 +3389,31 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         await conn.OpenAsync();
+                        // Process uploaded images
+                        foreach (var image in Images)
+                        {
+                            if (image != null && image.Length > 0)
+                            {
+                                // Generate a unique filename for each image
+                                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+
+                                // Set the path where you want to store the images
+                                var filePath = Path.Combine("wwwroot/images", fileName);
+
+                                // Save the image to the server
+                                using (var stream = new FileStream(filePath, FileMode.Create))
+                                {
+                                    image.CopyTo(stream);
+                                }
+
+                                // Save the image path to the database
+                                // Use ADO.NET or an ORM like Entity Framework to perform database operations
+                                // For simplicity, assuming Ticket model has a property for the image path
+                                createTicketModel.ImagePath = "/images/" + fileName;
+                            }
+                        }
+
+                        // Save the rest of the model to the database
                         SqlCommand cmd = new SqlCommand("InsertClaim", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
@@ -3430,10 +3456,10 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@SenderAddress", createTicketModel.senderaddress);
                         cmd.Parameters.AddWithValue("@Origin", createTicketModel.Origin);
                         cmd.Parameters.AddWithValue("@Origin_Desc", createTicketModel.Origin_Desc);
-                        cmd.Parameters.AddWithValue("@Receiver", createTicketModel.receiver);
-                        cmd.Parameters.AddWithValue("@ReceiverCompany", createTicketModel.receivercompany);
-                        cmd.Parameters.AddWithValue("@ReceiverPhone", createTicketModel.receiverphone);
-                        cmd.Parameters.AddWithValue("@ReceiverAddress", createTicketModel.receiveraddress);
+                        cmd.Parameters.AddWithValue("@Receiver", null);
+                        cmd.Parameters.AddWithValue("@ReceiverCompany", null);
+                        cmd.Parameters.AddWithValue("@ReceiverPhone", null);
+                        cmd.Parameters.AddWithValue("@ReceiverAddress", null);
                         cmd.Parameters.AddWithValue("@Destination", createTicketModel.Destination);
                         cmd.Parameters.AddWithValue("@Destination_Desc", createTicketModel.Destination_Desc);
                         cmd.Parameters.AddWithValue("@PaymentMode", createTicketModel.Payment_Mode);
@@ -3442,6 +3468,16 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@IsClosed", 0);
                         cmd.Parameters.AddWithValue("@EmailAddress", createTicketModel.Name);
                         cmd.Parameters.AddWithValue("@Remarks", createTicketModel.Remarks);
+
+
+                        cmd.Parameters.AddWithValue("@CNValue", createTicketModel.CNValue);
+                        cmd.Parameters.AddWithValue("@InsuranceRate", createTicketModel.InsuranceRate);
+                        cmd.Parameters.AddWithValue("@InsuranceAmount", createTicketModel.InsuranceAmount);
+                        cmd.Parameters.AddWithValue("@ClaimAmount", createTicketModel.ClaimAmount);
+                        cmd.Parameters.AddWithValue("@NegotiatedAmount", createTicketModel.NegotiatedAmount);
+                        cmd.Parameters.AddWithValue("@ImagePath", createTicketModel.ImagePath);
+
+
                         cmd.Parameters.AddWithValue("@CreatedOn", DateAndTime.Today);
 
                         // Add the @ticketExists output parameter
@@ -3558,82 +3594,6 @@ namespace PLIC_Web_Poratal.Controllers
                                     string myValue = ViewBag.TrackingData;
 
 
-                                    //DataTable table = dataSet.Tables["Table"];
-                                    //DataRow row = table.Rows[0];
-
-                                    //// Retrieve values from the row and store them in variables
-                                    //int ticketId1 = Convert.ToInt32(row["TicketId"]);
-                                    //long ConsignmentNo = Convert.ToInt32(row["CnsgNo"]);
-                                    //string category = row["Category"].ToString();
-                                    //string issueType = row["IssueType"].ToString();
-                                    //string Origin = row["Origin"].ToString();
-                                    //string Destination = row["Destination"].ToString();
-
-
-
-                                    //string subject;
-                                    //subject = "  Care Connect: Ticket: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " - Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + "  - Priority: " + createTicketModel.TicketPriorityName + "";
-                                    ////string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
-
-                                    ////Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
-
-
-                                    //string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Ticked ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td> <td> <b> Agent</b> </td>  </tr>";
-
-                                    //textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td>  <td> " + HttpContext.Session.GetString("UserName") + "</td> </tr>";
-                                    //textBody += "</table> ";
-
-
-                                    //textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + createTicketModel.Remarks + "<tr><td> </table> \n" +
-                                    //        "</br><table> <tr><td>\n" +
-                                    //        "Kindly Login Care Connect Portal URL. http://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
-
-                                    //       "<tr><td>\n" +
-                                    //       "Best regards,</br> </td></tr>\n" +
-                                    //       "<tr><td>\n" +
-                                    //       "MIS Department</br> </td></tr>\n" +
-
-                                    //       "<tr style=font-size:10px><td>\n" +
-                                    //       "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
-                                    //       " </table>";
-
-                                    //if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
-                                    //{
-                                    //    // Call your send email function
-                                    //    // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
-                                    //    await SendEmailAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
-                                    //}
-                                    //else
-                                    //{
-                                    //    // Show an alert indicating that one or both email addresses are not valid
-                                    //    // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
-                                    //    //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
-
-
-                                    //    return Json(new { success = false, message = "Email Address is Not Valid." });
-                                    //}
-
-
-
-                                    //  SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, "Email From Care Connect", EmailTicketModel.remarks);
-
-
-
-
-                                    //SqlTransaction transaction1 = conn.BeginTransaction();
-                                    //SqlCommand cmd1 = new SqlCommand("sp_Ticket_Email", conn);
-                                    //cmd1.CommandType = CommandType.StoredProcedure;
-                                    //cmd1.Transaction = transaction;
-                                    //cmd1.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                                    ////cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
-                                    //cmd1.Parameters.AddWithValue("@Comment", createTicketModel.Remarks);
-                                    //cmd1.Parameters.AddWithValue("@TicketId", ticketID);
-
-                                    //cmd1.Parameters.AddWithValue("@Activity", "Auto-Email");
-
-                                    //// conn1.Close();
-                                    ////conn1.Open();
-                                    //await cmd1.ExecuteNonQueryAsync();
 
 
 
@@ -4185,7 +4145,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         await cmd.ExecuteNonQueryAsync();
 
-  
+
 
                         // Retrieve the values of @toemail and @ccemail
                         string toemail = cmd.Parameters["@toemail"].Value.ToString();
@@ -4470,22 +4430,22 @@ namespace PLIC_Web_Poratal.Controllers
         {
             DataSet dataSet1 = new DataSet();
             SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
-     
+
             if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
             {
 
                 conn.Open();
                 SqlCommand command = new SqlCommand("sp_careconnect_Get_Account_Open_Type_DropDownData", conn);
                 command.CommandType = CommandType.StoredProcedure;
-          
+
                 SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
-   
+
                 dataAdapter1.Fill(dataSet1);
                 TrackingGenerateViewModel model = new TrackingGenerateViewModel
                 {
-                  
+
                     AccountOpening = dataSet1,
-             
+
                 };
                 string RoleID = HttpContext.Session.GetString("RoleID");
                 string UserName = HttpContext.Session.GetString("UserName");
@@ -4494,7 +4454,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
                 ViewBag.UserName = UserName;
-               
+
                 return View("~/Views/Reports/AccountOpen.cshtml", model);
             }
 

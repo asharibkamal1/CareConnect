@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.FlowAnalysis;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,11 @@ namespace CareConnect.Models
         public string Weight { get; set; }
        // public string BookingDate { get; set; }
         public string Quantity { get; set; }
+        public string CNValue { get; set; }
+        public string InsuranceRate { get; set; }
+        public string InsuranceAmount { get; set; }
+        public double ClaimAmount { get; set; }
+        public double NegotiatedAmount { get; set; }
         public string pieces { get; set; }
 
         public string ticketid { get; set; }
@@ -66,6 +72,9 @@ namespace CareConnect.Models
         public bool isFRNChecked { get; set; }
      
         public string claimid { get; set; }
+
+        public string ImagePath { get; set; }
+        public List<IFormFile> images { get; set; }
 
 
 
