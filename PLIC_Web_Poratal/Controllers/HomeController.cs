@@ -14,16 +14,20 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PLIC_Web_Poratal.Controllers
 {
@@ -1269,6 +1273,7 @@ namespace PLIC_Web_Poratal.Controllers
                 DataSet dataSet2 = new DataSet();
                 DataSet dataSet3 = new DataSet();
                 DataSet dataSet4 = new DataSet();
+                DataSet dataSet6 = new DataSet();
 
                 using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
@@ -1292,11 +1297,13 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command2 = new SqlCommand("sp_GetClaimHistory", conn1))
                     using (SqlCommand command4 = new SqlCommand("sp_careconnect_Get_Ticket_Status", conn1))
                     using (SqlCommand command3 = new SqlCommand("SP_Get_ConsignmentNo_By_ClaimNo", conn1))
+                    using (SqlCommand command6 = new SqlCommand("sp_GetClaimimages", conn1))
 
                     {
 
                         command3.CommandType = CommandType.StoredProcedure;
                         command3.Parameters.AddWithValue("@ClaimID", claimid);
+
                         string consignmentNumber;
 
                         // Execute the stored procedure and store the result in the variable
@@ -1308,15 +1315,18 @@ namespace PLIC_Web_Poratal.Controllers
                         command2.CommandType = CommandType.StoredProcedure;
                         command4.CommandType = CommandType.StoredProcedure;
                         command5.CommandType = CommandType.StoredProcedure;
+                        command6.CommandType = CommandType.StoredProcedure;
 
                         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                         SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
                         SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
                         SqlDataAdapter dataAdapter4 = new SqlDataAdapter(command4);
                         SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
+                        SqlDataAdapter dataAdapter6 = new SqlDataAdapter(command6);
                         command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
                         command1.Parameters.AddWithValue("@ClaimID", claimid);
                         command2.Parameters.AddWithValue("@ClaimID", claimid);
+                        command6.Parameters.AddWithValue("@ClaimID", claimid);
 
 
                         //dataAdapter.Fill(dataSet3);
@@ -1331,6 +1341,7 @@ namespace PLIC_Web_Poratal.Controllers
                             dataAdapter2.Fill(dataSet2);
                             dataAdapter.Fill(dataSet3);
                             dataAdapter4.Fill(dataSet4);
+                            dataAdapter6.Fill(dataSet6);
 
                         });
 
@@ -1345,7 +1356,8 @@ namespace PLIC_Web_Poratal.Controllers
                             TicketStatus = dataSet4,
                             userid = userId,
                             roleid = userRoleId,
-                            TicketType = dataSet5
+                            TicketType = dataSet5,
+                            ClaimImages = dataSet6
                         };
 
                         ViewData["TicketNo"] = claimid;
@@ -3391,7 +3403,7 @@ namespace PLIC_Web_Poratal.Controllers
                     {
                         await conn.OpenAsync();
                         // Process uploaded images
-         
+
 
                         // Save the rest of the model to the database
                         SqlCommand cmd = new SqlCommand("InsertClaim", conn);
@@ -3646,6 +3658,49 @@ namespace PLIC_Web_Poratal.Controllers
                                     //DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(dataSetJson);
 
                                     string myValue = ViewBag.TrackingData;
+
+                                    string subject;
+                                    subject = "  Care Connect: Claim ID: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " - Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + "  - Priority: " + createTicketModel.TicketPriorityName + "";
+                                    //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
+
+                                    //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
+
+
+                                    string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Claim ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td> <td> <b> Agent</b> </td>  </tr>";
+
+                                    textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td>  <td> " + HttpContext.Session.GetString("UserName") + "</td> </tr>";
+                                    textBody += "</table> ";
+
+
+                                    textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + createTicketModel.Remarks + "<tr><td> </table> \n" +
+                                            "</br><table> <tr><td>\n" +
+                                            "Kindly Login Care Connect Portal URL. http://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
+
+                                           "<tr><td>\n" +
+                                           "Best regards,</br> </td></tr>\n" +
+                                           "<tr><td>\n" +
+                                           "MIS Department</br> </td></tr>\n" +
+
+                                           "<tr style=font-size:10px><td>\n" +
+                                           "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
+                                           " </table>";
+                                  
+
+                                    if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
+                                    {
+                                        // Call your send email function
+                                        // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
+                                        await SendEmailClaimAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody, Images);
+                                    }
+                                    else
+                                    {
+                                        // Show an alert indicating that one or both email addresses are not valid
+                                        // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
+                                        //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
+
+
+                                        return Json(new { success = false, message = "Email Address is Not Valid." });
+                                    }
 
 
 
@@ -6168,6 +6223,44 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+        public async Task SendEmailClaimAsync(string toEmail, string ccEmail, string subject, string EmailBody, List<IFormFile> Images)
+        {
+            try
+            {
+                using (MailMessage mail = new MailMessage())
+                using (SmtpClient SmtpServer = new SmtpClient("mail.daewoofastex.pk"))
+                {
+
+
+                    mail.From = new MailAddress("careconnect@daewoofastex.pk");
+                    mail.To.Add("asharib.kamal@daewoo.com.pk");
+                    mail.CC.Add("amir.saleem@daewoo.com.pk");
+                    //mail.Bcc.Add("amir.saleem@daewoo.com.pk,asharib.kamal@daewoo.com.pk,imran.ali@daewoofastex.pk,amna.niazi@daewoofastex.pk");
+                    mail.IsBodyHtml = true;
+                    mail.Subject = subject;
+                    mail.Body = EmailBody;
+
+                    foreach (var image in Images)
+                    {
+                        Attachment attachment = new Attachment(image.OpenReadStream(), image.FileName, MediaTypeNames.Image.Jpeg);
+                        mail.Attachments.Add(attachment);
+
+                    }
+                    SmtpServer.UseDefaultCredentials = false;
+                    SmtpServer.Timeout = int.MaxValue;
+                    SmtpServer.Port = 587;
+                    SmtpServer.Credentials = new NetworkCredential("careconnect@daewoofastex.pk", "Wateen@786786");
+                    SmtpServer.EnableSsl = false;
+
+                    await SmtpServer.SendMailAsync(mail); // Send the email asynchronously
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                // Handle any exceptions that occur during the sending of the email
+            }
+        }
 
 
         public IActionResult Privacy()
