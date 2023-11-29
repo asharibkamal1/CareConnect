@@ -1,7 +1,7 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
 @Html.ValidationSummary(true)
 
-<div class="card" hidden >
+<div class="card">
     <div class="card-header" style="background-color: #0565B7;color:white">
         <h3 class="card-title">Booking Detail</h3>
     </div>
@@ -32,209 +32,230 @@
 
 
 
-<div class="card">
-    <div class="card-header" style="background-color: #0565B7;color:white">
-        <h3 class="card-title">Create Claim</h3>
-    </div>
-    <div class="card-body">
-        <!-- Render the dropdown list with TicketCatType data -->
+    <div class="card">
+        <div class="card-header" style="background-color: #0565B7;color:white">
+            <h3 class="card-title">Create Claim</h3>
+        </div>
+        <div class="card-body">
+            <!-- Render the dropdown list with TicketCatType data -->
 
-        <div class="row">
+            <div class="row">
 
 
-            <div class="col-md-3 col-sm-3">
-                <label for="TicketTypeDropdown">Claim Category:</label>
-                <select class="form-control" id="categoryDropdown" name="ticketcatagory">
-                    <option value="">Select Category</option>
-                    @foreach (System.Data.DataRow catRow in Model.ClaimCategoryDS.Tables[5].Rows)
-                    {
+                <div class="col-md-3 col-sm-3">
+                    <label for="TicketTypeDropdown">Claim Category:</label>
+                    <select class="form-control" id="categoryDropdown" name="ticketcatagory">
+                        <option value="">Select Category</option>
+                        @foreach (System.Data.DataRow catRow in Model.ClaimCategoryDS.Tables[5].Rows)
+                        {
 
-                        <option value="@catRow["claimcategoryid"]">@catRow["categoryname"]</option>
-                      
-                    }
-                </select>
+                            <option value="@catRow["claimcategoryid"]">@catRow["categoryname"]</option>
 
-                <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Claim Category.</span>
-            </div>
+                        }
+                    </select>
 
-            <div class="col-md-3 col-sm-3">
-
-                <div id="subcategoryContainer">
+                    <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Claim Category.</span>
                 </div>
-                <span class="text-danger" id="subcategoryDropdownError" style="display: none;">Please select Sub Category.</span>
-            </div>
 
-     @*        <div class="col-md-3 col-sm-3 divhide">
+                <div class="col-md-3 col-sm-3">
+
+                    <div id="subcategoryContainer">
+                    </div>
+                    <span class="text-danger" id="subcategoryDropdownError" style="display: none;">Please select Sub Category.</span>
+                </div>
+
+                @*        <div class="col-md-3 col-sm-3 divhide">
                 <label for="TicketTypeDropdown">Source:</label>
                 <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
 
-                    <option value="">Select Source</option>
-                    @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
-                    {
-                        <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
-                    }
+                <option value="">Select Source</option>
+                @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
+                {
+                <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
+                }
                 </select>
                 <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
-            </div> *@
-            <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Claim Priority:</label>
-                <select class="form-control" id="PriorityDropdown" name="priority ">
-                    <option value="">Select Priority</option>
-                    @foreach (System.Data.DataRow catRow in Model.PriorityDS.Tables[2].Rows)
-                    {
-                        <option value="@catRow["priority_id"]">@catRow["priority_type"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="priorityError" style="display: none;">Please select priority.</span>
-            </div>
-
-
-
-        </div>
-
-
-        <div class="row divhide">
-
-            <div class="col-md-2 col-sm-2">
-
-                <label for="TicketTypeDropdown">City:</label>
-                <select class="form-control" id="CityDropdown" name="city ">
-                    <option value="">Select City</option>
-                    @foreach (System.Data.DataRow catRow in Model.CityDS.Tables[3].Rows)
-                    {
-                        <option value="@catRow["city_id"]">@catRow["city_name"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="cityError" style="display: none;">Please select City.</span>
-            </div>
-
-            <div class="col-md-4 col-sm-4">
-
-                <div id="regionContainer">
+                </div> *@
+                <div class="col-md-3 col-sm-3 divhide">
+                    <label for="TicketTypeDropdown">Claim Priority:</label>
+                    <select class="form-control" id="PriorityDropdown" name="priority ">
+                        <option value="">Select Priority</option>
+                        @foreach (System.Data.DataRow catRow in Model.PriorityDS.Tables[2].Rows)
+                        {
+                            <option value="@catRow["priority_id"]">@catRow["priority_type"]</option>
+                        }
+                    </select>
+                    <span class="text-danger" id="priorityError" style="display: none;">Please select priority.</span>
                 </div>
-                <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
-                <span class="text-danger" id="locationError" style="display: none;">Please select Location.</span>
-            </div>
-            <div class="col-md-2 col-sm-2">
 
-                <div class="form-group">
-                    <label class="control-label">Tracking NO:</label>
-                    <input type="text" disabled class="form-control" value="@ViewData["TrackingNumber"]" />
-                    <span class="text-danger" id="trackingError" style="display: none;">Tracking No Empty.</span>
+                <div class="col-md-3 col-sm-3">
+                    <label for="amount">Amount:</label>
+                    <input type="text" id="NegotiatedAmount" placeholder="Please Enter Amount" class="form-control" />
+                    <span class="text-danger" id="priorityError" style="display: none;">Please Enter Amount.</span>
                 </div>
 
             </div>
 
 
-            <div class="col-md-2 col-sm-2">
-                <label for="BarcodeDropdown">BarCode:</label>
-                <select class="form-control" id="BarcodeDropdown" name="barcode" required>
-                    <option value="">ALL</option>
-                    @foreach (System.Data.DataRow catRow in Model.BookingDetail.Tables[6].Rows)
-                    {
-                        <option value="@catRow["BarCode"]">@catRow["BarCode"]</option>
-                    }
-                </select>
-                <span class="text-danger" id="barcodeError" style="display: none;">Please select a barcode.</span>
-            </div>
+            <div class="row divhide">
 
-            <div class="col-md-2 col-sm-2">
+                <div class="col-md-2 col-sm-2">
 
-                <div id="categorycontainer">
+                    <label for="TicketTypeDropdown">City:</label>
+                    <select class="form-control" id="CityDropdown" name="city ">
+                        <option value="">Select City</option>
+                        @foreach (System.Data.DataRow catRow in Model.CityDS.Tables[3].Rows)
+                        {
+                            <option value="@catRow["city_id"]">@catRow["city_name"]</option>
+                        }
+                    </select>
+                    <span class="text-danger" id="cityError" style="display: none;">Please select City.</span>
                 </div>
-                <span class="text-danger" id="barcodcateerror" style="display: none;">Please select Category.</span>
+
+                <div class="col-md-4 col-sm-4">
+
+                    <div id="regionContainer">
+                    </div>
+                    <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
+                    <span class="text-danger" id="locationError" style="display: none;">Please select Location.</span>
+                </div>
+                <div class="col-md-2 col-sm-2">
+
+                    <div class="form-group">
+                        <label class="control-label">Tracking NO:</label>
+                        <input type="text" disabled class="form-control" value="@ViewData["TrackingNumber"]" />
+                        <span class="text-danger" id="trackingError" style="display: none;">Tracking No Empty.</span>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-2 col-sm-2">
+                    <label for="BarcodeDropdown">BarCode:</label>
+                    <select class="form-control" id="BarcodeDropdown" name="barcode" required>
+                        <option value="">ALL</option>
+                        @foreach (System.Data.DataRow catRow in Model.BookingDetail.Tables[6].Rows)
+                        {
+                            <option value="@catRow["BarCode"]">@catRow["BarCode"]</option>
+                        }
+                    </select>
+                    <span class="text-danger" id="barcodeError" style="display: none;">Please select a barcode.</span>
+                </div>
+
+                <div class="col-md-2 col-sm-2">
+
+                    <div id="categorycontainer">
+                    </div>
+                    <span class="text-danger" id="barcodcateerror" style="display: none;">Please select Category.</span>
+                </div>
+
             </div>
 
-        </div>
 
+            <div class="row divhide">
+                <div class="col-md-4">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="rdotype" checked value="sender">
+                            <span></span>Sender
+                        </label>
 
-        <div class="row divhide">
-            <div class="col-md-4">
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="rdotype" checked value="sender">
-                        <span></span>Sender
-                    </label>
-
-                    <label>
+                        @*      <label>
                         <input type="radio" name="rdotype" value="receiver">
                         <span></span>Receiver
-                    </label>
+                        </label>
+                        *@
 
-
-                    <label>
-                        <input type="radio" name="rdotype" value="none">
-                        <span></span>None
-                    </label>
+                        <label>
+                            <input type="radio" name="rdotype" value="none">
+                            <span></span>None
+                        </label>
+                    </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div radio-group>
+
+                        <label>
+                            <input type="checkbox" id="chksendsms" checked name="SMS" />
+                            <span></span>Send SMS
+                        </label>
+
+                    </div>
+                </div>
+
             </div>
 
-            <div class="col-md-6">
-                <div radio-group>
 
-                    <label>
-                        <input type="checkbox" id="chksendsms" checked name="SMS" />
-                        <span></span>Send SMS
-                    </label>
+
+
+
+            <div class="row">
+                <div class="col-md-3 col-sm-3 divhide">
+                    <div class="form-group">
+                        <label for="TicketTypeDropdown">Name:</label>
+                        <input type="text" id="txtname" name="name" value="@Model.BookingDetail.Tables[2].Rows[0]["Person:"]" class="form-control" placeholder="Name">
+                        <span class="text-danger" id="nameError" style="display: none;">Please type name.</span>
+                    </div>
 
                 </div>
+                <div class="col-md-3 col-sm-3 divhide">
+                    <div class="form-group">
+                        <label for="TicketTypeDropdown">Contact NO:</label>
+                        <input type="text" id="txtcontactno" name="contact" value="@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]" class="form-control" placeholder="Contact No">
+                        <span class="text-danger" id="contactError" style="display: none;">Please type contact.</span>
+                        <span class="text-danger" id="contactErrorvalidation" style="display: none;">Contact number is invalid. Please enter a 11-digit number like (XXXX-XXXXXXX).</span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3 col-sm-3 divhide">
+                    <label for="TicketTypeDropdown">Gender:</label>
+                    <select name="Gender" id="ddgender" class="form-control">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+
+
+                </div>
+                <div class="col-md-3 col-sm-3 ">
+                    <div class="form-group">
+                        <label for="TicketTypeDropdown">Remarks:</label>
+
+                        <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
+                        <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
+                    </div>
+                </div>
+
+
             </div>
 
-        </div>
 
 
-        <div class="row">
-            <div class="col-md-3 col-sm-3 divhide">
+            @*        // ***********       upload images     ***********       *@
+
+            <div class="col-md-3 col-sm-3">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Name:</label>
-                    <input type="text" id="txtname" name="name" value="@Model.BookingDetail.Tables[2].Rows[0]["Person:"]" class="form-control" placeholder="Name">
-                    <span class="text-danger" id="nameError" style="display: none;">Please type name.</span>
-                </div>
-
-            </div>
-            <div class="col-md-3 col-sm-3 divhide">
-                <div class="form-group">
-                    <label for="TicketTypeDropdown">Contact NO:</label>
-                    <input type="text" id="txtcontactno" name="contact" value="@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]" class="form-control" placeholder="Contact No">
-                    <span class="text-danger" id="contactError" style="display: none;">Please type contact.</span>
-                    <span class="text-danger" id="contactErrorvalidation" style="display: none;">Contact number is invalid. Please enter a 11-digit number like (XXXX-XXXXXXX).</span>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Gender:</label>
-                <select name="Gender" id="ddgender" class="form-control">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
-
-
-            </div>
-            <div class="col-md-3 col-sm-3 ">
-                <div class="form-group">
-                    <label for="TicketTypeDropdown">Remarks:</label>
-
-                    <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
-                    <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
+                    <label for="imageUpload">Upload Images:</label>
+                    <input type="file" id="imageUpload" name="Images" class="form-control" multiple>
+                    <!-- Use 'multiple' attribute to allow selecting multiple images -->
                 </div>
             </div>
 
 
-        </div>
-        <div class="row">
+            <div class="row">
 
-            <div class="col-md-12 col-sm-12">
-                <button class="btn btn-success float-Right" id="btnCreateTicket">Create Claim</button>
+                <div class="col-md-12 col-sm-12">
+                    <button class="btn btn-success float-Right" id="btnCreateTicket">Create Claim</button>
 
+                </div>
             </div>
+
         </div>
 
     </div>
-
-</div>
 
 
 <script>
@@ -283,7 +304,7 @@
             // Clear the subcategory container
             $('#regionContainer').html('');
             // Clear the subterminal container
-          
+
             debugger
 
             // Make AJAX call to fetch subcategories based on the selected category
@@ -370,7 +391,7 @@
 
             var Gender = $('#ddgender').val();
             var barcodeValue = $('#BarcodeDropdown').val();
-           // var tickettypeValue = $('#TicketTypeDropdown').val();
+            // var tickettypeValue = $('#TicketTypeDropdown').val();
             var categoryValue = $('#categoryDropdown').val();
             var ticketsubcatagory = $('#subcategoryContainer').find('#SubcategoryDropdown').val();
             var ticketsubcatagoryName = $('#subcategoryContainer').find('#SubcategoryDropdown option:selected').text();
@@ -381,7 +402,7 @@
             var TicketPriorityName = $('#PriorityDropdown option:selected').text();
             var City = $('#CityDropdown').val();
             var locationid = $('#regionContainer').find('#LocationDropdown').val();
-            
+
             var locationname = $('#regionContainer').find('#LocationDropdown option:selected').text();
             var region = $('#regionContainer').find('#RegionDropdown').val();
 
@@ -404,6 +425,8 @@
             var selectedOption = dropdown.options[dropdown.selectedIndex];
             var TicketCategoryName = selectedOption.text;
             debugger
+            var imagefile = $('#imageUpload').val();
+
             var pattern = /^92\d{10}$/;
             debugger
             if (categoryValue == '6') {
@@ -426,7 +449,7 @@
                 var tickettypeValue = undefined;
 
                 var barcodecategoryname = '';
-                
+
                 var TicketPriority = undefined;
 
 
@@ -441,7 +464,7 @@
             }
             else {
 
-               // var tickettypeValue = $('#TicketTypeDropdown').val();
+                // var tickettypeValue = $('#TicketTypeDropdown').val();
                 var Gender = $('#ddgender').val();
 
 
@@ -460,8 +483,8 @@
                     $('#subcategoryDropdownError').hide();
                 }
 
-                
-              
+
+
 
                 if (TicketPriority === '') {
                     $('#priorityError').show();
@@ -483,9 +506,9 @@
                 } else {
                     $('#locationError').hide();
                 }
-                
 
-                
+
+
                 if (City === '') {
                     $('#cityError').show();
                     return false; // Prevent form submission if barcode is not selected
@@ -528,36 +551,6 @@
             }
 
 
-
-
-
-            // if (tickettypeValue === '') {
-            //     $('#TicketTypeDropdownError').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#TicketTypeDropdownError').hide();
-            // }
-
-            // if (barcodecategoryname === '') {
-            //     $('#barcodcateerror').show();
-            //     return false; // Prevent form submission if barcode is not selected
-            // } else {
-            //     $('#barcodcateerror').hide();
-            // }
-
-           
-
-            //if (barcodeValue === '') {
-            //    $('#barcodeError').show();
-            //    return false; // Prevent form submission if barcode is not selected
-            //}
-            //else {
-            //    $('#barcodeError').hide();
-            //}
-
-
-
-
             if (RemarksValue === '') {
                 $('#RemarksError').show();
                 return false; // Prevent form submission if barcode is not selected
@@ -565,20 +558,16 @@
                 $('#RemarksError').hide();
             }
             const checkbox = document.getElementById("chksendsms");
-          
+
             // Get the value (true or false) from the checkbox
             const isChecked = checkbox.checked;
-
-          
-
             debugger
+            var formData = new FormData();
             var ticketData = {
-
-                //tickettype:  tickettypeValue,
+                // your ticket data properties...
                 barcode: barcodeValue,
                 ticketsubcatagory: $('#subcategoryContainer').find('#SubcategoryDropdown').val(),
                 ticketsubcatagoryName: ticketsubcatagoryName,
-                //  ticketsubcatagoryName: ticketsubcatagoryName,
                 barcodecategoryname: barcodecategoryname,
                 name: name,
                 contact: contact,
@@ -613,16 +602,36 @@
                 Weight: $('#Weight').val(),
                 pieces: $('#Pieces').val(),
                 Quantity: $('#Quantity').val(),
+                CNValue: $('#CNValue').val(),
+                InsuranceRate: $('#InsuranceRate').val(),
+                InsuranceAmount: $('#InsuranceAmount').val(),
+                ClaimAmount: $('#Amount').val(),
+                NegotiatedAmount: $('#NegotiatedAmount').val(),
                 ticketcatagory: $('#categoryDropdown').val(),
                 ticketcatagoryName: TicketCategoryName,
                 Remarks: RemarksValue,
-
             };
+
+            // Iterate over the properties of ticketData
+            for (var key in ticketData) {
+                if (ticketData.hasOwnProperty(key)) {
+                    // Append each key-value pair to the FormData
+                    formData.append(key, ticketData[key]);
+                }
+            }
+
+            // Now you can append the files
+            var files = $("#imageUpload")[0].files;
+            for (var i = 0; i < files.length; i++) {
+                formData.append("Images", files[i]);
+            }
             debugger
             $.ajax({
                 url: '/Home/CreateClaim',
                 type: 'POST',
-                data: ticketData,
+                data: formData,
+                contentType: false,
+                processData: false,
                 success: function (response) {
                     debugger
                     // Check if the ticket was created successfully
@@ -633,7 +642,7 @@
                         // var ticketno = @ViewData["TicketNo"];
                         // var ticketno = $('#tracking').val();
                         // Construct the URL with the tracking number as a query parameter
-                        var url = '/Home/GetClaimDetails?ticketno=' + ClaimNO;
+                        var url = '/Home/GetClaimDetailsbyClaimid?ticketno=' + ClaimNO;
                         // Redirect to the new URL same tab
                         window.location.href = url;
                         // Open the new view in a new window/tab

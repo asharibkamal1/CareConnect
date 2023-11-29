@@ -16,7 +16,7 @@ namespace PLIC_Web_Poratal
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)    
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -27,16 +27,16 @@ namespace PLIC_Web_Poratal
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-           // services.AddSession();
+            // services.AddSession();
             services.AddControllersWithViews();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddNotyf(config => { config.DurationInSeconds =300; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
+            services.AddNotyf(config => { config.DurationInSeconds = 300; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);//You can set Time
-               // options.Cookie.HttpOnly = true;
-                //options.Cookie.IsEssential = true;
-                // options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the session timeout to 30 minutes
+                                                               // options.Cookie.HttpOnly = true;
+                                                               //options.Cookie.IsEssential = true;
+                                                               // options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the session timeout to 30 minutes
             });
         }
 
