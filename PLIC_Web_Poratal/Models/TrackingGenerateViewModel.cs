@@ -13,6 +13,8 @@ namespace CareConnect.Models
         public DataSet CRMReportDetail { get; set; }
         public DataSet TicketCatType { get; set; }
         public DataSet AccountOpening { get; set; }
+
+        public DataSet CODLedgerReport { get; set; }
         public DataSet AllTerminals { get; set; }
         public DataSet TicketIssueTypeDescription { get; set; }
         public DataSet Sub_Terminal { get; set; }
@@ -26,6 +28,8 @@ namespace CareConnect.Models
         public DataSet TicketDetails { get; set; }
         public DataSet TrackingHistory { get; set; }
         public DataSet SearchTicketDetail { get; set; }
+
+        public DataSet SearchClaimDetail { get; set; }
         public DataSet TerminalAddressReportDS { get; set; }
         public DataSet ClaimCategoryDS { get; set; }
         public DataSet TrackingDetailsforClaimreport {  get; set; }

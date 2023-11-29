@@ -1,0 +1,254 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!-- Select2 CSS -->
+<link href="/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="/dist/js/select2.min.js"></script>
+
+@model CareConnect.Models.TrackingGenerateViewModel
+@{
+    ViewData["Title"] = "COD Ledger Report";
+}
+<h1 id="reportTitle">COD Ledger Report</h1>
+<br />
+<div class="row">
+    <!-- left column -->
+
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <!-- jquery validation -->
+
+
+
+
+        <div class="form-group">
+
+            <div class="row">
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Customer:</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <select class="form-control select2" id="CustomerTypeDropdown" name="customertype">
+                        <option value="">Select Customer</option>
+                        @foreach (System.Data.DataRow catRow in Model.CODLedgerReport.Tables[0].Rows)
+                        {
+
+
+                            <option value="@catRow["customer_id"]">@catRow["customer_name"]</option>
+
+                        }
+                    </select>
+
+                    <span class="text-danger" id="customertypeDropdownError" style="display: none;">Please select Customer.</span>
+                </div>
+
+
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Date From:</label>
+
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="date" id="datefrom" name="datefrom" class="form-control" autofocus />
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    <label class="text-secondary font-weight-bold">Date To:</label>
+
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="date" id="dateto" name="dateto" class="form-control" autofocus />
+                </div>
+
+                <div class="custom-checkbox col-lg-1 col-md-2 col-sm-2">
+                    <input type="checkbox" id="Checkboxall">
+                    <label for="Checkboxall">ALL</label>
+                </div>
+
+                <div class="col-lg-1 col-md-2 col-sm-2">
+                    <button class="btn btn-success float-left" id="btnSubmit">Submit</button>
+                </div>
+               
+            </div>
+            <div> <br /></div>
+            <span class="text-danger"></span>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table id="ReportaDataTable" class="table table-striped table-bordered" style="width:100%"></table>
+</div>
+
+<script>
+    debugger
+    function showLoader() {
+        // Add the loader and blur the page
+        $('body').addClass('blur');
+        $('body').append('<div class="loader-container"><div class="loader"></div></div>');
+    }
+
+    function hideLoader() {
+        // Remove the loader and remove the blur from the page
+        $('body').removeClass('blur');
+        $('.loader-container').remove();
+    }
+
+    function onlyNumberKey(evt) {
+
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+
+        $('.select2').select2();
+
+        // Calculate one week ago date
+        var oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        // Format the date in YYYY-MM-DD format
+        var formattedDate = oneWeekAgo.toISOString().split('T')[0];
+
+        // Set the default date values in the input fields
+        document.getElementById('datefrom').value = formattedDate;
+        document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
+
+        $('#btnSubmit').click(function () {
+            debugger
+
+            var customerID = $('#CustomerTypeDropdown').val();
+            var datefrom = $('#datefrom').val();
+            var dateto = $('#dateto').val();
+
+            if (!customerID) {
+                $('#customertypeDropdownError').show();
+                return; // Stop execution if customer is not selected
+            } else {
+                $('#customertypeDropdownError').hide();
+            }
+            if (datefrom == "") {
+                datefrom = null;
+            }
+            if (dateto == "") {
+                dateto = null;
+
+            } else {
+
+            }
+
+
+
+            $.ajax({
+                url: '/Home/GetCODCustomerledgerPaytment',
+                type: 'GET',
+                data: {
+                    customer_id: customerID,
+                    datefrom: datefrom,
+                    dateto: dateto
+                },
+
+                success: function (response) {
+                    debugger
+                    var jsonResponse = JSON.parse(response);
+                    var obj = jsonResponse.Report_rpt_Customer_Ledger.Table;
+
+                    $('#ReportaDataTable').empty();
+                    var tableHeaders = '<thead><tr>' +
+                        '<th>customer_id</th>' +
+                        '<th>customer_name</th>' +
+                        '<th>customer_city</th>' +
+                        '<th>invoice_date</th>' +
+                        '<th>details</th>' +
+                        '<th>TotalReimbursementAmount</th>' +
+                        '<th>amount</th>' +
+                        '<th>filter</th>' +
+                        // '<th>Email_Address</th>' +
+                        // '<th>FRN_Business_Loc</th>' +
+                        // '<th>FRN_Own_Property</th>' +
+                        // '<th>Remarks</th>';
+                    // '<th>OpeningComment</th>' +
+                    // '<th>UserName</th>' +
+                     '</tr></thead>';
+
+                    // Create table body
+                    var tableBody = '<tbody>';
+                    debugger
+                    for (var i = 0; i < obj.length; i++) {
+                        var row = obj[i];
+                        tableBody +=
+                            '<tr>' +
+                            '<td>' + row.customer_id + '</td>' +
+                            '<td>' + row.customer_name + '</td>' +
+                            '<td>' + row.customer_city + '</td>' +
+                            '<td>' + row.invoice_date + '</td>' +
+                            '<td>' + row.details + '</td>' +
+                            '<td>' + row.TotalReimbursementAmount + '</td>' +
+                            '<td>' + row.amount + '</td>' +
+                            '<td>' + row.filter + '</td>' +
+                            // '<td>' + row.Email_Address + '</td>' +
+                            // '<td>' + row.FRN_Business_Loc + '</td>' +
+                            // '<td>' + row.FRN_Own_Property + '</td>' +
+                            // '<td>' + row.Remarks + '</td>' +
+                            // '<td>' + row.OpeningComment + '</td>' +
+                            // '<td>' + row.UserName + '</td>' +
+                            '</tr>';
+                    }
+                    debugger
+                    tableBody += '</tbody>';
+                    debugger
+
+                    // Append table headers and body to the table
+                    $('#ReportaDataTable').append(tableHeaders + tableBody);
+                    $('#ReportaDataTable').DataTable().destroy();
+                    debugger
+                    // Initialize DataTables
+
+
+                    $('#ReportaDataTable').DataTable({
+                        scrollX: '400px',
+                        scrollY: '400px', // Specify the desired height of the scrollable area
+                        scrollCollapse: true,
+                        language: {
+                            paginate: {
+                                first: 'First',
+                                previous: 'Previous',
+                                next: 'Next',
+                                last: 'Last'
+                            }
+                        }
+
+                    });
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+
+
+
+
+
+
+

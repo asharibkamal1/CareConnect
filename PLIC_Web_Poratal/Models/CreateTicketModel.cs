@@ -73,9 +73,10 @@ namespace CareConnect.Models
      
         public string claimid { get; set; }
 
+
         public string ImagePath { get; set; }
         public List<IFormFile> images { get; set; }
-
+     
 
 
 
