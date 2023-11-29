@@ -4713,7 +4713,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpGet]
-        public IActionResult GetCODCustomerledgerPaytment(CreateTicketModel createTicketModel)
+        public IActionResult GetCODCustomerledgerPaytment(CODledgerModel codledgerModel)
         {
             try
             {
@@ -4724,9 +4724,9 @@ namespace PLIC_Web_Poratal.Controllers
                     {
                         SqlCommand cmd = new SqlCommand("sp_careconnect_Get_COD_Customer_Payment_ledger", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@customer_id", createTicketModel.customer_id);
-                        //cmd.Parameters.AddWithValue("@CreatedFrom", createTicketModel.datefrom);
-                        //cmd.Parameters.AddWithValue("@CreatedTo", createTicketModel.dateto);
+                        cmd.Parameters.AddWithValue("@customer_id", codledgerModel.customer_id);
+                        //cmd.Parameters.AddWithValue("@CreatedFrom", codledgerModel.datefrom);
+                        //cmd.Parameters.AddWithValue("@CreatedTo", codledgerModel.dateto);
 
 
                         conn.Close();
