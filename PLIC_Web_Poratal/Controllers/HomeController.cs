@@ -4619,8 +4619,6 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
-
-
         [HttpGet]
         public IActionResult GetAccountOpenDateWise(CreateTicketModel createTicketModel)
         {
@@ -4675,7 +4673,99 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+        public IActionResult ReportCODLedger()
+        {
+            DataSet dataSet1 = new DataSet();
+            SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+            //SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
 
+            if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+            {
+
+                conn.Open();
+                SqlCommand command = new SqlCommand("sp_careconnect_Get_COD_Customer_DropDownData", conn);
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+
+                dataAdapter1.Fill(dataSet1);
+                TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                {
+
+                    CODLedgerReport = dataSet1,
+
+
+                };
+                string RoleID = HttpContext.Session.GetString("RoleID");
+                string UserName = HttpContext.Session.GetString("UserName");
+
+                ViewData["RoleID"] = RoleID;
+
+
+                ViewBag.UserName = UserName;
+
+                return View("~/Views/Home/CODLedgerReport.cshtml", model);
+            }
+
+            return RedirectToAction("Login", "Account");
+
+        }
+
+
+        [HttpGet]
+        public IActionResult GetCODCustomerledgerPaytment(CreateTicketModel createTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                    //SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_careconnect_Get_COD_Customer_Payment_ledger", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@customer_id", createTicketModel.customer_id);
+                        //cmd.Parameters.AddWithValue("@CreatedFrom", createTicketModel.datefrom);
+                        //cmd.Parameters.AddWithValue("@CreatedTo", createTicketModel.dateto);
+
+
+                        conn.Close();
+                        conn.Open();
+                        // Execute the stored procedure and retrieve the results into a DataTable
+                        DataSet ds = new DataSet();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        conn.Close();
+
+                        ReportViewModel model = new ReportViewModel
+                        {
+                            Report_rpt_Customer_Ledger = ds
+                        };
+
+
+                        string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                        //string jsonResponse = await jsonResponse.Content.ReadAsStringAsync();
+                        return Json(jsonResponse);
+
+                        //return View("Report", model);
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Generating Report.", error = ex.Message });
+            }
+        }
 
 
         [HttpGet]

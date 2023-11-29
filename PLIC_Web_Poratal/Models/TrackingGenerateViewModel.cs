@@ -13,6 +13,8 @@ namespace CareConnect.Models
         public DataSet CRMReportDetail { get; set; }
         public DataSet TicketCatType { get; set; }
         public DataSet AccountOpening { get; set; }
+
+        public DataSet CODLedgerReport { get; set; }
         public DataSet AllTerminals { get; set; }
         public DataSet TicketIssueTypeDescription { get; set; }
         public DataSet Sub_Terminal { get; set; }

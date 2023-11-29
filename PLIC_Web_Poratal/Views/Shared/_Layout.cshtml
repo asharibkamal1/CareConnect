@@ -386,6 +386,13 @@
                                             </li>
 
                                             <li class="no-marker">
+                                                <a asp-action="ReportCODLedger" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "#0565B7" : "default");">
+
+                                                    <i class="nav-icon fas fa-dot-circle"></i>COD Ledger Report
+                                                </a>
+                                            </li>
+
+                                            <li class="no-marker">
                                                 <a asp-action="ReportAccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#0565B7" : "default");">
 
                                                     <i class="nav-icon fas fa-dot-circle"></i>
