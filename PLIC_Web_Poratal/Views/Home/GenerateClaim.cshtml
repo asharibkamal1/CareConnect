@@ -6,11 +6,11 @@
 
 <head>
     @*@{
-            Layout = null;
+    Layout = null;
 
-            ViewData["Title"] = "Policy";
-            //string policy;
-        }*@
+    ViewData["Title"] = "Policy";
+    //string policy;
+    }*@
     <title>Generate Claim</title>
     <!-- SweetAlert CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
@@ -19,8 +19,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" href="~/css/custom.css" />*@
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />*@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
@@ -28,12 +28,16 @@
         html, body {
             height: 100%;
         }
+        /* Add styles for the overlay */
+        /* Styles for the overlay */
+
 
         .btn-add {
             background: #EBFFFF;
             color: #006060;
             border-color: #006060;
         }
+
         .radio-group {
             display: flex;
             align-items: center;
@@ -85,7 +89,7 @@
 
         .main {
             /*            margin-left: 10%;
-        */ border: 1px solid;
+                        */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -139,7 +143,7 @@
 
 
             <div class="card" hidden>
-                <div class="card-header"  style="background-color: #0565B7;color:white">
+                <div class="card-header" style="background-color: #0565B7;color:white">
                     <h3 class="card-title">Tracking Number</h3>
                 </div>
                 <div class="card-body">
@@ -164,7 +168,6 @@
             <!-- jquery validation -->
             <div class="card">
                 <div id="trackingDetailsContainer">
-
                 </div>
             </div>
         </div>
@@ -176,23 +179,23 @@
 
 
 <script>
-$(document).ready(function () {
-    debugger;
-    $.ajax({
+    $(document).ready(function () {
+        debugger;
+        $.ajax({
             url: '/Home/GetTrackingGenerateDetailsClaim',
-        type: 'POST',
+            type: 'POST',
             data: { tracking: @ViewData["TrackingNumber"] },
-        success: function (result) {
-            debugger;
-            // Render the partial view with the result
-            $('#trackingDetailsContainer').html(result);
-        },
-        error: function (xhr, status, error) {
-            console.log(xhr.responseText); // Log the server response
-            Swal.fire('Error', 'Error occurred while retrieving tracking details. Error: ' + error, 'error');
-        }
+            success: function (result) {
+                debugger;
+                // Render the partial view with the result
+                $('#trackingDetailsContainer').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText); // Log the server response
+                Swal.fire('Error', 'Error occurred while retrieving tracking details. Error: ' + error, 'error');
+            }
+        });
     });
-});
 
 </script>
 

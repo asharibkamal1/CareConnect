@@ -91,7 +91,7 @@
 
         .main {
             /*            margin-left: 10%;
-                                                                                                                                                    */ border: 1px solid;
+                                                                                                                                                                                                    */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -144,7 +144,7 @@
             </li>*@
 
             <li class="nav-item">
-                <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" href="#secondTableTabContent">History Detail</a>
+                <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" style="width: 100%" href="#secondTableTabContent">Historys Detail</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="updateTableTabButton" data-toggle="pill" href="#updateTableTabContent">Update Detail</a>
@@ -220,6 +220,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="hdTableTabButton" data-toggle="pill" href="#hdTableTabContent">HD Status Detail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="claimimagesTableTabButton" data-toggle="pill" href="#claimimagesTableTabContent">Claim Images</a>
             </li>
         </ul>
 
@@ -691,6 +694,45 @@
             @*-----------------END hd table -----------*@
 
 
+            @*------------------ claim images detail-----------------*@
+
+            <div id="claimimagesTableTabContent" class="tab-pane fade show">
+                <table id="claimimagesTable" class="display">
+                    <thead>
+                        <tr>
+                            @foreach (System.Data.DataColumn column in Model.ClaimImages.Tables[0].Columns)
+                            {
+                                <th>@column.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody style="width:100px">
+                        @foreach (System.Data.DataRow row in Model.ClaimImages.Tables[0].Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray.Select((value, index) => new { Value = value, Index = index }))
+                                {
+                                    <td>
+                                        @if (item.Index == 1) // Assuming '1' is the index of the 'ImageUrl' column
+                                        {
+                                            <a href="@item.Value.ToString()" target="_blank">View File</a>
+                                        }
+                                        else
+                                        {
+                                            @item.Value.ToString()
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+            @*-----------------END claim images table -----------*@
+
+
         </div>
     </div>
 </div>
@@ -790,11 +832,13 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                                                 }
+                                                                         }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
         });
+
+
 
 
         // Iterate through each row in the table
@@ -808,7 +852,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                                                     }
+                                                                             }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -893,7 +937,25 @@
                 }
             }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-                                });
+                        });
+
+
+
+    $('#claimimagesTable').DataTable({
+        // scrollX: '300px',
+        // scrollY: '300px',
+        scrollCollapse: true,
+        ordering: false,
+        pageLength: 100,
+        language: {
+            paginate: {
+                first: 'First',
+                previous: 'Previous',
+                next: 'Next',
+                last: 'Last'
+            }
+        }
+    });
 
     $('#TrackingTable').DataTable({
         scrollX: '400px',
@@ -911,7 +973,7 @@
             }
         }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-                                });
+                                                        });
 
 
     $('#btnupdate').click(function () {
@@ -1188,7 +1250,7 @@
             issuetypeid: issuetypeid,
             userid: "",
             remarks: $('#txtremarksupdateissuetype').val(),
-           
+
 
         };
 
@@ -1443,7 +1505,7 @@
             }
         });
     });
-                                            });
+                                                                    });
 </script>
 
 
