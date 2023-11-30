@@ -89,26 +89,18 @@
     </div>
 </div>
 
-
-<div class="table-responsive">
-    <table id="ReportaDataTable" class="table table-striped table-bordered" style="width:100%">
-        <tfoot>
-        <tr>
-            <th>Total:</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </tfoot>
-    </table>
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div id="CODLdgerReportContainer">
+    </div>
 </div>
 
+
+
 <script>
-    debugger
+
     function showLoader() {
         // Add the loader and blur the page
         $('body').addClass('blur');
@@ -135,35 +127,25 @@
 
 <script>
     $(document).ready(function () {
-        debugger
 
         $('.select2').select2();
 
         // Calculate one week ago date
         var oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        oneWeekAgo.setDate(oneWeekAgo.getDate());
 
         // Format the date in YYYY-MM-DD format
         var formattedDate = oneWeekAgo.toISOString().split('T')[0];
 
         // Set the default date values in the input fields
-
         //document.getElementById('datefrom').value = formattedDate;
         //document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
 
         $('#btnSubmit').click(function () {
             debugger
-
             var customerID = $('#CustomerTypeDropdown').val();
             var datefrom = $('#datefrom').val();
             var dateto = $('#dateto').val();
-
-            if (!customerID) {
-                $('#customertypeDropdownError').show();
-                return; // Stop execution if customer is not selected
-            } else {
-                $('#customertypeDropdownError').hide();
-            }
             if (datefrom == "") {
                 datefrom = null;
             }
@@ -185,86 +167,38 @@
                     dateto: dateto
                 },
 
-                success: function (response) {
+                success: function (result) {
                     debugger
-                    var jsonResponse = JSON.parse(response);
-                    var obj = jsonResponse.Report_rpt_Customer_Ledger.Table;
+                    // Check if the ticket was created successfully
 
-                    $('#ReportaDataTable').empty();
-                    var tableHeaders = '<thead><tr>' +
-                        '<th>Customer Id</th>' +
-                        '<th>Customer Name</th>' +
-                        '<th>Customer City</th>' +
-                        '<th>Invoice Date</th>' +
-                        '<th>Details</th>' +
-                        '<th>Reimbursement Amount</th>' +
-                        '<th>Amount</th>' +
-                        '<th>Filter</th>' +
-                        '</tr></thead>';
+                    debugger;
+                    // Show a success message using SweetAlert
+                    //Swal.fire('Success', response.message, 'success');
 
-                    // Create table body
-                    var tableBody = '<tbody>';
-                    debugger
-                    for (var i = 0; i < obj.length; i++) {
-                        var row = obj[i];
-                        tableBody +=
-                            '<tr>' +
-                            '<td>' + row.customer_id + '</td>' +
-                            '<td>' + row.customer_name + '</td>' +
-                            '<td>' + row.customer_city + '</td>' +
-                            '<td>' + row.invoice_date + '</td>' +
-                            '<td>' + row.details + '</td>' +
-                            '<td>' + row.TotalReimbursementAmount + '</td>' +
-                            '<td>' + row.amount + '</td>' +
-                            '<td>' + row.filter + '</td>' +
-                            '</tr>';
-                    }
-                    debugger
-                    tableBody += '</tbody>';
-                    debugger
-
-                    // Append table headers and body to the table
-                    $('#ReportaDataTable').append(tableHeaders + tableBody);
-                    $('#ReportaDataTable').DataTable().destroy();
-
-                    debugger
-                    // Initialize DataTables
+                    $('#CODLdgerReportContainer').html(result);
 
 
-                    $('#ReportaDataTable').DataTable({
-                        scrollX: '400px',
-                        scrollY: '400px', // Specify the desired height of the scrollable area
-                        scrollCollapse: true,
-                        language: {
-                            paginate: {
-                                first: 'First',
-                                previous: 'Previous',
-                                next: 'Next',
-                                last: 'Last'
-                            }
-                        },
-                        footerCallback: function (row, data, start, end, display) {
-                            var api = this.api();
 
-                            api.columns().every(function (index) {
-                                if (index === 5 || index === 6) { // Assuming 'TotalReimbursementAmount' is at index 5 and 'Amount' is at index 6
-                                    var columnData = this.data();
-                                    var columnSum = columnData.reduce(function (acc, val) {
-                                        return acc + parseFloat(val);
-                                    }, 0);
-                                    $(this.footer()).html(columnSum);
-                                } else {
-                                    $(this.footer()).html('Total');
-                                }
-                            });
-                        }
-                    });
-                } 
+                    // $('#categoryDropdown').val(''),
+                    //     $('#cngno').val(''),
+                    //     $('#ticketid').val(''),
+                    //     $('#Barcode').val(''),
+                    //     $('#txtorigin').val(''),
+                    //     $('#txtDestination').val(''),
+                    //     $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
+                },
+                error: function (xhr, status, error) {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', 'Error Fetching Records: ' + error, 'error');
+                }
             });
         });
+
     });
 
+
 </script>
+
 
 
 

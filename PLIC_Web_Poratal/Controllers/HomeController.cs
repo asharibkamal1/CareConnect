@@ -4822,11 +4822,12 @@ namespace PLIC_Web_Poratal.Controllers
                         {
                             Report_rpt_Customer_Ledger = ds
                         };
+                        ViewBag.TrackingData = ds;
+                        return PartialView("_CODLedgerReportDetail", model);
 
-
-                        string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                        //string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
                         //string jsonResponse = await jsonResponse.Content.ReadAsStringAsync();
-                        return Json(jsonResponse);
+                        //return Json(jsonResponse);
 
                         //return View("Report", model);
 
