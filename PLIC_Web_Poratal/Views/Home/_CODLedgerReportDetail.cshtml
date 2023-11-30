@@ -44,13 +44,16 @@
                 <tfoot>
                     <tr>
                         <th>Total</th>
-                     
-                       
+
+
                         <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        @* <th></th>
+                    <th></th> *@
                         <!-- Add more footer cells as needed -->
                     </tr>
                 </tfoot>
@@ -118,14 +121,17 @@
             footerCallback: function (row, data, start, end, display) {
                 var api = this.api();
                 api.columns().every(function (index) {
-                    if (index === 5 || index === 6) { // Exclude first column from sum calculation
+                    if (index === 0) {
+                        $(this.footer()).html('Total');
+                    } else if (index === 5 || index === 6) { // Exclude first column from sum calculation
                         var columnData = this.data();
                         var columnSum = columnData.reduce(function (acc, val) {
                             return acc + parseFloat(val);
                         }, 0);
-                        $(this.footer()).html(columnSum);
+                       // var formattedSum = columnSum.toFixed(2); // Limit to two digits after the decimal point
+                        $(this.footer()).html('<div style="padding-right: 20px;">' + columnSum + '</div>');
                     } else {
-                        $(this.footer()).html('Total');
+                        $(this.footer()).html('');
                     }
                 });
             }
@@ -136,7 +142,6 @@
 
 
 </script>
-
 
 
 
