@@ -1,0 +1,2 @@
+﻿Booking_Date,Payment_Mode,Product,Origin,Origin_Desc,Destination,Destination_Desc,Weight,Pieces,Quantity,CNValue,InsuranceRate,InsuranceAmount,Amount
+"01/01/2023 12:00:00 am","COD CREDIT","CASH ON DELIVERY - HOME DELIVERY",LAHORE,"FRN DHA PHASE 1",KARACHI,MAIN,1.50,1,1,0.00,0.00,0.00,351.00
