@@ -120,16 +120,19 @@
             },
             footerCallback: function (row, data, start, end, display) {
                 var api = this.api();
+
                 api.columns().every(function (index) {
                     if (index === 0) {
                         $(this.footer()).html('Total');
-                    } else if (index === 5 || index === 6) { // Exclude first column from sum calculation
+                    } else if (index === 5 || index === 6) {
                         var columnData = this.data();
                         var columnSum = columnData.reduce(function (acc, val) {
                             return acc + parseFloat(val);
                         }, 0);
-                       // var formattedSum = columnSum.toFixed(2); // Limit to two digits after the decimal point
-                        $(this.footer()).html('<div style="padding-right: 20px;">' + columnSum + '</div>');
+                        var formattedSum = columnSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        // Remove commas from the formatted number
+                        formattedSum = formattedSum.replace(/,/g, '');
+                        $(this.footer()).html('<div style="padding-right: 20px;">' + formattedSum + '</div>');
                     } else {
                         $(this.footer()).html('');
                     }
