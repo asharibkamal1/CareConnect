@@ -24,7 +24,7 @@
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <label class="text-secondary font-weight-bold">Account Type:</label>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
+                <div class="col-lg-3 col-md-2 col-sm-2">
                     <select class="form-control" id="AccountTypeDropdown" name="accounttype">
                         <option value="">Select Account Type</option>
                         @foreach (System.Data.DataRow catRow in Model.AccountOpening.Tables[0].Rows)
@@ -65,6 +65,14 @@
         </div>
 
 
+    </div>
+</div>
+
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div id="AccountOpenReportContainer">
     </div>
 </div>
 
@@ -140,77 +148,29 @@
                     dateto: dateto
                 },
 
-                success: function (response) {
+                success: function (result) {
                     debugger
-                    var jsonResponse = JSON.parse(response);
-                    var obj = jsonResponse.Report_rpt_ticketdetails.Table;
+                    // Check if the ticket was created successfully
 
-                    $('#ReportaDataTable').empty();
-                    var tableHeaders = '<thead><tr>' +
-                        '<th>SNO</th>' +
-                        '<th>Customer_Name</th>' +
-                        '<th>Contact_No</th>' +
-                        '<th>Region</th>' +
-                        '<th>CreatedOn</th>' +
-                        '<th>Avg_Ship_Per_Week</th>' +
-                        '<th>Avg_Wgt_Per_Shipment</th>' +
-                        '<th>Business_Nature</th>' +
-                        '<th>Email_Address</th>' +
-                        '<th>FRN_Business_Loc</th>' +
-                        '<th>FRN_Own_Property</th>' +
-                        '<th>Remarks</th>';
-                        // '<th>OpeningComment</th>' +
-                        // '<th>UserName</th>' +
-                        // '</tr></thead>';
+                    debugger;
+                    // Show a success message using SweetAlert
+                    //Swal.fire('Success', response.message, 'success');
 
-                    // Create table body
-                    var tableBody = '<tbody>';
-                    debugger
-                    for (var i = 0; i < obj.length; i++) {
-                        var row = obj[i];
-                        tableBody +=
-                            '<tr>' +
-                            '<td>' + row.SNO + '</td>' +
-                            '<td>' + row.Customer_Name + '</td>' +
-                            '<td>' + row.Contact_No + '</td>' +
-                            '<td>' + row.Region + '</td>' +
-                            '<td>' + row.CreatedOn + '</td>' +
-                            '<td>' + row.Avg_Ship_Per_Week + '</td>' +
-                            '<td>' + row.Avg_Wgt_Per_Shipment + '</td>' +
-                            '<td>' + row.Business_Nature + '</td>' +
-                            '<td>' + row.Email_Address + '</td>' +
-                            '<td>' + row.FRN_Business_Loc + '</td>' +
-                            '<td>' + row.FRN_Own_Property + '</td>' +
-                            '<td>' + row.Remarks + '</td>' +
-                            // '<td>' + row.OpeningComment + '</td>' +
-                            // '<td>' + row.UserName + '</td>' +
-                            '</tr>';
-                    }
-                    debugger
-                    tableBody += '</tbody>';
-                    debugger
-
-                    // Append table headers and body to the table
-                    $('#ReportaDataTable').append(tableHeaders + tableBody);
-                    $('#ReportaDataTable').DataTable().destroy();
-                    debugger
-                    // Initialize DataTables
+                    $('#AccountOpenReportContainer').html(result);
 
 
-                    $('#ReportaDataTable').DataTable({
-                        scrollX: '400px',
-                        scrollY: '400px', // Specify the desired height of the scrollable area
-                        scrollCollapse: true,
-                        language: {
-                            paginate: {
-                                first: 'First',
-                                previous: 'Previous',
-                                next: 'Next',
-                                last: 'Last'
-                            }
-                        }
 
-                    });
+                    // $('#categoryDropdown').val(''),
+                    //     $('#cngno').val(''),
+                    //     $('#ticketid').val(''),
+                    //     $('#Barcode').val(''),
+                    //     $('#txtorigin').val(''),
+                    //     $('#txtDestination').val(''),
+                    //     $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
+                },
+                error: function (xhr, status, error) {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', 'Error Fetching Records: ' + error, 'error');
                 }
             });
         });
@@ -219,8 +179,6 @@
 
 
 </script>
-
-
 
 
 

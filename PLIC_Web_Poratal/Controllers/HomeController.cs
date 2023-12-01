@@ -4726,13 +4726,14 @@ namespace PLIC_Web_Poratal.Controllers
 
                         ReportViewModel model = new ReportViewModel
                         {
-                            Report_rpt_ticketdetails = ds
+                            Report_rpt_Account_Open = ds
                         };
+                        ViewBag.TrackingData = ds;
+                        return PartialView("_AccoutOpenReportDetail", model);
 
-
-                        string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                        //string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
                         //string jsonResponse = await jsonResponse.Content.ReadAsStringAsync();
-                        return Json(jsonResponse);
+                        //return Json(jsonResponse);
 
                         //return View("Report", model);
 
