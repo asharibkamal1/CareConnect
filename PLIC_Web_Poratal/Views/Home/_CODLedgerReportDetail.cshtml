@@ -72,24 +72,22 @@
 </div>
 <br />
 
-
-
-
+@* 
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
 <!-- Include pdfMake library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script> *@
 
 <!-- Include DataTables and Buttons extensions -->
 
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+@* <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script> *@
 <!-- Add TableExport library -->
 @* <script src="https://cdn.datatables.net/1.11.10/js/jquery.dataTables.min.js"></script> *@
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+@* <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> *@
 
 
 
@@ -105,11 +103,11 @@
             scrollX: '400px',
             scrollY: '900px',
             scrollCollapse: true,
-            pageLength: 100,
-            dom: 'Bfrtip', // 'B' for buttons
-            buttons: [
+            pageLength: 10,
+            dom: 'frtip', // 'B' for buttons
+        @*     buttons: [
                 'copy', 'excel', 'print'
-            ],
+            ], *@
             language: {
                 paginate: {
                     first: 'First',
@@ -132,7 +130,7 @@
                         var formattedSum = columnSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         // Remove commas from the formatted number
                         formattedSum = formattedSum.replace(/,/g, '');
-                        $(this.footer()).html('<div style="padding-right: 20px;">' + formattedSum + '</div>');
+                        $(this.footer()).html('<div style="padding-right: 150px;">' + formattedSum + '</div>');
                     } else {
                         $(this.footer()).html('');
                     }
