@@ -11,15 +11,6 @@
     <div class="card-body">
         @if (Model.Report_rpt_COD_Invoice_Services != null && Model.Report_rpt_COD_Invoice_Services.Tables.Count > 0)
         {
-            <div class="entries-dropdown">
-                <label for="entriesSelect">Show entries:</label>
-                <select id="entriesSelect">
-                    <option value="10">10</option>
-                    <option value="30">30</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
             <div class="dt-buttons"></div>
             <table id="ReportaDataTable" class="display nowrap" style="width:100%">
                 <thead>
@@ -110,13 +101,8 @@
     $(document).ready(function () {
         var table = $('#ReportaDataTable').DataTable({
             scrollX: '400px',
-            scrollY: '900px',
+            scrollY: '400',
             scrollCollapse: true,
-            pageLength: 100,
-            dom: 'frtip', // 'B' for buttons
-            buttons: [
-                'copy', 'excel', 'print'
-            ],
             language: {
                 paginate: {
                     first: 'First',
@@ -125,31 +111,12 @@
                     last: 'Last'
                 }
             },
-    @*             footerCallback: function (row, data, start, end, display) {
-            var api = this.api();
 
-            api.columns().every(function (index) {
-            if (index === 0) {
-            $(this.footer()).html('Total');
-            } else if (index === 5 || index === 6) {
-            var columnData = this.data();
-            var columnSum = columnData.reduce(function (acc, val) {
-            return acc + parseFloat(val);
-            }, 0);
-            var formattedSum = columnSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            // Remove commas from the formatted number
-            formattedSum = formattedSum.replace(/,/g, '');
-            $(this.footer()).html('<div style="padding-right: 150px;">' + formattedSum + '</div>');
-            } else {
-            $(this.footer()).html('');
-            }
-            });
-            }*@
         });
-    $('#entriesSelect').on('change', function () {
-        // Update the DataTable with the selected entries value
-        table.page.len($(this).val()).draw();
-    });
+    @*    $('#entriesSelect').on('change', function () {
+            // Update the DataTable with the selected entries value
+            table.page.len($(this).val()).draw();
+            }); *@
             });
 
 

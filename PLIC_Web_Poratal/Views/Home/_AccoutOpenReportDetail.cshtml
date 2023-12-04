@@ -112,7 +112,7 @@
             scrollX: '400px',
             scrollY: '900px',
             scrollCollapse: true,
-            pageLength: 100,
+           
             dom: 'Bfrtip', // 'B' for buttons
             buttons: [
                 'copy', 'excel', 'print'
@@ -125,20 +125,7 @@
                     last: 'Last'
                 }
             },
-            // footerCallback: function (row, data, start, end, display) {
-            //     var api = this.api();
-            //     api.columns().every(function (index) {
-            //         if (index !== 0) { // Exclude first column from sum calculation
-            //             var columnData = this.data();
-            //             var columnSum = columnData.reduce(function (acc, val) {
-            //                 return acc + parseFloat(val);
-            //             }, 0);
-            //             $(this.footer()).html(columnSum);
-            //         } else {
-            //             $(this.footer()).html('Total');
-            //         }
-            //     });
-            // }
+         
         });
         $('#entriesSelect').on('change', function () {
             // Update the DataTable with the selected entries value
