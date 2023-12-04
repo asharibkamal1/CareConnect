@@ -44,20 +44,20 @@
                     <span class="text-danger" id="customertypeDropdownError" style="display: none;">Please select Customer.</span>
                 </div>
 
-                
+
                 <div class="col-lg-1 col-md-1 col-sm-1 ">
                     <label class="text-secondary font-weight-bold">Date From:</label>
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                    <input type="date" id="datefrom" name="datefrom" class="form-control"/>
+                    <input type="date" id="datefrom" name="datefrom" class="form-control" />
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <label class="text-secondary font-weight-bold display-none">Date To:</label>
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                    <input type="date" id="dateto" name="dateto" class="form-control"/>
+                    <input type="date" id="dateto" name="dateto" class="form-control" />
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2">
@@ -142,7 +142,7 @@
 
             }
 
-
+            showLoader();
 
             $.ajax({
                 url: '/Home/GetCODInvoiceServices',
@@ -160,7 +160,7 @@
                     debugger;
                     // Show a success message using SweetAlert
                     //Swal.fire('Success', response.message, 'success');
-
+                    hideLoader();
                     $('#CODInvoiceReportContainer').html(result);
 
 
@@ -174,17 +174,16 @@
                     //     $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
                 },
                 error: function (xhr, status, error) {
+                    // Hide loader in case of an error
+                    hideLoader();
+
                     // Show an error message using SweetAlert
                     Swal.fire('Error', 'Error Fetching Records: ' + error, 'error');
                 }
             });
         });
-
     });
-
-
 </script>
-
 
 
 
