@@ -15,6 +15,7 @@ namespace CareConnect.Models
         public DataSet AccountOpening { get; set; }
 
         public DataSet CODLedgerReport { get; set; }
+        public DataSet CODInvoiceReport { get; set; }
         public DataSet AllTerminals { get; set; }
         public DataSet TicketIssueTypeDescription { get; set; }
         public DataSet Sub_Terminal { get; set; }

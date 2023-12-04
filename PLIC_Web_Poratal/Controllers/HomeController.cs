@@ -4847,6 +4847,102 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+        public IActionResult ReportCODInvoiceServices()
+        {
+            DataSet dataSet1 = new DataSet();
+            SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+            //SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+
+            if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+            {
+
+                conn.Open();
+                SqlCommand command = new SqlCommand("sp_careconnect_Get_COD_Customer_DropDownData", conn);
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
+
+                dataAdapter1.Fill(dataSet1);
+                TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                {
+
+                    CODInvoiceReport = dataSet1,
+
+
+                };
+                string RoleID = HttpContext.Session.GetString("RoleID");
+                string UserName = HttpContext.Session.GetString("UserName");
+
+                ViewData["RoleID"] = RoleID;
+
+
+                ViewBag.UserName = UserName;
+
+                return View("~/Views/Home/CODInvoiceServicesReport.cshtml", model);
+            }
+
+            return RedirectToAction("Login", "Account");
+
+        }
+
+        [HttpGet]
+        public IActionResult GetCODInvoiceServices(CODInvoiceServicesModel codInvoiceServicesModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                    //SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_careconnect_Get_COD_Invoice_Services", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@customer_id", codInvoiceServicesModel.customer_id);
+                        cmd.Parameters.AddWithValue("@CreatedFrom", codInvoiceServicesModel.datefrom);
+                        cmd.Parameters.AddWithValue("@CreatedTo", codInvoiceServicesModel.dateto);
+                        //cmd.Parameters.AddWithValue("@invoice_date", codInvoiceServicesModel.invoice_date);
+
+
+
+                        conn.Close();
+                        conn.Open();
+                        // Execute the stored procedure and retrieve the results into a DataTable
+                        DataSet ds = new DataSet();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        conn.Close();
+
+                        ReportViewModel model = new ReportViewModel
+                        {
+                            Report_rpt_COD_Invoice_Services = ds
+                        };
+                        ViewBag.TrackingData = ds;
+                        return PartialView("_CODInvoiceServicesReportDetail", model);
+
+                        //string jsonResponse = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                        //string jsonResponse = await jsonResponse.Content.ReadAsStringAsync();
+                        //return Json(jsonResponse);
+
+                        //return View("Report", model);
+
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Generating Report.", error = ex.Message });
+            }
+        }
+
 
         [HttpGet]
         public ActionResult GetTerminalAddressReport(CreateTicketModel createTicketModel)
