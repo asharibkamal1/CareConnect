@@ -4,10 +4,15 @@
 @{
 }
 
+
+<!-- Select2 JS -->
+<script src="/dist/js/select2.min.js"></script>
+
+@model CareConnect.Models.TrackingGenerateViewModel
 @{
-    ViewData["Title"] = "Account Open";
+    ViewData["Title"] = "COD Invoice Services";
 }
-<h1 id="reportTitle">Account Opening Report</h1>
+<h1 id="reportTitle">COD Invoice Report</h1>
 <br />
 <div class="row">
     <!-- left column -->
@@ -22,42 +27,44 @@
 
             <div class="row">
                 <div class="col-lg-1 col-md-1 col-sm-1">
-                    <label class="text-secondary font-weight-bold">Account Type:</label>
+                    <label class="text-secondary font-weight-bold">Customers:</label>
                 </div>
                 <div class="col-lg-3 col-md-2 col-sm-2">
-                    <select class="form-control" id="AccountTypeDropdown" name="accounttype">
-                        <option value="">Select Account Type</option>
-                        @foreach (System.Data.DataRow catRow in Model.AccountOpening.Tables[0].Rows)
+                    <select class="form-control select2" id="CustomerTypeDropdown" name="customertype">
+                        <option value="">Select Customer</option>
+                        @foreach (System.Data.DataRow catRow in Model.CODInvoiceReport.Tables[0].Rows)
                         {
 
 
-                            <option value="@catRow["Opening_Type_Id"]">@catRow["Opening_Type"]</option>
+                            <option value="@catRow["customer_id"]">@catRow["customer_name"]</option>
 
                         }
                     </select>
 
-                    <span class="text-danger" id="accounttypeDropdownError" style="display: none;">Please select Account Type.</span>
+                    <span class="text-danger" id="customertypeDropdownError" style="display: none;">Please select Customer.</span>
                 </div>
 
                 
-                <div class="col-lg-1 col-md-1 col-sm-1">
+                <div class="col-lg-1 col-md-1 col-sm-1 ">
                     <label class="text-secondary font-weight-bold">Date From:</label>
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                    <input type="date" id="datefrom" name="datefrom" class="form-control" autofocus />
+                    <input type="date" id="datefrom" name="datefrom" class="form-control"/>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
-                    <label class="text-secondary font-weight-bold">Date To:</label>
+                    <label class="text-secondary font-weight-bold display-none">Date To:</label>
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                    <input type="date" id="dateto" name="dateto" class="form-control" autofocus />
+                    <input type="date" id="dateto" name="dateto" class="form-control"/>
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2">
-                    <button class="btn btn-success float-left" id="btnReport">Report</button>
+                    <button class="btn btn-success float-left" id="btnSubmit">Submit</button>
                 </div>
+
+
             </div>
             <div> <br /></div>
             <span class="text-danger"></span>
@@ -72,17 +79,14 @@
     <div class="row">
         <br />
     </div>
-    <div id="AccountOpenReportContainer">
+    <div id="CODInvoiceReportContainer">
     </div>
 </div>
 
 
-<div class="table-responsive">
-    <table id="ReportaDataTable" class="table table-striped table-bordered" style="width:100%"></table>
-</div>
 
 <script>
-    debugger
+
     function showLoader() {
         // Add the loader and blur the page
         $('body').addClass('blur');
@@ -109,10 +113,12 @@
 
 <script>
     $(document).ready(function () {
-        debugger
+
+        $('.select2').select2();
+
         // Calculate one week ago date
         var oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        oneWeekAgo.setDate(oneWeekAgo.getDate());
 
         // Format the date in YYYY-MM-DD format
         var formattedDate = oneWeekAgo.toISOString().split('T')[0];
@@ -121,10 +127,9 @@
         document.getElementById('datefrom').value = formattedDate;
         document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
 
-        $('#btnReport').click(function () {
+        $('#btnSubmit').click(function () {
             debugger
-
-            var openingtypeid = $('#AccountTypeDropdown').val();
+            var customerID = $('#CustomerTypeDropdown').val();
             var datefrom = $('#datefrom').val();
             var dateto = $('#dateto').val();
             if (datefrom == "") {
@@ -140,10 +145,10 @@
 
 
             $.ajax({
-                url: '/Home/GetAccountOpenDateWise',
+                url: '/Home/GetCODInvoiceServices',
                 type: 'GET',
                 data: {
-                    Opening_Type_Id: openingtypeid,
+                    customer_id: customerID,
                     datefrom: datefrom,
                     dateto: dateto
                 },
@@ -156,7 +161,7 @@
                     // Show a success message using SweetAlert
                     //Swal.fire('Success', response.message, 'success');
 
-                    $('#AccountOpenReportContainer').html(result);
+                    $('#CODInvoiceReportContainer').html(result);
 
 
 
@@ -179,6 +184,9 @@
 
 
 </script>
+
+
+
 
 
 
