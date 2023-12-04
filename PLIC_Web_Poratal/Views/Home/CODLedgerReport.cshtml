@@ -1,24 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<!-- Select2 CSS -->
-@* <link href="/dist/css/select2.min.css" rel="stylesheet" /> *@
-
-<!-- jQuery -->
-@* <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> *@
-
+﻿
 <!-- Select2 JS -->
 <script src="/dist/js/select2.min.js"></script>
-
-<style>
-    #datefrom,
-    #dateto {
-        display: none;
-        visibility: hidden;
-    }
-</style>
 @model CareConnect.Models.TrackingGenerateViewModel
 @{
     ViewData["Title"] = "COD Ledger Report";
@@ -28,7 +10,7 @@
 <div class="row">
     <!-- left column -->
 
-    <div class="col-md-12 col-lg-12 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         <!-- jquery validation -->
 
 
@@ -40,7 +22,7 @@
                 <div class="col-lg-1 col-md-1 col-sm-1">
                     <label class="text-secondary font-weight-bold">Customer:</label>
                 </div>
-                <div class="col-lg-3 col-md-2 col-sm-2">
+                <div class="col-lg-4 col-md-2 col-sm-2">
                     <select class="form-control select2" id="CustomerTypeDropdown" name="customertype">
                         <option value="">Select Customer</option>
                         @foreach (System.Data.DataRow catRow in Model.CODLedgerReport.Tables[0].Rows)
@@ -55,30 +37,9 @@
                     <span class="text-danger" id="customertypeDropdownError" style="display: none;">Please select Customer.</span>
                 </div>
 
-                <div class="col-lg-2 col-md-2 col-sm-2">
+                <div class="col-lg-7 col-md-6 col-sm-2">
                     <button class="btn btn-success float-left" id="btnSubmit">Submit</button>
                 </div>
-
-                @*                 <div class="col-lg-1 col-md-1 col-sm-1 ">
-                <label class="text-secondary font-weight-bold" >Date From:</label>
-
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                <input type="date" id="datefrom" name="datefrom" class="form-control" autofocus disabled />
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                <label class="text-secondary font-weight-bold display-none">Date To:</label>
-
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                <input type="date" id="dateto" name="dateto" class="form-control" autofocus disabled />
-                </div>
-
-                <div class="custom-checkbox col-lg-1 col-md-2 col-sm-2">
-                <input type="checkbox" id="Checkboxall">
-                <label for="Checkboxall">ALL</label>
-                </div> *@
-
             </div>
             <div> <br /></div>
             <span class="text-danger"></span>
@@ -99,29 +60,6 @@
 
 
 
-<script>
-
-    function showLoader() {
-        // Add the loader and blur the page
-        $('body').addClass('blur');
-        $('body').append('<div class="loader-container"><div class="loader"></div></div>');
-    }
-
-    function hideLoader() {
-        // Remove the loader and remove the blur from the page
-        $('body').removeClass('blur');
-        $('.loader-container').remove();
-    }
-
-    function onlyNumberKey(evt) {
-
-        // Only ASCII character in that range allowed
-        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
-        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
-            return false;
-        return true;
-    }
-</script>
 
 
 
@@ -129,17 +67,6 @@
     $(document).ready(function () {
 
         $('.select2').select2();
-
-        // Calculate one week ago date
-        var oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate());
-
-        // Format the date in YYYY-MM-DD format
-        var formattedDate = oneWeekAgo.toISOString().split('T')[0];
-
-        // Set the default date values in the input fields
-        //document.getElementById('datefrom').value = formattedDate;
-        //document.getElementById('dateto').value = new Date().toISOString().split('T')[0]; // Set "Date To" to current date
 
         $('#btnSubmit').click(function () {
             debugger
@@ -179,13 +106,6 @@
 
 
 
-                    // $('#categoryDropdown').val(''),
-                    //     $('#cngno').val(''),
-                    //     $('#ticketid').val(''),
-                    //     $('#Barcode').val(''),
-                    //     $('#txtorigin').val(''),
-                    //     $('#txtDestination').val(''),
-                    //     $('#subcategoryContainer').find('#SubcategoryDropdown').val('')
                 },
                 error: function (xhr, status, error) {
                     // Show an error message using SweetAlert
