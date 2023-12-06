@@ -12,6 +12,7 @@ namespace CareConnect.Models
 
         public string Name { get; set; }
         public string ticketsubcatagoryName { get; set; }
+        public string content { get; set; }
         public string infosubcatagoryName { get; set; }
         public string barcodecategoryname { get; set; }
         public string Contact { get; set; }

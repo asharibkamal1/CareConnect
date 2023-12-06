@@ -91,7 +91,7 @@
 
         .main {
             /*            margin-left: 10%;
-                                                                                                                                                                                                    */ border: 1px solid;
+                                                                                                                                                                                                                                    */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -158,9 +158,9 @@
                     //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
                     if (Model.roleid == "2")
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
+                            </li>
                     }
                     else
                     {
@@ -182,9 +182,9 @@
 
                     if (Model.roleid == "4" || Model.roleid == "2")
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
+                            </li>
                     }
                 }
                 catch (Exception ex)
@@ -199,11 +199,11 @@
 
 
 
-                    @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
+                        @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
+                            </li>
                     }
                 }
                 catch (Exception ex)
@@ -223,6 +223,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="claimimagesTableTabButton" data-toggle="pill" href="#claimimagesTableTabContent">Claim Images</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="finalremarksTableTabButton" data-toggle="pill" href="#finalremarksTableTabContent">Final Remarks</a>
             </li>
         </ul>
 
@@ -733,6 +736,78 @@
             @*-----------------END claim images table -----------*@
 
 
+
+            @*------------------ finalremarks detail-----------------*@
+
+            <div id="finalremarksTableTabContent" class="tab-pane fade show">
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="form-group">
+
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Origin:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    @if (Model.finalremarksDS.Tables[0].Rows.Count > 0)
+                                    {
+                                        <input type="text" id="txtorigin" class="form-control" value="@Model.finalremarksDS.Tables[0].Rows[0]["City_Name"]" readonly />
+                                    }
+
+
+                                    <span class="text-danger" id="RemarksError" style="display: none;"></span>
+
+
+                                </div>
+
+
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Destination:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @if (Model.finalremarksDS.Tables[1].Rows.Count > 0)
+                                    {
+                                        <input type="text" id="txtdestination" class="form-control" value="@Model.finalremarksDS.Tables[1].Rows[0]["City_Name"]" readonly />
+                                    }
+
+
+                                    <span class="text-danger" id="RemarksError" style="display: none;"></span>
+                                </div>
+
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    @*<label for="toDate">From Date:</label>*@
+                                    <input type="text" id="txtfinalremarks" placeholder="Please Type Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
+                                    <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
+                                </div>
+
+
+
+
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <button class="btn btn-success float-left" id="btnupdatefinalremarks">Update</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*-----------------END claim images table -----------*@
+
+
         </div>
     </div>
 </div>
@@ -832,7 +907,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                                                                         }
+                                                                                         }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -852,7 +927,7 @@
     @*          barcodeCell.css('background-color', barcodeColors[barcodeValue]);
                     barcodeCell.addClass('highlighted'); *@
 
-                                                                             }
+                                                                                             }
 
             // Apply the background color to highlight rows with the same barcode value
             $(this).css('background-color', barcodeColors[barcodeValue]);
@@ -937,7 +1012,7 @@
                 }
             }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-                        });
+                                        });
 
 
 
@@ -973,7 +1048,7 @@
             }
         }, dom: 'lfrtip'   @*  'lfrt' *@ // 'lrtip' Hide search box and page number
 
-                                                        });
+                                                                        });
 
 
     $('#btnupdate').click(function () {
@@ -1031,6 +1106,80 @@
         });
 
     });
+
+    $('#btnupdatefinalremarks').click(function () {
+        //console.log("button is clisked");
+        debugger
+        var activity;
+        var origin = $('#txtorigin').val();
+        var destination = $('#txtdestination').val();
+
+        if (origin === '' || origin === undefined) {
+            //$('#RemarksError').show();
+            origin = 0; // Prevent form submission if origin is not selected
+        } else {
+            origin = 1;
+            activity="Origin FR"
+        }
+
+        if (destination === '' || destination === undefined) {
+            destination = 0;
+            // Prevent form submission if destination is not selected
+        } else {
+            destination = 1;
+            activity = "Destination FR"
+        }
+
+        var ticketData = {
+
+            remarks: $('#txtfinalremarks').val(),
+            ticketdid: @ViewData["TicketNo"],
+            activity: activity,
+            origin: origin,
+            destination: destination,
+            userid: "",
+
+        };
+
+
+
+
+        $.ajax({
+            url: '/Home/UpdateFinalRemarks',
+            type: 'POST',
+            data: ticketData,
+            success: function (response) {
+                debugger
+                // Check if the ticket was created successfully
+                if (response.success) {
+                    // Show a success message using SweetAlert
+                    Swal.fire('Success', response.message, 'success');
+                    var ticketno = response.data;
+    @*// var ticketno = @ViewData["TicketNo"];*@
+                        // var ticketno = $('#tracking').val();
+
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarks').val('');
+
+                }
+                else {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show an error message using SweetAlert
+                Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+            }
+        });
+
+    });
+
+
 
 
     $('#CityDropdown').change(function () {
@@ -1505,7 +1654,7 @@
             }
         });
     });
-                                                                    });
+                                                                                    });
 </script>
 
 
