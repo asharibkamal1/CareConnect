@@ -20,7 +20,34 @@
                 <tbody>
                     @foreach (System.Data.DataRow row in Model.SearchClaimDetail.Tables[0].Rows)
                     {
-                        <tr>
+                        var originResponse = row["Origin_Response"].ToString().Trim();
+                        var destinationResponse = row["Destination_Response"].ToString().Trim();
+                        var rmsResponse = row["RMS_Response"].ToString().Trim();
+                        var dgmResponse = row["DGM_Response"].ToString().Trim();
+                        var bgColor = "";
+
+                        // Set background color based on conditions
+                        if (originResponse == "Yes")
+                        {
+                            bgColor = "Coral";
+                        }
+
+                        if (originResponse == "Yes" && destinationResponse == "Yes")
+                        {
+                            bgColor = "#6495ED";
+                        }
+
+                        if (originResponse == "Yes" && destinationResponse == "Yes" && rmsResponse == "Yes")
+                        {
+                            bgColor = "#f39c12";
+                        }
+
+                        if (originResponse == "Yes" && destinationResponse == "Yes" && rmsResponse == "Yes" && dgmResponse == "Yes")
+                        {
+                            bgColor = "LightGreen";
+                        }
+
+                        <tr style="background-color: @bgColor;">
                             @foreach (var item in row.ItemArray)
                             {
                                 <td>
@@ -69,16 +96,15 @@
 
         });
     });
-    //$(document).on('click', '.detailButton', function () {
-    //    debugger
-    //    var ticketId = $(this).data('ticketid');
-    //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
+        //$(document).on('click', '.detailButton', function () {
+        //    debugger
+        //    var ticketId = $(this).data('ticketid');
+        //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
 
-    //    window.open(url, '_blank');
+        //    window.open(url, '_blank');
 
-    //});
+        //});
 </script>
-
 
 
 
