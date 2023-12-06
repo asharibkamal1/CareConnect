@@ -156,7 +156,7 @@
                 try
                 {
                     //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
-                    if (Model.roleid == "2")
+                    if (Model.roleid == "2" || Model.roleid == "3" || Model.roleid == "7")
                     {
                         <li class="nav-item">
                             <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
@@ -177,10 +177,7 @@
                 try
                 {
 
-
-
-
-                    if (Model.roleid == "4" || Model.roleid == "2")
+                    if (Model.roleid == "4" || Model.roleid == "2" || Model.roleid == "3" || Model.roleid == "7")
                     {
                         <li class="nav-item">
                             <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>

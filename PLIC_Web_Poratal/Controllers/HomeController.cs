@@ -28,6 +28,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Razor.Language;
+using System.Data.Common;
 
 namespace PLIC_Web_Poratal.Controllers
 {
@@ -42,297 +45,6 @@ namespace PLIC_Web_Poratal.Controllers
         //public HomeController(ILogger<HomeController> logger)
         //{
         //    _logger = logger;
-        //}
-
-        public ActionResult PrintPremiumVoucher(string VoucherNo, string iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                List<PrintPremiumVoucher> voucherdetail = _db.GetVoucherDetail(VoucherNo, iid).ToList();
-                //PrintPremiumVoucher voucherdetail = _db.GetVoucherDetail(VoucherNo,iid);
-                return View("~/Views/Home/PrintPremium.cshtml", voucherdetail);
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-        }
-
-        public ActionResult PrintLoanVoucher(string VoucherNo, string iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                PrintLoanVoucher voucherDetail = new PrintLoanVoucher();
-                voucherDetail = _db.GetLoanVoucherDetail(VoucherNo, iid);
-                return View("~/Views/Home/PrintLoanVoucher.cshtml", voucherDetail);
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-        }
-
-
-        public ActionResult PrintfirstPremiumVoucher(string VoucherNo, string iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                List<PrintPremiumVoucher> voucherdetail = _db.GetVoucherDetail(VoucherNo, iid).ToList();
-                //PrintPremiumVoucher voucherdetail = _db.GetVoucherDetail(VoucherNo,iid);
-                return View("~/Views/Home/PrintfirstPremium.cshtml", voucherdetail);
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-        }
-
-        //Changes Done by Aizaz & Imran  Dated(2/16/2022)
-        public ActionResult Index(string policy, int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                // changed by Aizaz and Imran Dated 17 Feb 22
-                List<Policy> policies = new List<Policy>();
-                List<PremiumVoucher> voucherlist = new List<PremiumVoucher>();
-
-                HttpContext.Session.SetInt32("iid", iid);
-                voucherlist = _db.GetAllVouchers(policy).ToList();
-                //if(voucherlist.Count==0)
-                //{
-                //    return View("~/Views/Home/Policy.cshtml", policies);
-                //}
-                ViewBag.message = "Voucher not found against policy no: ";
-                ViewBag.pol = policy;
-                return View(voucherlist);
-            }
-            return RedirectToAction("Login", "Account");
-            //return View("~/Views/Account/Login.cshtml");
-        }
-
-
-        public ActionResult PostLoginComplaint(int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                PostLoginComplaint postLoginComplaint = new PostLoginComplaint();
-                postLoginComplaint = _db.GetPostComplaintsData(iid);
-                postLoginComplaint.mobileNumber = HttpContext.Session.GetString("Mobile");
-                return View(postLoginComplaint);
-            }
-            return RedirectToAction("Login", "Account");
-            //return View("~/Views/Account/Login.cshtml");
-        }
-
-        [HttpPost]
-        public IActionResult InsertPostLoginComplaint(PostLoginComplaint postLoginComplaint)
-        {
-            try
-            {
-                //postLoginComplaint.complaintOrigin = "From Portal";
-                if (ModelState.IsValid)
-                {
-
-                    postLoginComplaint.cnicNo = HttpContext.Session.GetString("CNIC");
-
-                    string resp = _db.insertPostLoginComplaint(postLoginComplaint);
-
-                    string fileName = null;
-                    if (postLoginComplaint.documents != null && postLoginComplaint.documents.Count > 0)
-                    {
-                        foreach (var file in postLoginComplaint.documents)
-                        {
-                            string path = Path.Combine(Directory.GetCurrentDirectory(), "C://Resource/WebPortalDocuments");
-                            fileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-
-                            if (!Directory.Exists(path))
-                                Directory.CreateDirectory(path);
-
-                            string fileNameWithPath = Path.Combine(path, fileName);
-
-                            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
-                            {
-                                file.CopyTo(stream);
-                            }
-
-                            _db.InsertUploadDocumnets(resp, fileName);
-                        }
-                    }
-
-                    string complaintType = postLoginComplaint.complaintType;
-                    string phone = postLoginComplaint.mobileNumber;
-                    string mobilenumber = "92" + phone.Substring(phone.Length - 10);
-                    //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://sms.lrt.com.pk/api/sms-single-or-bulk-api.php?username=PLIKHYAMNAZALCIS&password=42207c1e1a53fc803b2cd2f65c09bfb&apikey=1d4fade70b3084dfa9fe4ff2b8f2540e&sender=PLICL&type=English&message=MESSAGE&phone=" + mobilenumber + "&message=" + "معزز کسٹمر%0aآپ کی شکایت موصول ہو چکی ہے۔%0aآپ کی شکایت نمبر " + resp + " ہے.%0aپوسٹل لائف انشورنس کمپنی");
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://sms.lrt.com.pk/api/sms-single-or-bulk-api.php?username=PCLSDKJPISWUWDHDPLIC&password=b63b122c528f54df4a0446b6bab05515&sender=8576&apikey=1094cbd4841bb89b173098af5bed0e60&type=Urdu&message=MESSAGE&phone=" + mobilenumber + "&message=" + "معزز کسٹمر%0aآپ کی شکایت موصول ہو چکی ہے۔%0aآپ کی شکایت نمبر " + resp + " ہے.%0aپوسٹل لائف انشورنس کمپنی");
-
-                    request.Method = "GET";
-
-                    WebResponse response = request.GetResponse();
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        var ApiStatus = reader.ReadToEnd();
-                        if (ApiStatus == "Your Message is sent, MSISDN 1, Cost 2")
-                        {
-                            _db.SmsLog(phone, 2, "Complaint registration message");
-                        }
-                    }
-                    ViewBag.message = "OK";
-                    ModelState.Clear();
-                    return View("~/Views/Home/PostLoginComplaint.cshtml");
-                }
-                return View("~/Views/Home/PostLoginComplaint.cshtml");
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-        }
-
-
-
-        public ActionResult FirstPremium(string policy, int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                // changed by Aizaz and Imran Dated 17 Feb 22
-                List<Policy> policies = new List<Policy>();
-                List<PremiumVoucher> voucherlist = new List<PremiumVoucher>();
-
-                HttpContext.Session.SetInt32("iid", iid);
-                voucherlist = _db.GetAllFirstPremiumVouchers(policy).ToList();
-                ViewBag.message = "Voucher not found against policy no: ";
-                ViewBag.pol = policy;
-                return View(voucherlist);
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-        }
-        public ActionResult LatePayment(string policy, int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                // changed by Aizaz and Imran Dated 17 Feb 22
-                List<Policy> policies = new List<Policy>();
-
-                List<PremiumVoucher> voucherlist = new List<PremiumVoucher>();
-
-                HttpContext.Session.SetInt32("iid", iid);
-                voucherlist = _db.GetAllLatePaymentVouchers(policy).ToList();
-                ViewBag.sucess = "SS";
-                ViewBag.message = "Voucher not found against policy no: ";
-                ViewBag.pol = policy;
-                return View(voucherlist);
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-        }
-
-
-
-        public ActionResult ShortPayment(string policy, int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                List<Policy> policies = new List<Policy>();
-                List<PremiumVoucher> voucherlist = new List<PremiumVoucher>();
-
-                HttpContext.Session.SetInt32("iid", iid);
-                voucherlist = _db.GetAllShortPaymentVouchers(policy).ToList();
-                ViewBag.sucess = "SS";
-                ViewBag.message = "Voucher not found against policy no: ";
-                ViewBag.pol = policy;
-                return View(voucherlist);
-
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-
-            // changed by Aizaz and Imran Dated 17 Feb 22
-        }
-
-        public ActionResult LoanVoucher(string policy, int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-                List<Policy> policies = new List<Policy>();
-                List<LoanVoucher> loanVoucherlist = new List<LoanVoucher>();
-
-                HttpContext.Session.SetInt32("iid", iid);
-                loanVoucherlist = _db.GetLoanVouchers(iid).ToList();
-                ViewBag.sucess = "SS";
-                ViewBag.message = "Loan Voucher not found against policy no: ";
-                ViewBag.pol = policy;
-                return View(loanVoucherlist);
-
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-
-            // changed by Aizaz and Imran Dated 17 Feb 22
-        }
-
-        public ActionResult Information(int iid)
-        {
-            if (HttpContext.Session.GetString("CNIC") != "" && HttpContext.Session.GetString("CNIC") != null)
-            {
-
-                ViewModel viewObj = new ViewModel();
-                viewObj = _db.GetInformation(iid);
-                return View(viewObj);
-            }
-            else
-                return RedirectToAction("Login", "Account");
-            // return View("~/Views/Account/Login.cshtml");
-        }
-
-
-
-        //public IActionResult Menu()
-        //{
-
-        //    //string password = HttpContext.Session.GetString("Password");
-        //    List<Policy1> policies = new List<Policy1>();
-        //    SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
-
-        //    if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
-        //    {
-        //        var viewModel = TempData["UserViewModel"] as UserViewModel;
-        //        // Check if the viewModel is not null before using it
-        //        if (viewModel != null)
-        //        {
-        //            // Access properties of viewModel
-        //            string loginId = viewModel.LoginId;
-        //            string userName = viewModel.UserName;
-        //            string password = viewModel.Password;
-        //            string roleId = viewModel.RoleID;
-
-        //            // Rest of your code using the viewModel...
-        //        }
-
-        //        string RoleID = HttpContext.Session.GetString("RoleID");
-        //        string UserName = HttpContext.Session.GetString("UserName");
-
-        //        ViewData["RoleID"] = RoleID;
-
-
-        //        ViewBag.UserName = UserName;
-        //        // ViewBag.RoleID = RoleID;
-
-        //        conn.Close();
-
-
-
-        //        return View("~/Views/Home/LoginPage.cshtml", viewModel);
-
-
-        //    }
-
-
-        //    return RedirectToAction("Login", "Account");
-
         //}
 
 
@@ -1182,7 +894,7 @@ namespace PLIC_Web_Poratal.Controllers
                         string consignmentNumber;
 
                         // Execute the stored procedure and store the result in the variable
-                        object result = command3.ExecuteScalar();
+                        object result = await command3.ExecuteScalarAsync();
                         consignmentNumber = result.ToString(); // Replace 'int' with the appropriate data type
 
                         command.CommandType = CommandType.StoredProcedure;
@@ -1274,6 +986,7 @@ namespace PLIC_Web_Poratal.Controllers
                 DataSet dataSet3 = new DataSet();
                 DataSet dataSet4 = new DataSet();
                 DataSet dataSet6 = new DataSet();
+                DataSet dataSet7 = new DataSet();
 
                 using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
@@ -1298,6 +1011,7 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command4 = new SqlCommand("sp_careconnect_Get_Ticket_Status", conn1))
                     using (SqlCommand command3 = new SqlCommand("SP_Get_ConsignmentNo_By_ClaimNo", conn1))
                     using (SqlCommand command6 = new SqlCommand("sp_GetClaimimages", conn1))
+                    using (SqlCommand command7 = new SqlCommand("sp_Claim_Check_Org_Dstn", conn1))
 
                     {
 
@@ -1307,7 +1021,7 @@ namespace PLIC_Web_Poratal.Controllers
                         string consignmentNumber;
 
                         // Execute the stored procedure and store the result in the variable
-                        object result = command3.ExecuteScalar();
+                        object result = await command3.ExecuteScalarAsync();
                         consignmentNumber = result.ToString(); // Replace 'int' with the appropriate data type
 
                         command.CommandType = CommandType.StoredProcedure;
@@ -1316,6 +1030,7 @@ namespace PLIC_Web_Poratal.Controllers
                         command4.CommandType = CommandType.StoredProcedure;
                         command5.CommandType = CommandType.StoredProcedure;
                         command6.CommandType = CommandType.StoredProcedure;
+                        command7.CommandType = CommandType.StoredProcedure;
 
                         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                         SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
@@ -1323,10 +1038,13 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlDataAdapter dataAdapter4 = new SqlDataAdapter(command4);
                         SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
                         SqlDataAdapter dataAdapter6 = new SqlDataAdapter(command6);
+                        SqlDataAdapter dataAdapter7 = new SqlDataAdapter(command7);
                         command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
                         command1.Parameters.AddWithValue("@ClaimID", claimid);
                         command2.Parameters.AddWithValue("@ClaimID", claimid);
                         command6.Parameters.AddWithValue("@ClaimID", claimid);
+                        command7.Parameters.AddWithValue("@ClaimID", claimid);
+                        command7.Parameters.AddWithValue("@UserId", LoginId);
 
 
                         //dataAdapter.Fill(dataSet3);
@@ -1342,6 +1060,7 @@ namespace PLIC_Web_Poratal.Controllers
                             dataAdapter.Fill(dataSet3);
                             dataAdapter4.Fill(dataSet4);
                             dataAdapter6.Fill(dataSet6);
+                            dataAdapter7.Fill(dataSet7);
 
                         });
 
@@ -1357,7 +1076,8 @@ namespace PLIC_Web_Poratal.Controllers
                             userid = userId,
                             roleid = userRoleId,
                             TicketType = dataSet5,
-                            ClaimImages = dataSet6
+                            ClaimImages = dataSet6,
+                            finalremarksDS = dataSet7
                         };
 
                         ViewData["TicketNo"] = claimid;
@@ -1397,19 +1117,39 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
-        public void InsertTrackingHistory(string LoginId, string trackingid)
+        //public void InsertTrackingHistory(string LoginId, string trackingid)
+        //{
+        //    db _db = new db();
+        //    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+        //    {
+        //        if (conn.State != ConnectionState.Open)
+        //            conn.Open();
+        //        SqlCommand cmd = new SqlCommand("SP_Insert_Tracking_History", conn);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        cmd.Parameters.AddWithValue("@LoginId", LoginId);
+        //        cmd.Parameters.AddWithValue("@TrackingID", trackingid);
+        //        cmd.ExecuteNonQuery();
+
+        //    }
+        //}
+
+        public async Task InsertTrackingHistory(string LoginId, string trackingid)
         {
             db _db = new db();
+
             using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
             {
                 if (conn.State != ConnectionState.Open)
-                    conn.Open();
-                SqlCommand cmd = new SqlCommand("SP_Insert_Tracking_History", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@LoginId", LoginId);
-                cmd.Parameters.AddWithValue("@TrackingID", trackingid);
-                cmd.ExecuteNonQuery();
+                    await conn.OpenAsync();
 
+                using (SqlCommand cmd = new SqlCommand("SP_Insert_Tracking_History", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@LoginId", LoginId);
+                    cmd.Parameters.AddWithValue("@TrackingID", trackingid);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
             }
         }
         public async Task<ActionResult> GetTrackingGenerateDetails(string tracking)
@@ -1423,8 +1163,12 @@ namespace PLIC_Web_Poratal.Controllers
                 using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                 {
-                    await conn.OpenAsync();
-                    await conn1.OpenAsync();
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
+                    if (conn.State != ConnectionState.Open)
+                        await conn.OpenAsync();
+
+
 
                     SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking_Generate", conn);
                     SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
@@ -1472,8 +1216,14 @@ namespace PLIC_Web_Poratal.Controllers
                 using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                 {
-                    await conn.OpenAsync();
-                    await conn1.OpenAsync();
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
+                    if (conn.State != ConnectionState.Open)
+                        await conn.OpenAsync();
+
+
+
+
 
                     SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking_Generate", conn);
                     SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
@@ -1512,7 +1262,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
-        public ActionResult GetTicketSearchDetails()
+        public async Task<ActionResult> GetTicketSearchDetails()
         {
 
             try
@@ -1522,41 +1272,50 @@ namespace PLIC_Web_Poratal.Controllers
                 DataSet dataSet2 = new DataSet();
 
 
-                SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
 
                 {
-                    conn.Open();
-                    conn1.Open();
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
 
-                    SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking_Generate", conn);
-                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
-
-                    command.CommandType = CommandType.StoredProcedure;
-                    command1.CommandType = CommandType.StoredProcedure;
-
-                    //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    if (conn.State != ConnectionState.Open)
+                        await conn.OpenAsync();
 
 
-                    //command.Parameters.AddWithValue("@bookingNumber", tracking);
-                    //dataAdapter.Fill(dataSet);
-                    dataAdapter1.Fill(dataSet1);
 
 
-                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking_Generate", conn))
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1))
                     {
-                        //BookingDetail = dataSet,
-                        //TicketType = dataSet1,
-                        TicketCatType = dataSet1,
-                        //PriorityDS = dataSet1,
-                        //CityDS = dataSet1,
-                    };
-                    //ViewBag.TrackingData = model;
-                    //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
-                    //ViewData["TrackingNumber"] = trackingNumbernew;
-                    return PartialView("_TicketSearchCatagory", model);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command1.CommandType = CommandType.StoredProcedure;
+
+                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1))
+                        {
+
+                            //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                            //dataAdapter.Fill(dataSet);
+                            //dataAdapter1.Fill(dataSet1);
+
+                            await Task.Run(() => dataAdapter1.Fill(dataSet1));
+
+                        }
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            TicketCatType = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        return PartialView("_TicketSearchCatagory", model);
+                    }
                 }
             }
 
@@ -1584,17 +1343,20 @@ namespace PLIC_Web_Poratal.Controllers
                     if (conn.State != ConnectionState.Open)
                         conn.Open();
 
-                    SqlCommand command = new SqlCommand("sp_careconnect_Get_ConsignmentNo_By_TicketID", conn);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@TicketID", ticketid);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_ConsignmentNo_By_TicketID", conn))
                     {
-                        // Check if there are rows and retrieve the consignment number
-                        if (reader.Read())
+
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TicketID", ticketid);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            // Replace "ColumnName" with the actual column name that holds the consignment number
-                            consignmentNumber = reader["ConsignmentNo"].ToString();
+                            // Check if there are rows and retrieve the consignment number
+                            if (reader.Read())
+                            {
+                                // Replace "ColumnName" with the actual column name that holds the consignment number
+                                consignmentNumber = reader["ConsignmentNo"].ToString();
+                            }
                         }
                     }
                 }
@@ -1609,7 +1371,7 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
-        public ActionResult GetSubcategories(string category)
+        public async Task<IActionResult> GetSubcategories(string category)
         {
 
             try
@@ -1619,34 +1381,84 @@ namespace PLIC_Web_Poratal.Controllers
 
 
 
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
 
                 {
 
-                    conn1.Open();
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
 
 
-                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_type_description_By_ID", conn1);
-
-                    command1.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
-
-                    command1.Parameters.AddWithValue("@category_Id", category);
-
-                    dataAdapter1.Fill(dataSet);
-
-                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_type_description_By_ID", conn1))
                     {
-                        TicketIssueTypeDescription = dataSet
-                    };
+                        command1.CommandType = CommandType.StoredProcedure;
 
-                    //ViewData["SubCatagory"] = dataSet;
-                    //ViewBag["SubCatagory"] = dataSet;
-                    return PartialView("_SubCategory", model);
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+
+                        command1.Parameters.AddWithValue("@category_Id", category);
+
+                        //dataAdapter1.Fill(dataSet);
+
+                        await Task.Run(() => dataAdapter1.Fill(dataSet));
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            TicketIssueTypeDescription = dataSet
+                        };
+
+                        //ViewData["SubCatagory"] = dataSet;
+                        //ViewBag["SubCatagory"] = dataSet;
+                        return PartialView("_SubCategory", model);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<ActionResult> GetSubcategoriesCRM(string category)
+        {
+
+            try
+            {
+                DataSet dataSet = new DataSet();
 
 
+
+
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                {
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_type_description_By_ID_CRM", conn1))
+                    {
+                        command1.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1))
+                        {
+                            command1.Parameters.AddWithValue("@category_Id", category);
+
+                            //dataAdapter1.Fill(dataSet);
+
+
+                            await Task.Run(() => dataAdapter1.Fill(dataSet));
+                        }
+
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            TicketIssueTypeDescription = dataSet
+                        };
+
+                        //ViewData["SubCatagory"] = dataSet;
+                        //ViewBag["SubCatagory"] = dataSet;
+                        return PartialView("_SubCategory", model);
+
+                    }
                 }
             }
 
@@ -1660,44 +1472,45 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-        public ActionResult GetSubcategoriesCRM(string category)
+
+        public async Task<ActionResult> GetSubtermianl(string terminalid)
         {
 
             try
             {
                 DataSet dataSet = new DataSet();
 
-
-
-
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
-
-
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 {
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
 
-                    conn1.Open();
 
 
-                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Ticket_type_description_By_ID_CRM", conn1);
-
-                    command1.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
-
-                    command1.Parameters.AddWithValue("@category_Id", category);
-
-                    dataAdapter1.Fill(dataSet);
-
-                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1))
                     {
-                        TicketIssueTypeDescription = dataSet
-                    };
+                        command1.CommandType = CommandType.StoredProcedure;
 
-                    //ViewData["SubCatagory"] = dataSet;
-                    //ViewBag["SubCatagory"] = dataSet;
-                    return PartialView("_SubCategory", model);
+                        using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1))
+                        {
+                            string type = "ALL";
 
+                            command1.Parameters.AddWithValue("@terminal_id", terminalid);
+                            command1.Parameters.AddWithValue("@type", type);
 
+                            // dataAdapter1.Fill(dataSet);
+                            await Task.Run(() => dataAdapter1.Fill(dataSet));
+                        }
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            Sub_Terminal = dataSet
+                        };
+
+                        //ViewData["SubCatagory"] = dataSet;
+                        //ViewBag["SubCatagory"] = dataSet;
+                        return PartialView("_SubTerminal", model);
+
+                    }
                 }
             }
 
@@ -1711,115 +1524,48 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-
-        public ActionResult GetSubtermianl(string terminalid)
+        public async Task<ActionResult> GetSubtermianlFRN(string terminalid)
         {
-
             try
             {
                 DataSet dataSet = new DataSet();
-
-
-
-
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
-
-
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
                 {
-
-                    conn1.Open();
-
-
-                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1);
-
-                    command1.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
-
-                    string type = "ALL";
-
-                    command1.Parameters.AddWithValue("@terminal_id", terminalid);
-                    command1.Parameters.AddWithValue("@type", type);
-
-                    dataAdapter1.Fill(dataSet);
-
-                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    if (conn1.State != ConnectionState.Open)
+                        await conn1.OpenAsync();
+                    using (SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1))
                     {
-                        Sub_Terminal = dataSet
-                    };
+                        command1.CommandType = CommandType.StoredProcedure;
 
-                    //ViewData["SubCatagory"] = dataSet;
-                    //ViewBag["SubCatagory"] = dataSet;
-                    return PartialView("_SubTerminal", model);
+                        using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1))
+                        {
+
+                            string type = "FRN";
+                            command1.Parameters.AddWithValue("@terminal_id", terminalid);
+                            command1.Parameters.AddWithValue("@type", type);
+
+                            // dataAdapter1.Fill(dataSet);
+
+                            await Task.Run(() => dataAdapter1.Fill(dataSet));
+
+                        }
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            Sub_Terminal = dataSet
+                        };
+
+                        //ViewData["SubCatagory"] = dataSet;
+                        //ViewBag["SubCatagory"] = dataSet;
+                        return PartialView("_SubTerminal", model);
 
 
+                    }
                 }
             }
-
-
-
-
             catch (Exception ex)
             {
 
-                throw ex;
-            }
-        }
-
-        public ActionResult GetSubtermianlFRN(string terminalid)
-        {
-
-            try
-            {
-                DataSet dataSet = new DataSet();
-
-
-
-
-                SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
-
-
-                {
-
-                    conn1.Open();
-
-
-                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_Sub_Terminal_by_Terminal_ID", conn1);
-
-                    command1.CommandType = CommandType.StoredProcedure;
-
-                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
-
-                    string type = "FRN";
-
-
-
-
-                    command1.Parameters.AddWithValue("@terminal_id", terminalid);
-                    command1.Parameters.AddWithValue("@type", type);
-
-                    dataAdapter1.Fill(dataSet);
-
-                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
-                    {
-                        Sub_Terminal = dataSet
-                    };
-
-                    //ViewData["SubCatagory"] = dataSet;
-                    //ViewBag["SubCatagory"] = dataSet;
-                    return PartialView("_SubTerminal", model);
-
-
-                }
-            }
-
-
-
-
-            catch (Exception ex)
-            {
-
-                throw ex;
+                throw;
             }
         }
         public ActionResult GetSubtermianlAGT(string terminalid)
@@ -2384,7 +2130,7 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
-        public IActionResult SearchTicket()
+        public async Task<IActionResult> SearchTicket()
         {
             try
             {
@@ -2397,17 +2143,23 @@ namespace PLIC_Web_Poratal.Controllers
                     DataSet dataSet = new DataSet();
                     DataSet dataSet1 = new DataSet();
                     DataSet dataSet2 = new DataSet();
-                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                    using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
                     {
-                        conn1.Open();
-                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
-                        command.CommandType = CommandType.StoredProcedure;
-                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
-                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
-                        //dataAdapter.Fill(dataSet);
-                        dataAdapter1.Fill(dataSet1);
+                        if (conn1.State != ConnectionState.Open)
+                            await conn1.OpenAsync();
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                            using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command))
+                            {
+                                //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                                //dataAdapter.Fill(dataSet);
+                                // dataAdapter1.Fill(dataSet1);
+                                await Task.Run(() => dataAdapter1.Fill(dataSet1));
+                            }
+                        }
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
                             //BookingDetail = dataSet,
@@ -2508,7 +2260,7 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
-        public IActionResult ReportCRM()
+        public async Task<IActionResult> ReportCRM()
         {
             try
             {
@@ -2521,30 +2273,40 @@ namespace PLIC_Web_Poratal.Controllers
                     DataSet dataSet = new DataSet();
                     DataSet dataSet1 = new DataSet();
                     DataSet dataSet2 = new DataSet();
-                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection"));
+                    using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
                     {
-                        conn1.Open();
-                        SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1);
-                        command.CommandType = CommandType.StoredProcedure;
-                        //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command);
-                        //command.Parameters.AddWithValue("@bookingNumber", tracking);
-                        //dataAdapter.Fill(dataSet);
-                        dataAdapter1.Fill(dataSet1);
-                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        if (conn1.State != ConnectionState.Open)
+                            await conn1.OpenAsync();
+
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1))
+
                         {
-                            //BookingDetail = dataSet,
-                            //TicketType = dataSet1,
-                            TicketCatType = dataSet1,
-                            //PriorityDS = dataSet1,
-                            //CityDS = dataSet1,
-                        };
-                        //ViewBag.TrackingData = model;
-                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
-                        //ViewData["TrackingNumber"] = trackingNumbernew;
-                        //return PartialView("_TicketSearchCatagory", model);
-                        return View("~/Views/Home/ReportCRM.cshtml", model);
+                            command.CommandType = CommandType.StoredProcedure;
+                            //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                            using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command))
+                            {
+
+
+                                //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                                //dataAdapter.Fill(dataSet);
+                                // dataAdapter1.Fill(dataSet1);
+                                await Task.Run(() => dataAdapter1.Fill(dataSet1));
+                            }
+                            TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                            {
+                                //BookingDetail = dataSet,
+                                //TicketType = dataSet1,
+                                TicketCatType = dataSet1,
+                                //PriorityDS = dataSet1,
+                                //CityDS = dataSet1,
+                            };
+                            //ViewBag.TrackingData = model;
+                            //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                            //ViewData["TrackingNumber"] = trackingNumbernew;
+                            //return PartialView("_TicketSearchCatagory", model);
+                            return View("~/Views/Home/ReportCRM.cshtml", model);
+                        }
                     }
                 }
                 return RedirectToAction("Login", "Account");
@@ -2554,18 +2316,6 @@ namespace PLIC_Web_Poratal.Controllers
 
                 throw ex;
             }
-
-
-
-
-
-
-
-            //return View("~/Views/Home/SearchTicket.cshtml", model);
-
-            // return View("~/Views/Home/SearchTicket.cshtml");
-
-
         }
 
         public IActionResult ReportClaim()
@@ -3081,7 +2831,9 @@ namespace PLIC_Web_Poratal.Controllers
                 {
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
-                        await conn.OpenAsync();
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+
                         SqlCommand cmd = new SqlCommand("InsertTicket", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlTransaction transaction = conn.BeginTransaction();
@@ -3531,6 +3283,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@ClaimAmount", createTicketModel.ClaimAmount);
                         cmd.Parameters.AddWithValue("@NegotiatedAmount", createTicketModel.NegotiatedAmount);
                         cmd.Parameters.AddWithValue("@ImagePath", null);
+                        cmd.Parameters.AddWithValue("@content", createTicketModel.content);
 
 
                         cmd.Parameters.AddWithValue("@CreatedOn", DateAndTime.Today);
@@ -3747,7 +3500,7 @@ namespace PLIC_Web_Poratal.Controllers
                                            "<tr style=font-size:10px><td>\n" +
                                            "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
                                            " </table>";
-                                  
+
 
                                     if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
                                     {
@@ -4542,7 +4295,7 @@ namespace PLIC_Web_Poratal.Controllers
         [HttpGet]
 
 
-        public ActionResult GetCRMReport(CreateTicketModel createTicketModel)
+        public async Task<ActionResult> GetCRMReport(CreateTicketModel createTicketModel)
         {
             try
             {
@@ -4566,16 +4319,19 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@CreatedTo", createTicketModel.dateto);
                         cmd.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("LoginId"));
 
-                        conn.Close();
-                        conn.Open();
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+
                         // Execute the stored procedure and retrieve the results into a DataTable
                         DataSet ds = new DataSet();
                         using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                         {
-                            adapter.Fill(ds);
+                            //adapter.Fill(ds);
+                            await Task.Run(() => adapter.Fill(ds));
+
                         }
 
-                        conn.Close();
+                       await conn.CloseAsync();
 
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
@@ -4599,6 +4355,7 @@ namespace PLIC_Web_Poratal.Controllers
                 // Handle the exception and return an error response
                 return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
             }
+           
         }
 
         public ActionResult GetClaimReport(CreateTicketModel createTicketModel)
@@ -5288,6 +5045,95 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+
+
+
+
+
+        [HttpPost]
+        public ActionResult UpdateFinalRemarks(UpdateTicketModel updateTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_Update_Claim_FinalRemarks", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                        cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
+                        cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
+                        cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+
+                        cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+
+
+
+                        // Add the @ticketExists output parameter
+                        SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                        ticketExistsParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketExistsParam);
+
+                        // Add the @TicketID output parameter
+                        SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                        ticketIDParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketIDParam);
+                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                        //ticketExistsParam.Direction = ParameterDirection.Output;
+                        //cmd.Parameters.Add(ticketExistsParam);
+                        conn.Close();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        // Check if the ticket already exists in your database
+                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                        bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                        int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                        // Display the appropriate message based on the ticket existence
+                        if (ticketupdateExists)
+                        {
+
+                            // Ticket already exists
+                            return Json(new { success = false, message = "claim already Updated." });
+                        }
+                        else
+                        {
+
+
+                            int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                            ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                            // Ticket inserted successfully
+                            return Json(new { success = true, data = ticketupdateno, message = "Claim Updated successfully." });
+                        }
+
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Updating ticket.", error = ex.Message });
+            }
+        }
+
+
+
         [HttpPost]
         public ActionResult TickedClosed(UpdateTicketModel updateTicketModel)
         {
@@ -5858,6 +5704,18 @@ namespace PLIC_Web_Poratal.Controllers
 
             return true;
         }
+
+
+
+
+
+
+
+
+
+
+
+
         public async Task<ActionResult> UpdateTicketEmail(EmailTicketModel EmailTicketModel)
         {
             try

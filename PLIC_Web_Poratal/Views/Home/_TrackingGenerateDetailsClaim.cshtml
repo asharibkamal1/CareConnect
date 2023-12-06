@@ -3,7 +3,7 @@
 
 <head>
 
-   <style>
+    <style>
         .overlayclaim {
             position: fixed;
             top: 0;
@@ -32,7 +32,6 @@
             display: block;
         }
 
-     
     </style>
 </head>
 
@@ -127,7 +126,7 @@
             </div>
 
             <div class="col-md-3 col-sm-3">
-                <label for="amount">Amount:</label>
+                <label for="amount">Negotiated Amount:</label>
                 <input type="text" id="NegotiatedAmount" placeholder="Please Enter Amount" class="form-control" />
                 <span class="text-danger" id="priorityError" style="display: none;">Please Enter Amount.</span>
             </div>
@@ -273,15 +272,23 @@
 
 
         @*        // ***********       upload images     ***********       *@
+        <div class="row">
 
-        <div class="col-md-3 col-sm-3">
-            <div class="form-group">
-                <label for="imageUpload">Upload Images:</label>
-                <input type="file" id="imageUpload" name="Images" class="form-control" multiple>
-                <!-- Use 'multiple' attribute to allow selecting multiple images -->
+            <div class="col-md-3 col-sm-3">
+                <div class="form-group">
+                    <label for="imageUpload">Upload Images:</label>
+                    <input type="file" id="imageUpload" name="Images" class="form-control" multiple>
+                    <!-- Use 'multiple' attribute to allow selecting multiple images -->
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3">
+                <div class="form-group">
+                    <label for="imageUpload">Content:</label>
+                    <input type="text" id="txtcontent" placeholder="Enter Content" name="content" class="form-control">
+                    <!-- Use 'multiple' attribute to allow selecting multiple images -->
+                </div>
             </div>
         </div>
-
 
         <div class="row">
 
@@ -426,8 +433,9 @@
     $(document).ready(function () {
         $('#btnCreateTicket').click(function () {
             debugger
-          
+
             var Gender = $('#ddgender').val();
+            var content = $('#txtcontent').val();
             var barcodeValue = $('#BarcodeDropdown').val();
             // var tickettypeValue = $('#TicketTypeDropdown').val();
             var categoryValue = $('#categoryDropdown').val();
@@ -648,6 +656,7 @@
                 ticketcatagory: $('#categoryDropdown').val(),
                 ticketcatagoryName: TicketCategoryName,
                 Remarks: RemarksValue,
+                content: content,
             };
 
             // Iterate over the properties of ticketData

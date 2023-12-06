@@ -62,7 +62,7 @@
 
         .main {
             /*            margin-left: 10%;
-                */ border: 1px solid;
+                                                */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -129,10 +129,6 @@
             filter: blur(1px);
         }
     </style>
-
-   
-
-
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
@@ -214,11 +210,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-   
+
 
 
 
@@ -332,13 +328,34 @@
                                             <p>Search Ticket</p>
                                         </a>
                                     </li>
+                                    @{
+                                        var userRoleId = ViewData["RoleID"] as string; // Example for ASP.NET Core
+                                    }
+                                    @{
+                                        try
+                                        {
+                                            //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+                                            if (userRoleId != "1")
+                                            {
 
-                               @*      <li class="nav-item">
-                                        <a asp-action="SearchClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-search"></i>
-                                            <p>Search Claim</p>
-                                        </a>
-                                    </li> *@
+                                                <li class="nav-item">
+                                                    <a asp-action="SearchClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#0565B7" : "default");">
+                                                        <i class="nav-icon fa fa-fw fa-search"></i>
+                                                        <p>Search Claim</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // Handle the exception here
+                                            throw ex;
+                                        }
+                                    }
 
                                     <li class="nav-item">
                                         <a asp-action="ServiceRequest" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#0565B7" : "default");">
@@ -400,7 +417,7 @@
                                                     <i class="nav-icon fas fa-dot-circle"></i>COD Invoice Report
                                                 </a>
                                             </li>
-                                            
+
                                             <li class="no-marker">
                                                 <a asp-action="ReportAccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#0565B7" : "default");">
 

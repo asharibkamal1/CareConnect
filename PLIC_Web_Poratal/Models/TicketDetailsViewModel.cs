@@ -13,6 +13,7 @@ namespace CareConnect.Models
         public DataSet BookingDetail { get; set; }
         public DataSet TicketStatus { get; set; }
         public DataSet TicketType { get; set; }
+        public DataSet finalremarksDS { get; set; }
         public DataSet ClaimImages { get; set; }
         public string userid { get; set; }
         public string roleid { get; set; }

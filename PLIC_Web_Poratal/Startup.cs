@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification;
+
 using AspNetCoreHero.ToastNotification.Extensions;
 
 namespace PLIC_Web_Poratal
@@ -29,7 +30,7 @@ namespace PLIC_Web_Poratal
             services.AddDistributedMemoryCache();
             // services.AddSession();
             services.AddControllersWithViews();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            //services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddNotyf(config => { config.DurationInSeconds = 300; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddSession(options =>
             {
