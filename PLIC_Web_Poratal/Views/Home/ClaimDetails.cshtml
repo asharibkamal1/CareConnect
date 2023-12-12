@@ -3,7 +3,21 @@
     ViewData["Title"] = "Claim Detail";
 
 }
+<style>
 
+    button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #45a049;
+        }
+</style>
 <div class="card">
     <div class="card-header" style="background-color: #0565B7;color:white">
         <h3 class="card-title">Tracking Detail</h3>
@@ -106,7 +120,12 @@
 
         <div class="tab-content mt-3">
             <div id="secondTableTabContent" class="tab-pane show fade active">
-                <table id="senderTable" class="display" style="width:100%">
+
+                <button style="float:right" onclick="exportToExcel()">Export to Excel</button>
+
+                <br />
+                <br />
+                <table id="senderTable1" class="display nowrap" style="width:100%">
                     <thead>
                         <tr>
                             @foreach (System.Data.DataColumn column in Model.TicketHistory.Tables[0].Columns)
@@ -769,6 +788,9 @@
 </div>
 
 
+
+
+
 <div class="card">
 
     <div class="card-header" style="background-color: #0565B7;color:white">
@@ -804,6 +826,42 @@
 
 
 <br />
+
+
+
+
+<script>
+    function exportToExcel() {
+        var wb = XLSX.utils.table_to_book(document.getElementById('senderTable1'), { sheet: "Sheet1" });
+        XLSX.writeFile(wb, 'table_data.xlsx');
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#senderTable1').DataTable({
+
+            scrollY: '350px',
+            scrollCollapse: true,
+            pageLength: 100,
+
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            },
+
+        });
+
+    });
+
+
+
+
+</script>
 
 <script>
     $(document).ready(function () {
@@ -915,13 +973,12 @@
 
 
         debugger
-        $('#senderTable').DataTable({
 
+        var table = $('#senderTable').DataTable({
             scrollX: '400px',
-            scrollY: '400px',
+            scrollY: '900px',
             scrollCollapse: true,
-            pageLength:100,
-
+            pageLength: 100,
             dom: 'Bfrtip', // 'B' for buttons
             buttons: [
                 'copy', 'excel', 'print'
@@ -939,7 +996,7 @@
         $('#HDTable').DataTable({
             //scrollX: '200px',
             scrollY: '350px',
-            ordering:true,
+            ordering: true,
             // scrollCollapse: true,
             //ordering: true,
             pageLength: 100,
@@ -1015,14 +1072,14 @@
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
 
-                            // var ticketno = $('#tracking').val();
+                        // var ticketno = $('#tracking').val();
 
-                            // Construct the URL with the tracking number as a query parameter
-                            // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
+                        // Construct the URL with the tracking number as a query parameter
+                        // var url = '/Home/GetTicketDetails?ticketno=' + ticketno;
 
-                            // Open the new view in a new window/tab
-                            // window.open(url, '_blank');
-                            $('#txtremarks').val('');
+                        // Open the new view in a new window/tab
+                        // window.open(url, '_blank');
+                        $('#txtremarks').val('');
 
                     }
                     else {
