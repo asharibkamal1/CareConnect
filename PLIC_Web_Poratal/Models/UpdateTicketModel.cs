@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,5 +20,12 @@ namespace CareConnect.Models
         public int TicketTypeDropdownid { get; set; }
         public int issuetypeid { get; set; }
         public string complainercell { get; set; }
+        public List<IFormFile> images { get; set; }
+        public string claimid { get; set; }
+
+
+        public string ImagePath { get; set; }
+   
+
     }
 }

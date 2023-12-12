@@ -31,6 +31,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Razor.Language;
 using System.Data.Common;
+using System.Security.Claims;
 
 namespace PLIC_Web_Poratal.Controllers
 {
@@ -1014,7 +1015,8 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command7 = new SqlCommand("sp_Claim_Check_Org_Dstn", conn1))
 
                     {
-
+                        var userId = HttpContext.Session.GetString("LoginId"); // Change this to your actual session key
+                        var userRoleId = HttpContext.Session.GetString("RoleID"); // Change this to your actual session key
                         command3.CommandType = CommandType.StoredProcedure;
                         command3.Parameters.AddWithValue("@ClaimID", claimid);
 
@@ -1032,6 +1034,13 @@ namespace PLIC_Web_Poratal.Controllers
                         command6.CommandType = CommandType.StoredProcedure;
                         command7.CommandType = CommandType.StoredProcedure;
 
+                        command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                        command1.Parameters.AddWithValue("@ClaimID", claimid);
+                        command2.Parameters.AddWithValue("@ClaimID", claimid);
+                        command6.Parameters.AddWithValue("@ClaimID", claimid);
+                        command7.Parameters.AddWithValue("@ClaimID", claimid);
+                        command7.Parameters.AddWithValue("@UserId", userId);
+
                         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                         SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
                         SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
@@ -1039,13 +1048,8 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
                         SqlDataAdapter dataAdapter6 = new SqlDataAdapter(command6);
                         SqlDataAdapter dataAdapter7 = new SqlDataAdapter(command7);
-                        command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
-                        command1.Parameters.AddWithValue("@ClaimID", claimid);
-                        command2.Parameters.AddWithValue("@ClaimID", claimid);
-                        command6.Parameters.AddWithValue("@ClaimID", claimid);
-                        command7.Parameters.AddWithValue("@ClaimID", claimid);
-                        command7.Parameters.AddWithValue("@UserId", LoginId);
-
+                        
+                       
 
                         //dataAdapter.Fill(dataSet3);
                         //dataAdapter1.Fill(dataSet1);
@@ -1064,8 +1068,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         });
 
-                        var userId = HttpContext.Session.GetString("LoginId"); // Change this to your actual session key
-                        var userRoleId = HttpContext.Session.GetString("RoleID"); // Change this to your actual session key
+                      
 
                         TicketDetailsViewModel model = new TicketDetailsViewModel
                         {
@@ -1111,7 +1114,7 @@ namespace PLIC_Web_Poratal.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ;
             }
         }
 
@@ -2959,9 +2962,10 @@ namespace PLIC_Web_Poratal.Controllers
                                 string complainerCellno = complainerCell; // Replace with the actual recipient's phone number
                                 string complainer = Complainer; // Replace with the actual complainer's name
                                 string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
+                                string ConsignmentNo = createTicketModel.cgnno; // Replace with the actual complaint
                                 int ticketId = ticketID; // Replace with the actual ticket ID
 
-                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
+                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} for ConsignmentNo {ConsignmentNo} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
 
                                 strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
 
@@ -3363,6 +3367,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             insertImageCmd.CommandType = CommandType.StoredProcedure;
                                             insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
                                             insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                            insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
                                             await insertImageCmd.ExecuteNonQueryAsync();
                                         }
                                     }
@@ -3415,6 +3420,7 @@ namespace PLIC_Web_Poratal.Controllers
                                         insertImageCmd.Transaction = transaction;
                                         insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
                                         insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                        insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
                                         await insertImageCmd.ExecuteNonQueryAsync();
                                     }
                                 }
@@ -3433,7 +3439,8 @@ namespace PLIC_Web_Poratal.Controllers
                                 string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
                                 int ticketId = ticketID; // Replace with the actual ticket ID
 
-                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Claim ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
+                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Claim ID {ticketId} against CN# {createTicketModel.cgnno} has been registered. Track your shipment https://fastex.pk or contact with Business management";
+                          
 
                                 strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
 
@@ -4331,7 +4338,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         }
 
-                       await conn.CloseAsync();
+                        await conn.CloseAsync();
 
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
@@ -4355,7 +4362,7 @@ namespace PLIC_Web_Poratal.Controllers
                 // Handle the exception and return an error response
                 return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
             }
-           
+
         }
 
         public ActionResult GetClaimReport(CreateTicketModel createTicketModel)
@@ -5051,7 +5058,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpPost]
-        public ActionResult UpdateFinalRemarks(UpdateTicketModel updateTicketModel)
+        public ActionResult UpdateClaim(UpdateTicketModel updateTicketModel)
         {
             try
             {
@@ -5059,14 +5066,12 @@ namespace PLIC_Web_Poratal.Controllers
                 {
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
-                        SqlCommand cmd = new SqlCommand("sp_Update_Claim_FinalRemarks", conn);
+                        SqlCommand cmd = new SqlCommand("sp_Update_Claim", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
                         //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
                         cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
-                        cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
-                        cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
-                        cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+                        cmd.Parameters.AddWithValue("@TicketId", updateTicketModel.ticketdid);
 
                         cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
 
@@ -5100,7 +5105,7 @@ namespace PLIC_Web_Poratal.Controllers
                         {
 
                             // Ticket already exists
-                            return Json(new { success = false, message = "claim already Updated." });
+                            return Json(new { success = false, message = "Claim already Updated." });
                         }
                         else
                         {
@@ -5133,6 +5138,211 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateRemarks(UpdateTicketModel updateTicketModel, List<IFormFile> Images)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+
+
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                        using (SqlCommand cmd = new SqlCommand("sp_Update_Claim_Remarks", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                            cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                            cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
+                            cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
+                            cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+
+                            cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+
+
+
+                            // Add the @ticketExists output parameter
+                            SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                            ticketExistsParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketExistsParam);
+
+                            // Add the @TicketID output parameter
+                            SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                            ticketIDParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketIDParam);
+                            //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                            //ticketExistsParam.Direction = ParameterDirection.Output;
+                            //cmd.Parameters.Add(ticketExistsParam);
+
+                            await cmd.ExecuteNonQueryAsync();
+
+                            // Check if the ticket already exists in your database
+                            //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                            bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                            int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                            // Display the appropriate message based on the ticket existence
+                            if (ticketupdateExists)
+                            {
+
+                                // Ticket already exists
+                                return Json(new { success = false, message = "claim already Updated." });
+                            }
+                            else
+                            {
+                                // Process uploaded images
+                                foreach (var image in Images)
+                                {
+                                    if (image != null && image.Length > 0)
+                                    {
+                                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                                        var filePath = Path.Combine("wwwroot/images/Claim", fileName);
+
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            image.CopyTo(stream);
+                                        }
+
+                                        // Save the image path to the database
+                                        var imageModel = new ClaimImage
+                                        {
+                                            ClaimId = Convert.ToInt32(updateTicketModel.ticketdid), // Use the ClaimID from the output parameter
+                                            ImageUrl = "/images/Claim/" + fileName
+                                        };
+
+                                        // Insert image record into ClaimImages table using the stored procedure
+                                        using (SqlCommand insertImageCmd = new SqlCommand("InsertClaimImages", conn))
+                                        {
+                                            insertImageCmd.CommandType = CommandType.StoredProcedure;
+                                            insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
+                                            insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                            insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
+                                            // insertImageCmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+                                            await insertImageCmd.ExecuteNonQueryAsync();
+                                        }
+                                    }
+                                }
+
+
+                                int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                                // Ticket inserted successfully
+                                return Json(new { success = true, data = ticketupdateno, message = "Claim Updated successfully." });
+                            }
+                        }
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Updating ticket.", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateFinalRemarks(UpdateTicketModel updateTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                        using (SqlCommand cmd = new SqlCommand("sp_Update_Claim_FinalRemarks", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                            cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                            cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
+                            cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
+                            cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+
+                            cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+
+
+
+                            // Add the @ticketExists output parameter
+                            SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                            ticketExistsParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketExistsParam);
+
+                            // Add the @TicketID output parameter
+                            SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                            ticketIDParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketIDParam);
+                            //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                            //ticketExistsParam.Direction = ParameterDirection.Output;
+                            //cmd.Parameters.Add(ticketExistsParam);
+                        
+                           await cmd.ExecuteNonQueryAsync();
+
+                            // Check if the ticket already exists in your database
+                            //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                            bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                            int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                            // Display the appropriate message based on the ticket existence
+                            if (ticketupdateExists)
+                            {
+
+                                // Ticket already exists
+                                return Json(new { success = false, message = "Claim already Updated." });
+                            }
+                            else
+                            {
+
+
+                                int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                                // Ticket inserted successfully
+                                return Json(new { success = true, data = ticketupdateno, message = "Claim Updated successfully." });
+                            }
+                        }
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Updating Claim.", error = ex.Message });
+            }
+        }
 
         [HttpPost]
         public ActionResult TickedClosed(UpdateTicketModel updateTicketModel)
@@ -5796,6 +6006,164 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         SqlCommand cmd = new SqlCommand("sp_Update_Ticket", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@Comment", EmailTicketModel.remarks);
+                        cmd.Parameters.AddWithValue("@TicketId", EmailTicketModel.ticketdid);
+
+                        cmd.Parameters.AddWithValue("@Activity", EmailTicketModel.activity);
+
+
+
+                        // Add the @ticketExists output parameter
+                        SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                        ticketExistsParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketExistsParam);
+
+                        // Add the @TicketID output parameter
+                        SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                        ticketIDParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketIDParam);
+                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                        //ticketExistsParam.Direction = ParameterDirection.Output;
+                        //cmd.Parameters.Add(ticketExistsParam);
+                        conn.Close();
+                        conn.Open();
+                        await cmd.ExecuteNonQueryAsync();
+
+                        // Check if the ticket already exists in your database
+                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                        bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                        int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                        // Display the appropriate message based on the ticket existence
+                        if (ticketupdateExists)
+                        {
+
+                            // Ticket already exists
+                            return Json(new { success = false, message = "Email Already Sent." });
+                        }
+                        else
+                        {
+
+
+                            int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                            ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                            // Ticket inserted successfully
+                            return Json(new { success = true, data = ticketupdateno, message = "Email Send successfully." });
+                        }
+
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new
+                {
+                    success = false,
+                    message = "Error Updating ticket.",
+                    error = ex.Message
+                });
+            }
+        }
+
+
+
+        public async Task<ActionResult> UpdateClaimEmail(EmailTicketModel EmailTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    if (string.IsNullOrEmpty(EmailTicketModel.remarks))
+                    {
+                        // Call your send email function
+                        return Json(new { success = false, message = "Remarks field is Empty." });
+                    }
+                    string dataSetJson = HttpContext.Session.GetString("Data1");
+
+                    DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(dataSetJson);
+
+                    string myValue = ViewBag.TrackingData;
+
+
+                    DataTable table = dataSet.Tables["Table"];
+                    DataRow row = table.Rows[0];
+
+                    // Retrieve values from the row and store them in variables
+                    int ticketId = Convert.ToInt32(row["claimId"]);
+                    long ConsignmentNo = Convert.ToInt32(row["CnsgNo"]);
+                    string category = row["Category"].ToString();
+                    string issueType = row["IssueType"].ToString();
+                    string Origin = row["Origin"].ToString();
+                    string Destination = row["Destination"].ToString();
+
+
+
+                    string subject;
+                    subject = "  Care Connect: Claim ID: " + ticketId + " - Consignment #: " + ConsignmentNo + " - Category: " + category + " - Issue Type: " + issueType + " - Origin: " + Origin + " - Destination: " + Destination + "  - Priority: " + "" + "";
+                    //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
+
+                    //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
+
+
+                    string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Claim ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td> <td> <b> Agent</b> </td>  </tr>";
+
+                    textBody += "<tr><td>" + ticketId + "</td><td> " + ConsignmentNo + "</td> <td> " + category + "</td>  <td> " + issueType + "</td>  <td> " + Origin + "</td>  <td> " + Destination + "</td>  <td> " + HttpContext.Session.GetString("UserName") + "</td> </tr>";
+                    textBody += "</table> ";
+
+
+                    textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + EmailTicketModel.remarks + "<tr><td> </table> \n" +
+                            "</br><table> <tr><td>\n" +
+                            "Kindly Login Care Connect Portal URL. http://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
+
+                           "<tr><td>\n" +
+                           "Best regards,</br> </td></tr>\n" +
+                           "<tr><td>\n" +
+                           "MIS Department</br> </td></tr>\n" +
+
+                           "<tr style=font-size:10px><td>\n" +
+                           "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
+                           " </table>";
+
+
+                    if (IsValidEmail(EmailTicketModel.emailto) && IsValidEmail(EmailTicketModel.emailcc))
+                    {
+                        // Call your send email function
+                        await SendEmailAsync(EmailTicketModel.emailto, EmailTicketModel.emailcc, subject, textBody);
+                    }
+                    else
+                    {
+                        // Show an alert indicating that one or both email addresses are not valid
+                        // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
+                        //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
+
+
+                        return Json(new { success = false, message = "Email Address is Not Valid." });
+                    }
+
+
+
+                    //  SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, "Email From Care Connect", EmailTicketModel.remarks);
+
+
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_Update_Claim", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
                         //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
