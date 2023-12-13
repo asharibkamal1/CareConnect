@@ -3,30 +3,14 @@
     ViewData["Title"] = "Claim Detail";
 
 }
-<style>
 
-    button {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-        button:hover {
-            background-color: #45a049;
-        }
-</style>
 <div class="card">
     <div class="card-header" style="background-color: #0565B7;color:white">
         <h3 class="card-title">Tracking Detail</h3>
     </div>
     <div class="card-body">
         <ul class="nav nav-pills nav-tabs" role="tablist">
-            @*<li class="nav-item">
-            <a class="nav-link active" id="receiverTabButton" data-toggle="pill" href="#receiverTabContent">Ticket Detail</a>
-            </li>*@
+        
 
             <li class="nav-item">
                 <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" style="width: 100%" href="#secondTableTabContent">Historys Detail</a>
@@ -165,7 +149,7 @@
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    @*<label for="toDate">From Date:</label>*@
+                               
                                     <input type="text" id="txtremarks" placeholder="Please Type Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
                                     <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
                                 </div>
@@ -203,7 +187,7 @@
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    @*<label for="toDate">From Date:</label>*@
+                                  
                                     <input type="text" id="autocompletetoemail" placeholder="Please Type Email Address" class="form-control float-left" autofocus name="email" />
                                     <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address.</span>
                                 </div>
@@ -212,7 +196,7 @@
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    @*<label for="toDate">From Date:</label>*@
+                                
                                     <input type="text" id="autocompletefromemail" placeholder="Please Type from Email Address" class="form-control float-left" />
                                     <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address</span>
                                 </div>
@@ -231,7 +215,7 @@
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    @*<label for="toDate">From Date:</label>*@
+                          
                                     <input type="text" id="txtremarksemail" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
 
                                 </div>
@@ -290,7 +274,7 @@
 
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            @*<label for="toDate">From Date:</label>*@
+                                  
                                             <input type="text" id="txtremarkssms" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
 
                                         </div>
@@ -322,7 +306,7 @@
                                             <label class="text-secondary font-weight-bold">Closing Remarks:</label>
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            @*<label for="toDate">From Date:</label>*@
+                                      
                                             <input type="text" id="txtremarksclosing" placeholder="Please Enter Closing Remarks" class="form-control float-left" style="height: 100px" />
                                             <span class="text-danger" id="RemarksErrorclosing" style="display: none;">Please Enter Closing Remarks</span>
                                         </div>
@@ -348,7 +332,7 @@
                                     <div class="row">
 
                                         <div class="col-lg-1 col-md-1 col-sm-1">
-                                            <label for="categoryDropdown" class="text-secondary font-weight-bold">Claim Description:</label>
+                                            <label  class="text-secondary font-weight-bold">Claim Description:</label>
 
                                         </div>
                                         <div class="col-md-3 col-sm-3">
@@ -369,7 +353,7 @@
                                             <label class="text-secondary font-weight-bold">Remarks:</label>
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            @*<label for="toDate">From Date:</label>*@
+                                         
                                             <input type="text" id="txtremarksupdateissuetype" placeholder="Please Enter  Remarks" class="form-control float-left" style="height: 100px" />
                                             <span class="text-danger" id="RemarksErrorupdateissuetype" style="display: none;">Please Enter Remarks</span>
                                         </div>
@@ -402,7 +386,7 @@
                                 </div>
 
                                 <div class="col-md-3 col-sm-3">
-                                    @*<label for="TicketTypeDropdown">Status:</label>*@
+                                 
                                     <select class="form-control" id="TicketStatusDropdown" name="TicketType ">
 
                                         <option value="0">Select Ticket Status</option>
@@ -443,7 +427,7 @@
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    @*<label for="toDate">From Date:</label>*@
+                            
                                     <input type="text" id="txtremarksclosed" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
                                     <span class="text-danger" id="RemarksErrorclosed" style="display: none;">Please Enter Remarks.</span>
                                 </div>
@@ -506,7 +490,7 @@
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    @*<label for="toDate">From Date:</label>*@
+                                 
                                     <input type="text" id="txtremarksreopen" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
                                     <span class="text-danger" id="RemarksErrorreopen" style="display: none;">Please Enter Remarks.</span>
                                 </div>
@@ -647,12 +631,9 @@
                                             <div class="form-group">
 
                                                 <div class="row">
-                                                    @*   <div class="col-lg-1 col-md-1 col-sm-1">
-                                        <label class="text-secondary font-weight-bold">Origin:</label>
-
-                                        </div> *@
+                                                  
                                                     <div class="col-lg-4 col-md-4 col-sm-4">
-                                                        @*<label for="toDate">From Date:</label>*@
+                                                
                                                         @if (Model.finalremarksDS.Tables[0].Rows.Count > 0)
                                                         {
                                                             <div class="col-lg-1 col-md-1 col-sm-1">
@@ -669,10 +650,7 @@
                                                     </div>
 
 
-                                                    @*       <div class="col-lg-1 col-md-1 col-sm-1">
-                                        <label class="text-secondary font-weight-bold">Destination:</label>
-
-                                        </div> *@
+                                               
                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                         @if (Model.finalremarksDS.Tables[1].Rows.Count > 0)
                                                         {
@@ -695,7 +673,7 @@
 
                                                 <div class="row">
                                                     <div class="col-lg-1 col-md-1 col-sm-1">
-                                                        <label for="imageUpload">Upload Images:</label>
+                                                        <label >Upload Images:</label>
 
                                                     </div>
                                                     <div class="col-md-3 col-sm-3">
@@ -712,7 +690,7 @@
 
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-sm-4">
-                                                        @*<label for="toDate">From Date:</label>*@
+                                                      
                                                         <input type="text" id="txtUpdateremarks" placeholder="Please Type Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
                                                         <span class="text-danger" id="RemarksErrorupdate" style="display: none;">Please Enter Remarks.</span>
                                                     </div>
@@ -758,7 +736,7 @@
 
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            @*<label for="toDate">From Date:</label>*@
+                                    
                                             <input type="text" id="txtfinalremarks" placeholder="Please Type Final Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
                                             <span class="text-danger" id="RemarksErrorfinal" style="display: none;">Please Enter Final Remarks.</span>
                                         </div>
@@ -780,7 +758,7 @@
 
             </div>
 
-            @*-----------------END claim images table -----------*@
+
 
 
         </div>
@@ -830,10 +808,11 @@
 
 
 
+
 <script>
     function exportToExcel() {
         var wb = XLSX.utils.table_to_book(document.getElementById('senderTable1'), { sheet: "Sheet1" });
-        XLSX.writeFile(wb, 'table_data.xlsx');
+        XLSX.writeFile(wb, 'ClaimHistoryDetail.xlsx');
     }
 </script>
 

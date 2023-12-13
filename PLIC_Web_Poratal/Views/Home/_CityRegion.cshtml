@@ -4,7 +4,7 @@
 <div class="ROW">
     <div id="locationDropdownContainer"  class="col-md-6 col-sm-6">
 
-        <label for="location">Location:</label>
+        <label >Location:</label>
         <select class="form-control" id="LocationDropdown" name="location">
             @foreach (System.Data.DataRow catRow in Model.Sub_Terminal.Tables[0].Rows)
             {
@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-6 col-sm-6">
 
-        <label for="TicketTypeDropdown">Region:</label>
+        <label >Region:</label>
         <select class="form-control" id="RegionDropdown" name="region">
             @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
             {
@@ -23,7 +23,7 @@
         </select>
     </div>
     <div id="userEmailDropdownContainer" class="col-md-8 col-sm-8 ">
-        <label for="TicketTypeDropdown">User Email:</label>
+        <label >User Email:</label>
         <select class="form-control" id="useremail" name="email">
             @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
             {

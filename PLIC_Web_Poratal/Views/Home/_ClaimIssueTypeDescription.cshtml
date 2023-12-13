@@ -1,7 +1,7 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
             <!-- Render the dropdown list with TicketCatType data -->
 
-@* <label for="TicketTypeDropdown">Claim Description:</label> *@
+
 <select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory" onchange="handleDropdownChange(this)">
     @foreach (System.Data.DataRow catRow in Model.TicketIssueTypeDescription.Tables[0].Rows)
     {
