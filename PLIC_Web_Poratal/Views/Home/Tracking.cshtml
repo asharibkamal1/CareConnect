@@ -1,80 +1,7 @@
-﻿@*@model PLIC_Web_Poratal.Models.ViewForwardedComplaintDataModel*@
-@{
+﻿@{
     ViewData["Title"] = "Tracking";
 }
-@* test  *@
 
-@* test2 *@
-<style>
-    /* css for even rows */
-    .highlight-row {
-        background-color: #ffd700; /* change this to the desired highlight color */
-        color: black; /* change this to the desired text color */
-    }
-
-    .even-row {
-        background-color: #e8e854; /* set the background color for even rows */
-        color: #000000; /* set the text color for even rows */
-    }
-
-    /* css for odd rows */
-    .odd-row {
-        background-color: #755555; /* set the background color for odd rows */
-        color: #000000; /* set the text color for odd rows */
-    }
-
-    .custom-checkbox input[type="checkbox"] {
-        display: none;
-    }
-
-    /*     test */
-
-    /* Define the custom checkbox style */
-    .custom-checkbox label {
-        display: inline-block;
-        position: relative;
-        padding-left: 30px; /* Adjust the space between the checkbox and label */
-        margin-right: 10px; /* Adjust the space between checkboxes if multiple */
-        cursor: pointer;
-    }
-
-        /* Style for the checkbox itself */
-        .custom-checkbox label::before {
-            content: "";
-            display: inline-block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 20px; /* Adjust the checkbox size */
-            height: 20px; /* Adjust the checkbox size */
-            border: 2px solid #0565B7; /* Border color */
-            background-color: white; /* Background color when not checked */
-            border-radius: 4px; /* Rounded corners */
-        }
-
-        /* Style for the checkmark (visible when checked) */
-        .custom-checkbox label::after {
-            content: "✔"; /* Checkmark symbol */
-            display: block;
-            position: absolute;
-            left: 0.5px; /* Adjust the position of the checkmark */
-            top: -3.2px; /* Adjust the position of the checkmark */
-            font-size: 16px; /* Adjust the checkmark size */
-            color: white; /* Color of the checkmark (white) */
-            opacity: 0; /* Hidden by default */
-        }
-
-    /* Style for the checkbox when checked */
-    .custom-checkbox input[type="checkbox"]:checked + label::before {
-        /* background-color: #0565B7; /* Background color when checked */ */ border: 2px solid #0565B7; /* Border color when checked */
-    }
-
-    /* Style for the checkmark when checked */
-    .custom-checkbox input[type="checkbox"]:checked + label::after {
-        opacity: 1; /* Show the checkmark when checked */
-        color: white;
-    }
-</style>
 <div class="container-fluid ">
     <div class="row">
         <br />
@@ -98,15 +25,15 @@
 
                     <div class="custom-checkbox col-lg-1 col-md-1 col-sm-2 ml-1">
                         <input type="checkbox" id="myCheckbox">
-                        <label for="myCheckbox">Ticket#</label>
+                        <label >Ticket#</label>
                     </div>
                     <div class="custom-checkbox col-lg-1 col-md-1 col-sm-2 ml-1">
                         <input type="checkbox" id="myCheckboxmanual">
-                        <label for="myCheckboxmanual">Manual#</label>
+                        <label >Manual#</label>
                     </div>
                     <div class="custom-checkbox col-lg-1 col-md-1 col-sm-2 ml-1">
                         <input type="checkbox" id="myCheckboxClaim">
-                        <label for="myCheckboxClaim">Claim#</label>
+                        <label >Claim#</label>
                     </div>
                 </div>
                 <span class="text-danger"></span>
@@ -133,8 +60,8 @@
 <script>
     $(document).ready(function () {
         debugger
-    @*var userRoleID = @ViewData["RoleID"];*@
-                                                            var userRoleID = @ViewBag.RoleID;
+
+      var userRoleID = @ViewBag.RoleID;
 
         $('.loader').hide();
         hideLoader();

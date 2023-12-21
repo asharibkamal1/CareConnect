@@ -7,6 +7,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using PLIC_Web_Poratal.Models;
+using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Mvc;
+using Report.Models;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Humanizer.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,6 +41,8 @@ using System.Security.Principal;
 using Microsoft.AspNetCore.Razor.Language;
 using System.Data.Common;
 using System.Security.Claims;
+using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Hosting;
 
 namespace PLIC_Web_Poratal.Controllers
 {
@@ -43,11 +54,27 @@ namespace PLIC_Web_Poratal.Controllers
         db _db = new db();
         string sqlquery = "select top 1 LoginId,Password from CRM_SYS_Users where LoginId=@LoginId and password=@Password";
 
+        private readonly IWebHostEnvironment _iwebHostEnvironment;
+        private string _connectionString = "DefaultConnection";
+        private readonly IConfiguration _configuration;
+
+
+        public HomeController(IWebHostEnvironment iwebhostenvironment, IConfiguration configuration)
+        {
+            this._iwebHostEnvironment = iwebhostenvironment;
+            this._configuration = configuration;
+            //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            //this._connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            _connectionString = _configuration.GetConnectionString("DefaultConnection");
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            _configuration = configuration;
+        }
+
         //public HomeController(ILogger<HomeController> logger)
         //{
         //    _logger = logger;
         //}
-
 
 
 
@@ -1048,8 +1075,8 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
                         SqlDataAdapter dataAdapter6 = new SqlDataAdapter(command6);
                         SqlDataAdapter dataAdapter7 = new SqlDataAdapter(command7);
-                        
-                       
+
+
 
                         //dataAdapter.Fill(dataSet3);
                         //dataAdapter1.Fill(dataSet1);
@@ -1068,7 +1095,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         });
 
-                      
+
 
                         TicketDetailsViewModel model = new TicketDetailsViewModel
                         {
@@ -1114,9 +1141,14 @@ namespace PLIC_Web_Poratal.Controllers
             }
             catch (Exception ex)
             {
-                throw ;
+                throw;
             }
         }
+
+
+
+
+
 
 
 
@@ -2321,6 +2353,62 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+
+        [HttpGet]
+        public IActionResult Report(int id)
+        {
+            DataTable dataTable = new DataTable(); // DataTable to store the result
+
+            using (SqlConnection connection = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("sp_Get_Claim_Form_By_ClaimID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ClaimID", id);
+
+                    using (SqlDataAdapter dataAdapter = new SqlDataAdapter(command))
+                    {
+                        dataAdapter.Fill(dataTable); // Fill the DataTable with the result of the stored procedure
+                    }
+                }
+            }
+
+            if (dataTable.Rows.Count == 0)
+            {
+                // Handle the case where no data is returned
+                return NotFound();
+            }
+
+            string mimtype = "";
+            int extension = 1;
+            var path = $"{this._iwebHostEnvironment.WebRootPath}\\Reports\\ClaimReport.rdlc";
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("ClaimForm", "Claim Form");
+
+            // Add parameters dynamically based on the columns in the DataTable
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                parameters.Add(column.ColumnName, dataTable.Rows[0][column].ToString());
+            }
+
+            LocalReport localReport = new LocalReport(path);
+            var result = localReport.Execute(RenderType.Pdf, extension, parameters, mimtype);
+
+            // Convert the PDF content to base64
+            var pdfBase64 = Convert.ToBase64String(result.MainStream.ToArray());
+
+            // Return the base64-encoded PDF content as JSON
+            return Json(pdfBase64);
+        }
+
+
+
+
+
+
+
         public IActionResult ReportClaim()
         {
             try
@@ -3440,7 +3528,7 @@ namespace PLIC_Web_Poratal.Controllers
                                 int ticketId = ticketID; // Replace with the actual ticket ID
 
                                 string SMSmessage = $"Dear {complainer},\nYour {complaint} with Claim ID {ticketId} against CN# {createTicketModel.cgnno} has been registered. Track your shipment https://fastex.pk or contact with Business management";
-                          
+
 
                                 strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
 
@@ -5297,8 +5385,8 @@ namespace PLIC_Web_Poratal.Controllers
                             //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
                             //ticketExistsParam.Direction = ParameterDirection.Output;
                             //cmd.Parameters.Add(ticketExistsParam);
-                        
-                           await cmd.ExecuteNonQueryAsync();
+
+                            await cmd.ExecuteNonQueryAsync();
 
                             // Check if the ticket already exists in your database
                             //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;

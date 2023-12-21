@@ -51,7 +51,7 @@
 
 
             <div class="col-md-auto col-12">
-                <label for="TicketTypeDropdown">Ticket Category:</label>
+                <label >Ticket Category:</label>
                 <select class="form-control" id="categoryDropdown" name="ticketcatagory">
                     <option value="">Select Category</option>
                     @foreach (System.Data.DataRow catRow in Model.TicketCatType.Tables[1].Rows)
@@ -82,7 +82,7 @@
             </div>
             <div class="col-md-3 col-md-3 col-sm-3">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Remarks:</label>
+                    <label >Remarks:</label>
 
                     <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
                     <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
