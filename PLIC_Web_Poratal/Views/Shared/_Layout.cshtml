@@ -408,6 +408,13 @@
                                             <p>Account Opening</p>
                                         </a>
                                     </li>
+                               @*  
+                                    <li class="nav-item">
+                                        <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
+                                            <i class="nav-icon fa fa-fw fa-search"></i>
+                                            <p>Bulk SMS</p>
+                                        </a>
+                                    </li> *@
                                 </ul>
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                     <li class="nav-item">
@@ -475,6 +482,9 @@
                                         </ul>
                                     </li>
                                 </ul>
+
+
+                            
                             </nav>
                             <!-- /.sidebar-menu -->
                         </div>

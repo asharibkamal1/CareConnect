@@ -43,6 +43,8 @@ using System.Data.Common;
 using System.Security.Claims;
 using AspNetCore.Reporting;
 using Microsoft.AspNetCore.Hosting;
+using CareConnect.Views.Home;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace PLIC_Web_Poratal.Controllers
 {
@@ -2231,7 +2233,71 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
+        public async Task<IActionResult> BulkSMS()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
+                    {
+                        if (conn1.State != ConnectionState.Open)
+                            await conn1.OpenAsync();
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Bulk_SMS_Send_Numbers", conn1))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                            using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command))
+                            {
+                                //command.Parameters.AddWithValue("@bookingNumber", tracking);
+                                //dataAdapter.Fill(dataSet);
+                                // dataAdapter1.Fill(dataSet1);
+                                await Task.Run(() => dataAdapter1.Fill(dataSet1));
+                            }
+                        }
+                        BulkSMS model = new BulkSMS
+                        {
+                            //BookingDetail = dataSet,
+                            //TicketType = dataSet1,
+                            bulksms = dataSet1,
+                            //PriorityDS = dataSet1,
+                            //CityDS = dataSet1,
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+                        //return PartialView("_TicketSearchCatagory", model);
+                        return View("~/Views/Home/BulkSMS.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
 
         public IActionResult SearchClaim()
         {
@@ -6572,6 +6638,147 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> SendBulkSMS(List<BulkSMS> smsDataList)
+        {
+            try
+            {
+
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+
+                    {
+                        if (conn1.State != ConnectionState.Open)
+                            await conn1.OpenAsync();
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Bulk_SMS_Send_Numbers", conn1))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                            using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command))
+                            {
+
+                                await Task.Run(() => dataAdapter1.Fill(dataSet1));
+                            }
+                        }
+                        BulkSMS model = new BulkSMS
+                        {
+
+                            bulksms = dataSet1,
+
+                        };
+
+                        int issendsms = 0;
+                        foreach (DataRow row in dataSet1.Tables[0].Rows)
+                        {
+                            
+                            string phoneNumber = row["mobile_no"].ToString();
+                            string smsMessage = row["sms_message"].ToString();
+
+                            string strPost = "";
+                            strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + phoneNumber + "&Mask=Fastex.PK&Message=" + smsMessage + " &SMS&UniCode=0&ShortCodePrefered=n";
+
+                            StreamWriter myWriter = null;
+                            ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
+                            HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
+                            objRequest.Method = "POST";
+                            objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
+                            objRequest.ContentType = "application/x-www-form-urlencoded";
+                            try
+                            {
+                                myWriter = new StreamWriter(objRequest.GetRequestStream());
+                                myWriter.Write(strPost);
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                            finally
+                            {
+                                myWriter.Close();
+                            }
+
+                            try
+                            {
+
+
+                                HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
+
+                                // Check the HTTP status code to determine the result
+                                if (objResponse.StatusCode == HttpStatusCode.OK)
+                                {
+                                    using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+                                    {
+                                        string result1 = sr.ReadToEnd();
+                                        string[] responseParts = result1.Split('|');
+
+
+                                        string statusCode = responseParts[0];
+                                        string message = responseParts[1];
+
+                                        // Show appropriate message based on the response
+                                        if (statusCode == "200" || statusCode == "0")
+                                        {
+                                            //string ticketno1 = ; // Replace with your tracking number variable or value
+                                            //ViewData["TicketNo"] = ticketno1;
+                                            issendsms = issendsms + 1;
+
+                                            // return Json(new { success = true, data = message, message = "SMS Send successfully." });
+                                        }
+                                        else
+                                        {
+
+                                            return Json(new { success = false, message = $"Error occurred while sending SMS:" });
+                                        }
+
+                                    }
+
+                                }
+                                else
+                                {
+
+
+                                }
+
+                                // Don't forget to close the response
+                                objResponse.Close();
+                            }
+                            catch (WebException ex)
+                            {
+                                // Handle any exceptions that occurred during the HTTP request
+                                Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
+                                return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
+                            }
+                        }
+                        return Json(new { success = true, data = "done", message = "SMS Send successfully." });
+                    }
+                    return Json(new { success = true, data = "done", message = "SMS Send successfully." });
+                    // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                    // Optionally, you can return a success response to the client
+
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new
+                {
+                    success = false,
+                    message = "Error Sending SMS.",
+                    error = ex.Message
+                });
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult> UpdateTicketClosingAsync(EmailTicketModel EmailTicketModel)

@@ -1,0 +1,103 @@
+﻿@model CareConnect.Models.BulkSMS
+@{
+    ViewData["Title"] = "Bulk SMS";
+
+}
+<div class="card">
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Send SMS</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="form-group">
+                    <div class="row">
+
+
+                        <div class="col-md-3 col-sm-3">
+                            <select class="form-control" id="bulksms" name="bulksms">
+                   
+                                @foreach (System.Data.DataRow catRow in Model.bulksms.Tables[0].Rows)
+                                {
+                                    <option value="@catRow["mobile_no"]" data-text="@catRow["sms_message"]">@catRow["mobile_no"]</option>
+                                }
+                            </select>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <button class="btn btn-success float-left" id="btnbulksms">Send Bulk SMS</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#btnbulksms').click(function () {
+            debugger
+            var smsDataList = [];
+
+            // Iterate through each selected option in the dropdown
+            $('#bulksms option').each(function () {
+                var mobileNumber = $(this).val();
+                var textMessage = $(this).data('text');
+
+                smsDataList.push({ CellNumber: mobileNumber, SmsMessage: textMessage });
+            });
+
+            debugger
+            if (smsDataList.length > 0) {
+                $.ajax({
+                    url: '/Home/SendBulkSMS',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ smsDataList: smsDataList }),
+                    success: function (response) {
+                        debugger
+                        // Check if the ticket was created successfully
+                        if (response.success) {
+                            // Show a success message using SweetAlert
+                            Swal.fire('Success', response.message, 'success');
+
+
+
+                            // $('#txtremarkssms').val('');
+
+
+                        }
+                        else {
+                            // Show an error message using SweetAlert
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Show an error message using SweetAlert
+                        Swal.fire('Error', 'Error sending Bulk SMS: ' + error, 'error');
+                    }
+                });
+            } else {
+                Swal.fire('Error', 'No mobile numbers available to send SMS: ' + error, 'error');
+
+            }
+
+        });
+    });
+</script>
