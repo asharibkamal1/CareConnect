@@ -62,7 +62,7 @@
 
         .main {
             /*            margin-left: 10%;
-                                                */ border: 1px solid;
+                                                                                */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -160,7 +160,7 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
     <!-- PDFMake and JSZip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
@@ -408,13 +408,41 @@
                                             <p>Account Opening</p>
                                         </a>
                                     </li>
-                               @*  
-                                    <li class="nav-item">
-                                        <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-search"></i>
-                                            <p>Bulk SMS</p>
-                                        </a>
+
+                                    @*    <li class="nav-item">
+                                    <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
+                                    <i class="nav-icon fa fa-fw fa-search"></i>
+                                    <p>Bulk SMS</p>
+                                    </a>
                                     </li> *@
+
+
+                                    @{
+                                        try
+                                        {
+                                            //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+                                            if (userRoleId != "1")
+                                            {
+
+                                                <li class="nav-item">
+                                                    <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
+                                                        <i class="nav-icon fa fa-fw fa-search"></i>
+                                                        <p>Bulk SMS</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // Handle the exception here
+                                            throw ex;
+                                        }
+                                    }
+
                                 </ul>
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                     <li class="nav-item">
@@ -483,8 +511,6 @@
                                     </li>
                                 </ul>
 
-
-                            
                             </nav>
                             <!-- /.sidebar-menu -->
                         </div>
@@ -504,38 +530,38 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-    </div>
-  
-    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
-  
 
-    <!-- overlayScrollbars -->
-    <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="~/dist/js/adminlte.js"></script>
 
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#trackingLink').click(function () {
-                $('.nav-link').removeClass('active'); // Remove active class from all nav-links
-                $(this).addClass('active'); // Add active class to the clicked nav-link
+        <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+
+
+        <!-- overlayScrollbars -->
+        <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/dist/js/adminlte.js"></script>
+
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#trackingLink').click(function () {
+                    $('.nav-link').removeClass('active'); // Remove active class from all nav-links
+                    $(this).addClass('active'); // Add active class to the clicked nav-link
+                });
+                $('#toggleSubMenu').click(function () {
+                    $('.submenu').toggle();
+                });
             });
-            $('#toggleSubMenu').click(function () {
-                $('.submenu').toggle();
-            });
-        });
-    </script>
+        </script>
 
 
-    <!-- AdminLTE for demo purposes -->
-    @*<script src="~/dist/js/demo.js"></script>*@
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    @*<script src="~/dist/js/pages/dashboard.js"></script>*@
-    @await RenderSectionAsync("Scripts", required: false)
+        <!-- AdminLTE for demo purposes -->
+        @*<script src="~/dist/js/demo.js"></script>*@
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        @*<script src="~/dist/js/pages/dashboard.js"></script>*@
+        @await RenderSectionAsync("Scripts", required: false)
 
-    <div class="daterangepicker ltr show-ranges opensright"><div class="ranges"><ul><li data-range-key="Today">Today</li><li data-range-key="Yesterday">Yesterday</li><li data-range-key="Last 7 Days">Last 7 Days</li><li data-range-key="Last 30 Days">Last 30 Days</li><li data-range-key="This Month">This Month</li><li data-range-key="Last Month">Last Month</li><li data-range-key="Custom Range">Custom Range</li></ul></div><div class="drp-calendar left"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-calendar right"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-buttons"><span class="drp-selected"></span><button class="cancelBtn btn btn-sm btn-default" type="button">Cancel</button><button class="applyBtn btn btn-sm btn-primary" disabled="disabled" type="button">Apply</button> </div></div>
-    <div class="jqvmap-label" style="display: none;"></div>
+        <div class="daterangepicker ltr show-ranges opensright"><div class="ranges"><ul><li data-range-key="Today">Today</li><li data-range-key="Yesterday">Yesterday</li><li data-range-key="Last 7 Days">Last 7 Days</li><li data-range-key="Last 30 Days">Last 30 Days</li><li data-range-key="This Month">This Month</li><li data-range-key="Last Month">Last Month</li><li data-range-key="Custom Range">Custom Range</li></ul></div><div class="drp-calendar left"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-calendar right"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-buttons"><span class="drp-selected"></span><button class="cancelBtn btn btn-sm btn-default" type="button">Cancel</button><button class="applyBtn btn btn-sm btn-primary" disabled="disabled" type="button">Apply</button> </div></div>
+        <div class="jqvmap-label" style="display: none;"></div>
 </body>
 </html>
 

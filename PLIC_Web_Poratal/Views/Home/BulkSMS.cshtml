@@ -1,103 +1,72 @@
-﻿@model CareConnect.Models.BulkSMS
+﻿@model CareConnect.Models.SmsResult
 @{
     ViewData["Title"] = "Bulk SMS";
-
+}
+@{
+    // Access the SmsResults from ViewBag
+    var smsResults = ViewBag.SmsResults as List<CareConnect.Models.SmsResult>;
 }
 <div class="card">
     <div class="card-header" style="background-color: #0565B7;color:white">
         <h3 class="card-title">Send SMS</h3>
     </div>
     <div class="card-body">
+        @if (ViewBag.ErrorMessage != null)
+        {  
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
         <div class="row">
             <div class="col-md-12 col-lg-12 col-sm-12">
                 <div class="form-group">
                     <div class="row">
-
-
-                        <div class="col-md-3 col-sm-3">
-                            <select class="form-control" id="bulksms" name="bulksms">
-                   
-                                @foreach (System.Data.DataRow catRow in Model.bulksms.Tables[0].Rows)
-                                {
-                                    <option value="@catRow["mobile_no"]" data-text="@catRow["sms_message"]">@catRow["mobile_no"]</option>
-                                }
-                            </select>
-
-                        </div>
-
-
+                        <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="UploadFile">
+                            <input type="file" name="file" />
+                            <button type="submit">Send Bulk SMS</button>
+                        </form>
                     </div>
-
                 </div>
             </div>
         </div>
 
-
-
-        <div class="row">
-            <div class="col-md-12 col-lg-12 col-sm-12">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <button class="btn btn-success float-left" id="btnbulksms">Send Bulk SMS</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Display SMS Results -->
+        <div>
+            @if (smsResults != null && smsResults.Count > 0)
+            {
+                <h4>SMS Sending Results:</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mobile Number</th>
+                            <th>Status</th>
+                            <th>StatusCode</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var result in smsResults)
+                        {
+                            <tr>
+                                <td>@result.MobileNumber</td>
+                                <td>@result.Status</td>
+                                <td>@result.statusCode</td>
+                                <td>@result.messages</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="color:red">
+                    @{
+                        // Access the SmsResults from ViewBag
+                        @ViewBag.error
+                    }
+                </p>
+            @*     <p>No SMS sending results available.</p> *@
+            }
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $('#btnbulksms').click(function () {
-            debugger
-            var smsDataList = [];
-
-            // Iterate through each selected option in the dropdown
-            $('#bulksms option').each(function () {
-                var mobileNumber = $(this).val();
-                var textMessage = $(this).data('text');
-
-                smsDataList.push({ CellNumber: mobileNumber, SmsMessage: textMessage });
-            });
-
-            debugger
-            if (smsDataList.length > 0) {
-                $.ajax({
-                    url: '/Home/SendBulkSMS',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ smsDataList: smsDataList }),
-                    success: function (response) {
-                        debugger
-                        // Check if the ticket was created successfully
-                        if (response.success) {
-                            // Show a success message using SweetAlert
-                            Swal.fire('Success', response.message, 'success');
-
-
-
-                            // $('#txtremarkssms').val('');
-
-
-                        }
-                        else {
-                            // Show an error message using SweetAlert
-                            Swal.fire('Error', response.message, 'error');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // Show an error message using SweetAlert
-                        Swal.fire('Error', 'Error sending Bulk SMS: ' + error, 'error');
-                    }
-                });
-            } else {
-                Swal.fire('Error', 'No mobile numbers available to send SMS: ' + error, 'error');
-
-            }
-
-        });
-    });
-</script>

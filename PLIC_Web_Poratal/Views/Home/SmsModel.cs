@@ -6,6 +6,7 @@ namespace CareConnect.Views.Home
     {
         public string CellNumber { get; set; }
         public string SmsMessage { get; set; }
+
     }
 
 }

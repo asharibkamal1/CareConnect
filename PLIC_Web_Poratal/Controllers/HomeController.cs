@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using System.IO;
 using PLIC_Web_Poratal.Models;
 using AspNetCore.Reporting;
 using Microsoft.AspNetCore.Mvc;
@@ -45,12 +49,16 @@ using AspNetCore.Reporting;
 using Microsoft.AspNetCore.Hosting;
 using CareConnect.Views.Home;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Build.Framework;
 
 namespace PLIC_Web_Poratal.Controllers
 {
     public class HomeController : Controller
     {
-
+        static HomeController()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        }
         //private readonly ILogger<HomeController> _logger;
 
         db _db = new db();
@@ -2243,39 +2251,12 @@ namespace PLIC_Web_Poratal.Controllers
                     string UserName = HttpContext.Session.GetString("UserName");
                     ViewData["RoleID"] = RoleID;
                     ViewBag.UserName = UserName;
-                    DataSet dataSet = new DataSet();
-                    DataSet dataSet1 = new DataSet();
-                    DataSet dataSet2 = new DataSet();
+
                     using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
                     {
-                        if (conn1.State != ConnectionState.Open)
-                            await conn1.OpenAsync();
-                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Bulk_SMS_Send_Numbers", conn1))
-                        {
-                            command.CommandType = CommandType.StoredProcedure;
-                            //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                            using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command))
-                            {
-                                //command.Parameters.AddWithValue("@bookingNumber", tracking);
-                                //dataAdapter.Fill(dataSet);
-                                // dataAdapter1.Fill(dataSet1);
-                                await Task.Run(() => dataAdapter1.Fill(dataSet1));
-                            }
-                        }
-                        BulkSMS model = new BulkSMS
-                        {
-                            //BookingDetail = dataSet,
-                            //TicketType = dataSet1,
-                            bulksms = dataSet1,
-                            //PriorityDS = dataSet1,
-                            //CityDS = dataSet1,
-                        };
-                        //ViewBag.TrackingData = model;
-                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
-                        //ViewData["TrackingNumber"] = trackingNumbernew;
-                        //return PartialView("_TicketSearchCatagory", model);
-                        return View("~/Views/Home/BulkSMS.cshtml", model);
+
+                        return View("~/Views/Home/BulkSMS.cshtml");
                     }
                 }
                 return RedirectToAction("Login", "Account");
@@ -6676,7 +6657,7 @@ namespace PLIC_Web_Poratal.Controllers
                         int issendsms = 0;
                         foreach (DataRow row in dataSet1.Tables[0].Rows)
                         {
-                            
+
                             string phoneNumber = row["mobile_no"].ToString();
                             string smsMessage = row["sms_message"].ToString();
 
@@ -6777,6 +6758,148 @@ namespace PLIC_Web_Poratal.Controllers
                     message = "Error Sending SMS.",
                     error = ex.Message
                 });
+            }
+        }
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> UploadFile(IFormFile file)
+        {
+            try
+            {
+
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    var error = "";
+                    var results = new List<SmsResult>(); // Store SMS sending results
+
+                    if (file != null && file.Length > 0)
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            file.CopyTo(stream);
+                            stream.Position = 0;
+
+                            using (var package = new ExcelPackage(stream))
+                            {
+                                var worksheet = package.Workbook.Worksheets[0];
+
+                                // Loop through the rows and read mobile numbers
+                                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                                {
+                                    try
+                                    {
+                                        string mobileNumber = worksheet.Cells[row, 1].Value.ToString();
+                                        string message = worksheet.Cells[row, 2].Value.ToString();
+                                        // Send SMS using the mobileNumber and smsMessage
+                                        // (You can call your SMS sending method here)
+                                        string strPost = "";
+                                        strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + mobileNumber + "&Mask=Fastex.PK&Message=" + message + " &SMS&UniCode=0&ShortCodePrefered=n";
+
+                                        StreamWriter myWriter = null;
+                                        ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
+                                        HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
+                                        objRequest.Method = "POST";
+                                        objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
+                                        objRequest.ContentType = "application/x-www-form-urlencoded";
+                                        try
+                                        {
+                                            myWriter = new StreamWriter(objRequest.GetRequestStream());
+                                            myWriter.Write(strPost);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+                                        finally
+                                        {
+                                            myWriter.Close();
+                                        }
+                                        try
+                                        {
+                                            HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
+                                            if (objResponse.StatusCode == HttpStatusCode.OK)
+                                            {
+                                                using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+                                                {
+                                                    string result1 = sr.ReadToEnd();
+                                                    string[] responseParts = result1.Split('|');
+
+
+                                                    string statusCode = responseParts[0];
+                                                    string messages = responseParts[1];
+
+
+                                                    if (statusCode == "200" || statusCode == "0")
+                                                    {
+
+                                                        results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Sent", statusCode = statusCode, messages = messages });
+
+                                                    }
+                                                    else
+                                                    {
+                                                        results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Not Sent", statusCode = statusCode, messages = messages });
+
+                                                        //results.Add(new SmsResult { messages = "Invalid mobile no" });
+                                                    }
+
+                                                }
+
+                                            }
+                                            else
+                                            {
+
+
+                                            }
+
+
+                                            objResponse.Close();
+                                        }
+                                        catch (WebException ex)
+                                        {
+                                            ViewBag.error = "";
+                                            results.Add(new SmsResult { MobileNumber = mobileNumber, Status = $"Error: {ex.Message}" });
+                                            // Handle any exceptions that occurred during the HTTP request
+                                            Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
+                                            return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
+                                        }
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // If an error occurs, add an error result
+                                        ViewBag.error = $"Error: {ex.Message}";
+                                        results.Add(new SmsResult { messages = $"Error: {ex.Message}" });
+                                    }
+
+                                }
+                                //ViewBag.SmsResults = results;
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "No File Selected";
+                        //results.Add(new SmsResult { messages = "No File Selected" });
+                        return View("BulkSMS");
+                    }
+                    ViewBag.SmsResults = results;
+                    return View("~/Views/Home/BulkSMS.cshtml");
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.ErrorMessage = "The file is not a valid Package file.";
+                return View("BulkSMS");
+
             }
         }
 

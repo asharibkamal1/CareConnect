@@ -809,6 +809,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         // Add parameters to the stored procedure
                         comm.Parameters.AddWithValue("@LoginId", acc.UserName);
+                        comm.Parameters.AddWithValue("@Password", acc.Password);
 
                         using (SqlDataReader sdr = comm.ExecuteReader())
                         {
