@@ -3385,9 +3385,9 @@ namespace PLIC_Web_Poratal.Controllers
                             cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
                         }
                         cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
-                        cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
-                        cmd.Parameters.AddWithValue("@Location", createTicketModel.locationname);
-                        cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
+                        //cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
+                        //cmd.Parameters.AddWithValue("@Location", createTicketModel.locationname);
+                        //cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
                         cmd.Parameters.AddWithValue("@CnsgNo", createTicketModel.cgnno);
                         cmd.Parameters.AddWithValue("@Product", createTicketModel.Product);
                         cmd.Parameters.AddWithValue("@AccountNo", createTicketModel.accountno);
@@ -3644,21 +3644,21 @@ namespace PLIC_Web_Poratal.Controllers
                                            " </table>";
 
 
-                                    if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
-                                    {
-                                        // Call your send email function
-                                        // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
-                                        await SendEmailClaimAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody, Images);
-                                    }
-                                    else
-                                    {
-                                        // Show an alert indicating that one or both email addresses are not valid
-                                        // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
-                                        //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
+                                    //if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
+                                    //{
+                                    //    // Call your send email function
+                                    //    // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
+                                    //    await SendEmailClaimAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody, Images);
+                                    //}
+                                    //else
+                                    //{
+                                    //    // Show an alert indicating that one or both email addresses are not valid
+                                    //    // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
+                                    //    //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
 
 
-                                        return Json(new { success = false, message = "Email Address is Not Valid." });
-                                    }
+                                    //    return Json(new { success = false, message = "Email Address is Not Valid." });
+                                    //}
 
 
 

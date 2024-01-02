@@ -125,7 +125,7 @@
 
         <div class="row divhide">
 
-            <div class="col-md-2 col-sm-2">
+        @*     <div class="col-md-2 col-sm-2">
 
                 <label >City:</label>
                 <select class="form-control" id="CityDropdown" name="city ">
@@ -144,7 +144,7 @@
                 </div>
                 <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
                 <span class="text-danger" id="locationError" style="display: none;">Please select Location.</span>
-            </div>
+            </div> *@
             <div class="col-md-2 col-sm-2">
 
                 <div class="form-group">
@@ -435,13 +435,13 @@
             //var TicketDescription = $('#txtremarks').val();
             var TicketPriority = $('#PriorityDropdown').val();
             var TicketPriorityName = $('#PriorityDropdown option:selected').text();
-            var City = $('#CityDropdown').val();
-            var locationid = $('#regionContainer').find('#LocationDropdown').val();
+            //var City = $('#CityDropdown').val();
+          //  var locationid = $('#regionContainer').find('#LocationDropdown').val();
 
-            var locationname = $('#regionContainer').find('#LocationDropdown option:selected').text();
-            var region = $('#regionContainer').find('#RegionDropdown').val();
+           /// var locationname = $('#regionContainer').find('#LocationDropdown option:selected').text();
+           // var region = $('#regionContainer').find('#RegionDropdown').val();
 
-            var UserEmail = $('#regionContainer').find('#useremail option:selected').text();
+           // var UserEmail = $('#regionContainer').find('#useremail option:selected').text();
             var TrackingNO = @ViewData["TrackingNumber"];
 
             var sender = @Html.Raw(Json.Serialize(Model.BookingDetail.Tables[2].Rows[0]["Person:"]));
@@ -488,10 +488,10 @@
                 var TicketPriority = undefined;
 
 
-                var City = undefined;
-                var region = '';
+               // var City = undefined;
+               // var region = '';
 
-                var UserEmail = '';
+              //  var UserEmail = '';
 
                 var name = '';
                 var contact = '';
@@ -527,35 +527,35 @@
                 } else {
                     $('#priorityError').hide();
                 }
-                if (locationname === '') {
-                    $('#locationError').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#locationError').hide();
-                }
+                // if (locationname === '') {
+                //     $('#locationError').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#locationError').hide();
+                // }
 
 
-                if (locationid === '0') {
-                    $('#locationError').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#locationError').hide();
-                }
+                // if (locationid === '0') {
+                //     $('#locationError').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#locationError').hide();
+                // }
 
 
 
-                if (City === '') {
-                    $('#cityError').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#cityError').hide();
-                }
-                if (UserEmail === '') {
-                    $('#emailerror').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#emailerror').hide();
-                }
+                // if (City === '') {
+                //     $('#cityError').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#cityError').hide();
+                // }
+                // if (UserEmail === '') {
+                //     $('#emailerror').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#emailerror').hide();
+                // }
                 if (name === '') {
                     $('#nameError').show();
                     return false; // Prevent form submission if barcode is not selected
@@ -610,10 +610,10 @@
                 issendsms: isChecked,
                 priority: TicketPriority,
                 TicketPriorityName: TicketPriorityName,
-                city: City,
-                locationname: locationname,
-                region: region,
-                UserEmail: UserEmail,
+               // city: City,
+               // locationname: locationname,
+               // region: region,
+                //UserEmail: UserEmail,
                 cgnno: @ViewData["TrackingNumber"],
                 Product: $('#Product').val(),
                 accountno: $('#Product').val(),
@@ -690,7 +690,7 @@
                         $('#TicketTypeDropdown').val(''),
                             $('#categoryDropdown').val(''),
                             $('#PriorityDropdown').val(''),
-                            $('#CityDropdown').val(''),
+                           // $('#CityDropdown').val(''),
                             $('#BarcodeDropdown').val(''),
                             $('#ddgender').val(''),
 
