@@ -134,7 +134,7 @@
                             //test comment
                             //console.log("test");
                         }
-                        else if (userRoleID === 14) {
+                        else if (userRoleID !== 4) {
                             debugger
                             debugger
                             var additionalButtonExists = $('#additionalButton').length > 0;
@@ -338,7 +338,7 @@
             });
 
         }
-        else if (userRoleID === 14) {
+        else if (userRoleID !== 4) {
             debugger
             const isChecked = myCheckbox.checked;
             debugger
@@ -375,7 +375,7 @@
                             debugger
                             $('#additionalButton').remove();
                         }
-                        else if (userRoleID === 14) {
+                        else if (userRoleID !== 4) {
                             debugger
                             debugger
                             var additionalButtonExists = $('#additionalButton').length > 0;
@@ -389,6 +389,18 @@
                                     debugger
 
                                     var url = '/Home/GenerateClaim?trackingNumber=' + $('#tracking').val();
+                                    window.open(url, '_blank');
+                                });
+
+                                var TicketButton = '<button class="btn btn-primary btn-add float-left" id="TicketButton">'
+                                    + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
+                                    + 'Generate Ticket'
+                                    + '</button>';
+                                $('#btnSubmit').after(TicketButton);
+                                document.getElementById('TicketButton').addEventListener('click', function () {
+                                    debugger
+
+                                    var url = '/Home/TicketGenerate?trackingNumber=' + $('#tracking').val();
                                     window.open(url, '_blank');
                                 });
                             }
@@ -415,6 +427,8 @@
                     else {
 
                         $('#additionalButton').remove();
+                        $('#TicketButton').remove();
+
 
                     }
                 }, complete: function () {
@@ -468,7 +482,7 @@
                             debugger
                             $('#additionalButton').remove();
                         }
-                        else if (userRoleID === 14) {
+                        else if (userRoleID !== 4) {
                             debugger
                             debugger
                             var additionalButtonExists = $('#additionalButton').length > 0;
