@@ -102,7 +102,7 @@
             </div>
 
          
-            <div class="col-md-3 col-sm-3 divhide">
+            <div class="col-md-2 col-sm-2 divhide">
                 <label >Claim Priority:</label>
                 <select class="form-control" id="PriorityDropdown" name="priority ">
                     <option value="">Select Priority</option>
@@ -114,10 +114,15 @@
                 <span class="text-danger" id="priorityError" style="display: none;">Please select priority.</span>
             </div>
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-2 col-sm-2">
                 <label >Negotiated Amount:</label>
                 <input type="text" id="NegotiatedAmount" placeholder="Please Enter Amount" class="form-control" />
                 <span class="text-danger" id="priorityError" style="display: none;">Please Enter Amount.</span>
+            </div>
+            <div class="col-md-2 col-sm-2">
+                <label>Claim Amount:</label>
+                <input type="text" id="ClaimAmountNew" placeholder="Please Enter Claim Amount" class="form-control" />
+                <span class="text-danger" id="priorityError" style="display: none;">Enter Claim Amount.</span>
             </div>
 
         </div>
@@ -424,6 +429,7 @@
             debugger
 
             var Gender = $('#ddgender').val();
+            var ClaimAmountNew = $('#ClaimAmountNew').val();
             var content = $('#txtcontent').val();
             var barcodeValue = $('#BarcodeDropdown').val();
             // var tickettypeValue = $('#TicketTypeDropdown').val();
@@ -641,6 +647,7 @@
                 InsuranceRate: $('#InsuranceRate').val(),
                 InsuranceAmount: $('#InsuranceAmount').val(),
                 ClaimAmount: $('#Amount').val(),
+                ClaimAmountNew: $('#ClaimAmountNew').val(),
                 NegotiatedAmount: $('#NegotiatedAmount').val(),
                 ticketcatagory: $('#categoryDropdown').val(),
                 ticketcatagoryName: TicketCategoryName,
@@ -661,10 +668,12 @@
             for (var i = 0; i < files.length; i++) {
                 formData.append("Images", files[i]);
             }
+
+
             $('#overlayclaim').addClass('visible');
             $('#loaderclaim').show();
             debugger
-            $.ajax({
+            $.ajax({ 
                 url: '/Home/CreateClaim',
                 type: 'POST',
                 data: formData,

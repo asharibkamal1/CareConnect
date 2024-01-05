@@ -338,7 +338,7 @@
             });
 
         }
-        else if (userRoleID !== 4) {
+        else if (userRoleID === 3 || userRoleID === 7) {
             debugger
             const isChecked = myCheckbox.checked;
             debugger
@@ -375,12 +375,12 @@
                             debugger
                             $('#additionalButton').remove();
                         }
-                        else if (userRoleID !== 4) {
+                        else if (userRoleID === 3 || userRoleID === 7) {
                             debugger
                             debugger
                             var additionalButtonExists = $('#additionalButton').length > 0;
                             if (!additionalButtonExists) {
-                                var additionalButton = '<button class="btn btn-error btn-add float-right" id="additionalButton">'
+                                var additionalButton = '<button class="btn btn-danger btn-add float-right" id="additionalButton">'
                                     + '<img id="svgicon" src="/login/img/ticketicon.svg" style="width: 16px; height: 16px;" alt="Icon">'
                                     + 'Generate Claim'
                                     + '</button>';
@@ -482,7 +482,7 @@
                             debugger
                             $('#additionalButton').remove();
                         }
-                        else if (userRoleID !== 4) {
+                        else if (userRoleID === 3 || userRoleID === 7) {
                             debugger
                             debugger
                             var additionalButtonExists = $('#additionalButton').length > 0;

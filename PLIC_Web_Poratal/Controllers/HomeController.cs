@@ -50,6 +50,7 @@ using Microsoft.AspNetCore.Hosting;
 using CareConnect.Views.Home;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Build.Framework;
+using System.Transactions;
 
 namespace PLIC_Web_Poratal.Controllers
 {
@@ -3420,6 +3421,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@InsuranceRate", createTicketModel.InsuranceRate);
                         cmd.Parameters.AddWithValue("@InsuranceAmount", createTicketModel.InsuranceAmount);
                         cmd.Parameters.AddWithValue("@ClaimAmount", createTicketModel.ClaimAmount);
+                        cmd.Parameters.AddWithValue("@ClaimAmountNew", createTicketModel.ClaimAmountNew);
                         cmd.Parameters.AddWithValue("@NegotiatedAmount", createTicketModel.NegotiatedAmount);
                         cmd.Parameters.AddWithValue("@ImagePath", null);
                         cmd.Parameters.AddWithValue("@content", createTicketModel.content);
@@ -3436,20 +3438,13 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlParameter ticketIDParam = new SqlParameter("@ClaimID", SqlDbType.Int);
                         ticketIDParam.Direction = ParameterDirection.Output;
                         cmd.Parameters.Add(ticketIDParam);
-                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
-                        //ticketExistsParam.Direction = ParameterDirection.Output;
-                        //cmd.Parameters.Add(ticketExistsParam);
-                        // conn.Close();
-                        //conn.Open();
+
 
 
                         await cmd.ExecuteNonQueryAsync();
 
 
 
-
-                        // Check if the ticket already exists in your database
-                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
 
 
 
@@ -3727,16 +3722,22 @@ namespace PLIC_Web_Poratal.Controllers
 
                                                 SqlCommand cmd3 = new SqlCommand("sp_Insert_SMS", conn);
                                                 cmd3.CommandType = CommandType.StoredProcedure;
-
+                                                cmd3.Transaction = transaction;
                                                 cmd3.Parameters.AddWithValue("@issendsms", issendsms);
                                                 cmd3.Parameters.AddWithValue("@TicketId", ticketID);
                                                 cmd3.Parameters.AddWithValue("@Message", message);
                                                 cmd3.Parameters.AddWithValue("@MobileNo", complainerCell);
                                                 cmd3.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
                                                 cmd3.Parameters.AddWithValue("@ErrorCode", statusCode);
+
                                                 await cmd3.ExecuteNonQueryAsync();
                                                 int ticketupdateno = ticketID; // Replace with your tracking number variable or value
                                                 ViewData["TicketUpdateNo"] = ticketupdateno;
+
+
+
+                                                transaction.Commit();
+
 
                                                 // Ticket inserted successfully
                                                 return Json(new { success = false, data = ticketupdateno, message = $"Claim Created Successfully!! SMS not sent. Error: {message}" });
@@ -3899,250 +3900,6 @@ namespace PLIC_Web_Poratal.Controllers
                                 //ViewData["TicketNo"] = ticketno1;
                                 return Json(new { success = true, data = ticketupdateno, message = "Service Request Created Successfully." });
                             }
-
-
-                            //string result = "";
-                            //string pattern = @"^92\d{10}$";
-
-                            //string complainerCell = ComplainerCell;
-
-                            //if (Regex.IsMatch(complainerCell, pattern))
-                            //{
-                            //    string strPost = "";
-                            //    // strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + complainerCell + "&Mask=Daewoo-Exp&Message=Test SMS!!! SMS&UniCode=0&ShortCodePrefered=n";
-
-
-                            //    string loginId = "923114814965";
-                            //    string loginPassword = "Zong@123";
-                            //    string complainerCellno = complainerCell; // Replace with the actual recipient's phone number
-                            //    string complainer = Complainer; // Replace with the actual complainer's name
-                            //    string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
-                            //    int ticketId = ticketID; // Replace with the actual ticket ID
-
-                            //    string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
-
-                            //    strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
-
-                            //    // Valid contact number
-
-
-                            //    // Testing API
-
-
-                            //    //strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + complainerCell + "&Mask=Daewoo-Exp&Message=Test &UniCode=0&ShortCodePrefered=n";
-
-                            //    StreamWriter myWriter = null;
-                            //    ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
-                            //    HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
-                            //    objRequest.Method = "POST";
-                            //    objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
-                            //    objRequest.ContentType = "application/x-www-form-urlencoded";
-                            //    try
-                            //    {
-                            //        myWriter = new StreamWriter(objRequest.GetRequestStream());
-                            //        myWriter.Write(strPost);
-                            //    }
-                            //    catch (Exception e)
-                            //    {
-                            //    }
-                            //    finally
-                            //    {
-                            //        myWriter.Close();
-                            //    }
-
-
-
-                            //    try
-                            //    {
-
-                            //        string dataSetJson = HttpContext.Session.GetString("Data1");
-
-                            //        //DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(dataSetJson);
-
-                            //        string myValue = ViewBag.TrackingData;
-
-
-                            //        //DataTable table = dataSet.Tables["Table"];
-                            //        //DataRow row = table.Rows[0];
-
-                            //        //// Retrieve values from the row and store them in variables
-                            //        //int ticketId1 = Convert.ToInt32(row["TicketId"]);
-                            //        //long ConsignmentNo = Convert.ToInt32(row["CnsgNo"]);
-                            //        //string category = row["Category"].ToString();
-                            //        //string issueType = row["IssueType"].ToString();
-                            //        //string Origin = row["Origin"].ToString();
-                            //        //string Destination = row["Destination"].ToString();
-
-
-
-                            //        string subject;
-                            //        subject = "  Care Connect: Ticket: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + " ";
-                            //        //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
-
-                            //        //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
-
-
-                            //        string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Ticked ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td>  </tr>";
-
-                            //        textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td> </tr>";
-                            //        textBody += "</table> ";
-
-
-                            //        textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + createTicketModel.Remarks + "<tr><td> </table> \n" +
-                            //                "</br><table> <tr><td>\n" +
-                            //                "Kindly Login Care Connect Portal URL. https://localhost:44371/ </br></br></td></tr>\n" +
-
-                            //               "<tr><td>\n" +
-                            //               "Best regards,</br> </td></tr>\n" +
-                            //               "<tr><td>\n" +
-                            //               "MIS Department</br> </td></tr>\n" +
-
-                            //               "<tr style=font-size:10px><td>\n" +
-                            //               "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
-                            //               " </table>";
-
-                            //        if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
-                            //        {
-                            //            // Call your send email function
-                            //            SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
-                            //        }
-                            //        else
-                            //        {
-                            //            // Show an alert indicating that one or both email addresses are not valid
-                            //            // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
-                            //            //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
-
-
-                            //            return Json(new { success = false, message = "Email Address is Not Valid." });
-                            //        }
-
-
-
-                            //        //  SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, "Email From Care Connect", EmailTicketModel.remarks);
-
-
-
-
-                            //        //SqlTransaction transaction1 = conn.BeginTransaction();
-                            //        SqlCommand cmd1 = new SqlCommand("sp_Ticket_Email", conn);
-                            //        cmd1.CommandType = CommandType.StoredProcedure;
-                            //        cmd1.Transaction = transaction;
-                            //        cmd1.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                            //        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
-                            //        cmd1.Parameters.AddWithValue("@Comment", createTicketModel.Remarks);
-                            //        cmd1.Parameters.AddWithValue("@TicketId", ticketID);
-
-                            //        cmd1.Parameters.AddWithValue("@Activity", "Auto-Email");
-
-                            //        // conn1.Close();
-                            //        //conn1.Open();
-                            //        cmd1.ExecuteNonQuery();
-
-
-
-
-
-                            //        // Make the HTTP request to the SMS API
-                            //        //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("your_sms_api_url_here");
-                            //        //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                            //        HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
-
-                            //        // Check the HTTP status code to determine the result
-                            //        if (objResponse.StatusCode == HttpStatusCode.OK)
-                            //        {
-                            //            using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
-                            //            {
-                            //                string result1 = sr.ReadToEnd();
-                            //                string[] responseParts = result1.Split('|');
-
-
-                            //                string statusCode = responseParts[0];
-                            //                string message = responseParts[1];
-
-                            //                // Show appropriate message based on the response
-                            //                if (statusCode == "200" || statusCode == "0")
-                            //                {
-                            //                    int ticketno1 = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketNo"] = ticketno1;
-                            //                    string issendsms = "1";
-
-
-                            //                    SqlCommand cmd2 = new SqlCommand("sp_Insert_SMS", conn);
-                            //                    cmd2.CommandType = CommandType.StoredProcedure;
-                            //                    cmd2.Transaction = transaction;
-                            //                    cmd2.Parameters.AddWithValue("@issendsms", issendsms);
-                            //                    cmd2.Parameters.AddWithValue("@TicketId", ticketID);
-                            //                    cmd2.Parameters.AddWithValue("@Remarks", SMSmessage);
-                            //                    cmd2.Parameters.AddWithValue("@Message", message);
-                            //                    cmd2.Parameters.AddWithValue("@MobileNo", complainerCell);
-                            //                    cmd2.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                            //                    cmd2.Parameters.AddWithValue("@ErrorCode", statusCode);
-                            //                    //conn1.Close();
-                            //                    //conn1.Open();
-                            //                    cmd2.ExecuteNonQuery();
-
-
-
-
-                            //                    int ticketupdateno = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketUpdateNo"] = ticketupdateno;
-                            //                    transaction.Commit();
-
-                            //                    // Ticket inserted successfully
-                            //                    return Json(new { success = true, data = ticketupdateno, message = "Ticket has been Created Successfully." });
-
-
-
-                            //                }
-                            //                else
-                            //                {
-
-                            //                    int ticketno1 = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketNo"] = ticketno1;
-                            //                    string issendsms = "0";
-
-                            //                    SqlCommand cmd3 = new SqlCommand("sp_Insert_SMS", conn);
-                            //                    cmd1.CommandType = CommandType.StoredProcedure;
-
-                            //                    cmd3.Parameters.AddWithValue("@issendsms", issendsms);
-                            //                    cmd3.Parameters.AddWithValue("@TicketId", ticketID);
-                            //                    cmd3.Parameters.AddWithValue("@Message", message);
-                            //                    cmd3.Parameters.AddWithValue("@MobileNo", complainerCell);
-                            //                    cmd3.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                            //                    cmd3.Parameters.AddWithValue("@ErrorCode", statusCode);
-                            //                    cmd3.ExecuteNonQuery();
-                            //                    int ticketupdateno = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketUpdateNo"] = ticketupdateno;
-
-                            //                    // Ticket inserted successfully
-                            //                    return Json(new { success = false, data = ticketupdateno, message = $"Ticket Created Successfully!! SMS not sent. Error: {message}" });
-
-                            //                }
-                            //            }
-                            //        }
-
-                            //        else
-                            //        {
-
-
-                            //        }
-                            //        objResponse.Close();
-                            //    }
-                            //    catch (WebException ex)
-                            //    {
-                            //        transaction.Rollback();
-                            //        Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
-                            //        return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
-                            //    }
-                            //    finally
-                            //    {
-                            //        conn.Close();
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    return Json(new { success = false, message = "Invalid Mobile No." });
-                            //}
                             int ticketno = ticketID; // Replace with your tracking number variable or value
                             ViewData["TicketNo"] = ticketno;
                             return Json(new { success = true, data = ticketno, message = "Ticket created successfully." });
@@ -6772,122 +6529,154 @@ namespace PLIC_Web_Poratal.Controllers
 
                 if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
                 {
-                    var error = "";
-                    var results = new List<SmsResult>(); // Store SMS sending results
-
-                    if (file != null && file.Length > 0)
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
-                        using (var stream = new MemoryStream())
+                        await conn.OpenAsync();
+                        var error = "";
+                        var results = new List<SmsResult>(); // Store SMS sending results
+
+                        if (file != null && file.Length > 0)
                         {
-                            file.CopyTo(stream);
-                            stream.Position = 0;
-
-                            using (var package = new ExcelPackage(stream))
+                            using (var stream = new MemoryStream())
                             {
-                                var worksheet = package.Workbook.Worksheets[0];
+                                file.CopyTo(stream);
+                                stream.Position = 0;
 
-                                // Loop through the rows and read mobile numbers
-                                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                                using (var package = new ExcelPackage(stream))
                                 {
-                                    try
+                                    var worksheet = package.Workbook.Worksheets[0];
+
+                                    // Loop through the rows and read mobile numbers
+                                    for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                                     {
-                                        string mobileNumber = worksheet.Cells[row, 1].Value.ToString();
-                                        string message = worksheet.Cells[row, 2].Value.ToString();
-                                        // Send SMS using the mobileNumber and smsMessage
-                                        // (You can call your SMS sending method here)
-                                        string strPost = "";
-                                        strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + mobileNumber + "&Mask=Fastex.PK&Message=" + message + " &SMS&UniCode=0&ShortCodePrefered=n";
+                                        try
+                                        {
+                                            string mobileNumber = worksheet.Cells[row, 1].Value.ToString();
+                                            string message = worksheet.Cells[row, 2].Value.ToString();
+                                            // Send SMS using the mobileNumber and smsMessage
+                                            // (You can call your SMS sending method here)
+                                            string strPost = "";
+                                            strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + mobileNumber + "&Mask=Fastex.PK&Message=" + message + " &SMS&UniCode=0&ShortCodePrefered=n";
 
-                                        StreamWriter myWriter = null;
-                                        ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
-                                        HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
-                                        objRequest.Method = "POST";
-                                        objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
-                                        objRequest.ContentType = "application/x-www-form-urlencoded";
-                                        try
-                                        {
-                                            myWriter = new StreamWriter(objRequest.GetRequestStream());
-                                            myWriter.Write(strPost);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                        }
-                                        finally
-                                        {
-                                            myWriter.Close();
-                                        }
-                                        try
-                                        {
-                                            HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
-                                            if (objResponse.StatusCode == HttpStatusCode.OK)
+                                            StreamWriter myWriter = null;
+                                            ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
+                                            HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
+                                            objRequest.Method = "POST";
+                                            objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
+                                            objRequest.ContentType = "application/x-www-form-urlencoded";
+                                            try
                                             {
-                                                using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+                                                myWriter = new StreamWriter(objRequest.GetRequestStream());
+                                                myWriter.Write(strPost);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                            }
+                                            finally
+                                            {
+                                                myWriter.Close();
+                                            }
+                                            try
+                                            {
+                                                HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
+                                                if (objResponse.StatusCode == HttpStatusCode.OK)
                                                 {
-                                                    string result1 = sr.ReadToEnd();
-                                                    string[] responseParts = result1.Split('|');
-
-
-                                                    string statusCode = responseParts[0];
-                                                    string messages = responseParts[1];
-
-
-                                                    if (statusCode == "200" || statusCode == "0")
+                                                    using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
                                                     {
+                                                        string result1 = sr.ReadToEnd();
+                                                        string[] responseParts = result1.Split('|');
 
-                                                        results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Sent", statusCode = statusCode, messages = messages });
 
-                                                    }
-                                                    else
-                                                    {
-                                                        results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Not Sent", statusCode = statusCode, messages = messages });
+                                                        string statusCode = responseParts[0];
+                                                        string messages = responseParts[1];
 
-                                                        //results.Add(new SmsResult { messages = "Invalid mobile no" });
+
+                                                        if (statusCode == "200" || statusCode == "0")
+                                                        {
+
+                                                            //int ticketno1 = ticketID; // Replace with your tracking number variable or value
+                                                            //ViewData["TicketNo"] = ticketno1;
+                                                            string issendsms = "1";
+
+
+                                                            SqlCommand cmd2 = new SqlCommand("sp_Insert_Bulk_SMS", conn);
+                                                            cmd2.CommandType = CommandType.StoredProcedure;
+                                                            //cmd2.Transaction = transaction;
+                                                            cmd2.Parameters.AddWithValue("@issendsms", issendsms);
+                                                            //cmd2.Parameters.AddWithValue("@TicketId", ticketID);
+                                                            //cmd2.Parameters.AddWithValue("@Remarks", SMSmessage);
+                                                            cmd2.Parameters.AddWithValue("@Message", message);
+                                                            cmd2.Parameters.AddWithValue("@MobileNo", mobileNumber);
+                                                            cmd2.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                                                            cmd2.Parameters.AddWithValue("@ErrorCode", statusCode);
+                                                            //conn1.Close();
+                                                            //conn1.Open();
+                                                            await cmd2.ExecuteNonQueryAsync();
+
+
+
+
+                                                            //int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                                            //ViewData["TicketUpdateNo"] = ticketupdateno;
+                                                            //transaction.Commit();
+
+
+
+                                                            results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Sent", statusCode = statusCode, messages = messages });
+
+                                                        }
+                                                        else
+                                                        {
+                                                            results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Not Sent", statusCode = statusCode, messages = messages });
+
+                                                            //results.Add(new SmsResult { messages = "Invalid mobile no" });
+                                                        }
+
                                                     }
 
                                                 }
+                                                else
+                                                {
 
+
+                                                }
+
+
+                                                objResponse.Close();
                                             }
-                                            else
+                                            catch (WebException ex)
                                             {
-
-
+                                                ViewBag.error = "";
+                                                results.Add(new SmsResult { MobileNumber = mobileNumber, Status = $"Error: {ex.Message}" });
+                                                // Handle any exceptions that occurred during the HTTP request
+                                                Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
+                                                return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
                                             }
 
-
-                                            objResponse.Close();
                                         }
-                                        catch (WebException ex)
+                                        catch (Exception ex)
                                         {
-                                            ViewBag.error = "";
-                                            results.Add(new SmsResult { MobileNumber = mobileNumber, Status = $"Error: {ex.Message}" });
-                                            // Handle any exceptions that occurred during the HTTP request
-                                            Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
-                                            return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
+                                            // If an error occurs, add an error result
+                                            ViewBag.error = $"Error: {ex.Message}";
+                                            results.Add(new SmsResult { messages = $"Error: {ex.Message}" });
                                         }
 
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        // If an error occurs, add an error result
-                                        ViewBag.error = $"Error: {ex.Message}";
-                                        results.Add(new SmsResult { messages = $"Error: {ex.Message}" });
-                                    }
-
+                                    //ViewBag.SmsResults = results;
                                 }
-                                //ViewBag.SmsResults = results;
+
                             }
 
                         }
-
+                        else
+                        {
+                            ViewBag.ErrorMessage = "No File Selected";
+                            //results.Add(new SmsResult { messages = "No File Selected" });
+                            return View("BulkSMS");
+                        }
+                        ViewBag.SmsResults = results;
+                        return View("~/Views/Home/BulkSMS.cshtml");
                     }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "No File Selected";
-                        //results.Add(new SmsResult { messages = "No File Selected" });
-                        return View("BulkSMS");
-                    }
-                    ViewBag.SmsResults = results;
-                    return View("~/Views/Home/BulkSMS.cshtml");
                 }
                 else
                 {
@@ -6897,7 +6686,7 @@ namespace PLIC_Web_Poratal.Controllers
             catch (Exception ex)
             {
 
-                ViewBag.ErrorMessage = "The file is not a valid Package file.";
+                ViewBag.ErrorMessage = "error.'" + ex.Message + "'";
                 return View("BulkSMS");
 
             }
