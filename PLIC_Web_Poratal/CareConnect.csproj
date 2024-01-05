@@ -22,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
-    <PackageReference Include="BoldReports.AspNet.Core" Version="5.3.13" />
+    <PackageReference Include="EPPlus" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
@@ -31,7 +32,9 @@
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +44,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\documents\5c50fbd2-a5b4-4bf1-9afe-4464033edfc9_003.jpg" />
+    <None Include="wwwroot\Reports\ClaimReport.rdlc" />
   </ItemGroup>
 
   <ItemGroup>

@@ -69,6 +69,7 @@ namespace CareConnect.Models
         public string UserEmail { get; set; }
         public int terminal { get; set; }
         public int subterminal { get; set; }
+        public int ClaimAmountNew { get; set; }
         public bool isAGTChecked { get; set; }
         public bool isFRNChecked { get; set; }
      

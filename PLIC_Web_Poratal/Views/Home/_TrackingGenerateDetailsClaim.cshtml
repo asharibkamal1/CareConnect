@@ -80,7 +80,7 @@
 
 
             <div class="col-md-3 col-sm-3">
-                <label for="TicketTypeDropdown">Claim Category:</label>
+                <label >Claim Category:</label>
                 <select class="form-control" id="categoryDropdown" name="ticketcatagory">
                     <option value="">Select Category</option>
                     @foreach (System.Data.DataRow catRow in Model.ClaimCategoryDS.Tables[5].Rows)
@@ -101,20 +101,9 @@
                 <span class="text-danger" id="subcategoryDropdownError" style="display: none;">Please select Sub Category.</span>
             </div>
 
-            @*        <div class="col-md-3 col-sm-3 divhide">
-            <label for="TicketTypeDropdown">Source:</label>
-            <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
-
-            <option value="">Select Source</option>
-            @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
-            {
-            <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
-            }
-            </select>
-            <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
-            </div> *@
-            <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Claim Priority:</label>
+         
+            <div class="col-md-2 col-sm-2 divhide">
+                <label >Claim Priority:</label>
                 <select class="form-control" id="PriorityDropdown" name="priority ">
                     <option value="">Select Priority</option>
                     @foreach (System.Data.DataRow catRow in Model.PriorityDS.Tables[2].Rows)
@@ -125,10 +114,15 @@
                 <span class="text-danger" id="priorityError" style="display: none;">Please select priority.</span>
             </div>
 
-            <div class="col-md-3 col-sm-3">
-                <label for="amount">Negotiated Amount:</label>
+            <div class="col-md-2 col-sm-2">
+                <label >Negotiated Amount:</label>
                 <input type="text" id="NegotiatedAmount" placeholder="Please Enter Amount" class="form-control" />
                 <span class="text-danger" id="priorityError" style="display: none;">Please Enter Amount.</span>
+            </div>
+            <div class="col-md-2 col-sm-2">
+                <label>Claim Amount:</label>
+                <input type="text" id="ClaimAmountNew" placeholder="Please Enter Claim Amount" class="form-control" />
+                <span class="text-danger" id="priorityError" style="display: none;">Enter Claim Amount.</span>
             </div>
 
         </div>
@@ -136,9 +130,9 @@
 
         <div class="row divhide">
 
-            <div class="col-md-2 col-sm-2">
+        @*     <div class="col-md-2 col-sm-2">
 
-                <label for="TicketTypeDropdown">City:</label>
+                <label >City:</label>
                 <select class="form-control" id="CityDropdown" name="city ">
                     <option value="">Select City</option>
                     @foreach (System.Data.DataRow catRow in Model.CityDS.Tables[3].Rows)
@@ -155,7 +149,7 @@
                 </div>
                 <span class="text-danger" id="emailerror" style="display: none;">Please select User Email.</span>
                 <span class="text-danger" id="locationError" style="display: none;">Please select Location.</span>
-            </div>
+            </div> *@
             <div class="col-md-2 col-sm-2">
 
                 <div class="form-group">
@@ -168,7 +162,7 @@
 
 
             <div class="col-md-2 col-sm-2">
-                <label for="BarcodeDropdown">BarCode:</label>
+                <label >BarCode:</label>
                 <select class="form-control" id="BarcodeDropdown" name="barcode" required>
                     <option value="">ALL</option>
                     @foreach (System.Data.DataRow catRow in Model.BookingDetail.Tables[6].Rows)
@@ -230,7 +224,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-3 divhide">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Name:</label>
+                    <label >Name:</label>
                     <input type="text" id="txtname" name="name" value="@Model.BookingDetail.Tables[2].Rows[0]["Person:"]" class="form-control" placeholder="Name">
                     <span class="text-danger" id="nameError" style="display: none;">Please type name.</span>
                 </div>
@@ -238,7 +232,7 @@
             </div>
             <div class="col-md-3 col-sm-3 divhide">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Contact NO:</label>
+                    <label >Contact NO:</label>
                     <input type="text" id="txtcontactno" name="contact" value="@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]" class="form-control" placeholder="Contact No">
                     <span class="text-danger" id="contactError" style="display: none;">Please type contact.</span>
                     <span class="text-danger" id="contactErrorvalidation" style="display: none;">Contact number is invalid. Please enter a 11-digit number like (XXXX-XXXXXXX).</span>
@@ -248,7 +242,7 @@
             </div>
 
             <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Gender:</label>
+                <label >Gender:</label>
                 <select name="Gender" id="ddgender" class="form-control">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -259,7 +253,7 @@
             </div>
             <div class="col-md-3 col-sm-3 ">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Remarks:</label>
+                    <label >Remarks:</label>
 
                     <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
                     <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
@@ -276,14 +270,14 @@
 
             <div class="col-md-3 col-sm-3">
                 <div class="form-group">
-                    <label for="imageUpload">Upload Images:</label>
+                    <label >Upload Images:</label>
                     <input type="file" id="imageUpload" name="Images" class="form-control" multiple>
                     <!-- Use 'multiple' attribute to allow selecting multiple images -->
                 </div>
             </div>
             <div class="col-md-3 col-sm-3">
                 <div class="form-group">
-                    <label for="imageUpload">Content:</label>
+                    <label >Content:</label>
                     <input type="text" id="txtcontent" placeholder="Enter Content" name="content" class="form-control">
                     <!-- Use 'multiple' attribute to allow selecting multiple images -->
                 </div>
@@ -435,6 +429,7 @@
             debugger
 
             var Gender = $('#ddgender').val();
+            var ClaimAmountNew = $('#ClaimAmountNew').val();
             var content = $('#txtcontent').val();
             var barcodeValue = $('#BarcodeDropdown').val();
             // var tickettypeValue = $('#TicketTypeDropdown').val();
@@ -446,13 +441,13 @@
             //var TicketDescription = $('#txtremarks').val();
             var TicketPriority = $('#PriorityDropdown').val();
             var TicketPriorityName = $('#PriorityDropdown option:selected').text();
-            var City = $('#CityDropdown').val();
-            var locationid = $('#regionContainer').find('#LocationDropdown').val();
+            //var City = $('#CityDropdown').val();
+          //  var locationid = $('#regionContainer').find('#LocationDropdown').val();
 
-            var locationname = $('#regionContainer').find('#LocationDropdown option:selected').text();
-            var region = $('#regionContainer').find('#RegionDropdown').val();
+           /// var locationname = $('#regionContainer').find('#LocationDropdown option:selected').text();
+           // var region = $('#regionContainer').find('#RegionDropdown').val();
 
-            var UserEmail = $('#regionContainer').find('#useremail option:selected').text();
+           // var UserEmail = $('#regionContainer').find('#useremail option:selected').text();
             var TrackingNO = @ViewData["TrackingNumber"];
 
             var sender = @Html.Raw(Json.Serialize(Model.BookingDetail.Tables[2].Rows[0]["Person:"]));
@@ -499,10 +494,10 @@
                 var TicketPriority = undefined;
 
 
-                var City = undefined;
-                var region = '';
+               // var City = undefined;
+               // var region = '';
 
-                var UserEmail = '';
+              //  var UserEmail = '';
 
                 var name = '';
                 var contact = '';
@@ -538,35 +533,35 @@
                 } else {
                     $('#priorityError').hide();
                 }
-                if (locationname === '') {
-                    $('#locationError').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#locationError').hide();
-                }
+                // if (locationname === '') {
+                //     $('#locationError').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#locationError').hide();
+                // }
 
 
-                if (locationid === '0') {
-                    $('#locationError').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#locationError').hide();
-                }
+                // if (locationid === '0') {
+                //     $('#locationError').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#locationError').hide();
+                // }
 
 
 
-                if (City === '') {
-                    $('#cityError').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#cityError').hide();
-                }
-                if (UserEmail === '') {
-                    $('#emailerror').show();
-                    return false; // Prevent form submission if barcode is not selected
-                } else {
-                    $('#emailerror').hide();
-                }
+                // if (City === '') {
+                //     $('#cityError').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#cityError').hide();
+                // }
+                // if (UserEmail === '') {
+                //     $('#emailerror').show();
+                //     return false; // Prevent form submission if barcode is not selected
+                // } else {
+                //     $('#emailerror').hide();
+                // }
                 if (name === '') {
                     $('#nameError').show();
                     return false; // Prevent form submission if barcode is not selected
@@ -621,10 +616,10 @@
                 issendsms: isChecked,
                 priority: TicketPriority,
                 TicketPriorityName: TicketPriorityName,
-                city: City,
-                locationname: locationname,
-                region: region,
-                UserEmail: UserEmail,
+               // city: City,
+               // locationname: locationname,
+               // region: region,
+                //UserEmail: UserEmail,
                 cgnno: @ViewData["TrackingNumber"],
                 Product: $('#Product').val(),
                 accountno: $('#Product').val(),
@@ -652,6 +647,7 @@
                 InsuranceRate: $('#InsuranceRate').val(),
                 InsuranceAmount: $('#InsuranceAmount').val(),
                 ClaimAmount: $('#Amount').val(),
+                ClaimAmountNew: $('#ClaimAmountNew').val(),
                 NegotiatedAmount: $('#NegotiatedAmount').val(),
                 ticketcatagory: $('#categoryDropdown').val(),
                 ticketcatagoryName: TicketCategoryName,
@@ -672,10 +668,12 @@
             for (var i = 0; i < files.length; i++) {
                 formData.append("Images", files[i]);
             }
+
+
             $('#overlayclaim').addClass('visible');
             $('#loaderclaim').show();
             debugger
-            $.ajax({
+            $.ajax({ 
                 url: '/Home/CreateClaim',
                 type: 'POST',
                 data: formData,
@@ -701,7 +699,7 @@
                         $('#TicketTypeDropdown').val(''),
                             $('#categoryDropdown').val(''),
                             $('#PriorityDropdown').val(''),
-                            $('#CityDropdown').val(''),
+                           // $('#CityDropdown').val(''),
                             $('#BarcodeDropdown').val(''),
                             $('#ddgender').val(''),
 

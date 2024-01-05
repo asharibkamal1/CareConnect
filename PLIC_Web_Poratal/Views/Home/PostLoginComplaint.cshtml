@@ -42,12 +42,12 @@
                 <form enctype="multipart/form-data" asp-action="InsertPostLoginComplaint" onsubmit="return submitForm(this);">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Policy Number </label>
+                            <label>Policy Number </label>
                             <input asp-for="policyNo" id="cnic" class="form-control" readonly />
                             <span asp-validation-for="policyNo" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Field Unit</label>
+                            <label>Field Unit</label>
                             <input asp-for="fieldUnit" id="mobileno" class="form-control" readonly />
                             <span asp-validation-for="fieldUnit" class="text-danger"></span>
                         </div>

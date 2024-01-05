@@ -1,0 +1,72 @@
+﻿@model CareConnect.Models.SmsResult
+@{
+    ViewData["Title"] = "Bulk SMS";
+}
+@{
+    // Access the SmsResults from ViewBag
+    var smsResults = ViewBag.SmsResults as List<CareConnect.Models.SmsResult>;
+}
+<div class="card">
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Send SMS</h3>
+    </div>
+    <div class="card-body">
+        @if (ViewBag.ErrorMessage != null)
+        {  
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="form-group">
+                    <div class="row">
+                        <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="UploadFile">
+                            <input type="file" name="file" />
+                            <button type="submit">Send Bulk SMS</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display SMS Results -->
+        <div>
+            @if (smsResults != null && smsResults.Count > 0)
+            {
+                <h4>SMS Sending Results:</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mobile Number</th>
+                            <th>Status</th>
+                            <th>StatusCode</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var result in smsResults)
+                        {
+                            <tr>
+                                <td>@result.MobileNumber</td>
+                                <td>@result.Status</td>
+                                <td>@result.statusCode</td>
+                                <td>@result.messages</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="color:red">
+                    @{
+                        // Access the SmsResults from ViewBag
+                        @ViewBag.error
+                    }
+                </p>
+            @*     <p>No SMS sending results available.</p> *@
+            }
+        </div>
+    </div>
+</div>

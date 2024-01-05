@@ -1,6 +1,8 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
 @Html.ValidationSummary(true)
 
+
+
 <div class="card" hidden >
     <div class="card-header" style="background-color: #0565B7;color:white">
         <h3 class="card-title">Booking Detail</h3>
@@ -43,7 +45,7 @@
 
 
             <div class="col-md-3 col-sm-3">
-                <label for="TicketTypeDropdown">Ticket Category:</label>
+                <label >Ticket Category:</label>
                 <select class="form-control" id="categoryDropdown" name="ticketcatagory">
                     <option value="">Select Category</option>
                     @foreach (System.Data.DataRow catRow in Model.TicketCatType.Tables[1].Rows)
@@ -67,7 +69,7 @@
             </div>
 
             <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Source:</label>
+                <label >Source:</label>
                 <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
 
                     <option value="">Select Source</option>
@@ -79,7 +81,7 @@
                 <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
             </div>
             <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Ticket Priority:</label>
+                <label >Ticket Priority:</label>
                 <select class="form-control" id="PriorityDropdown" name="priority ">
                     <option value="">Select Priority</option>
                     @foreach (System.Data.DataRow catRow in Model.PriorityDS.Tables[2].Rows)
@@ -99,7 +101,7 @@
 
             <div class="col-md-2 col-sm-2">
 
-                <label for="TicketTypeDropdown">City:</label>
+                <label >City:</label>
                 <select class="form-control" id="CityDropdown" name="city ">
                     <option value="">Select City</option>
                     @foreach (System.Data.DataRow catRow in Model.CityDS.Tables[3].Rows)
@@ -129,7 +131,7 @@
 
 
             <div class="col-md-2 col-sm-2">
-                <label for="BarcodeDropdown">BarCode:</label>
+                <label >BarCode:</label>
                 <select class="form-control" id="BarcodeDropdown" name="barcode" required>
                     <option value="">ALL</option>
                     @foreach (System.Data.DataRow catRow in Model.BookingDetail.Tables[6].Rows)
@@ -188,7 +190,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-3 divhide">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Name:</label>
+                    <label >Name:</label>
                     <input type="text" id="txtname" name="name" value="@Model.BookingDetail.Tables[2].Rows[0]["Person:"]" class="form-control" placeholder="Name">
                     <span class="text-danger" id="nameError" style="display: none;">Please type name.</span>
                 </div>
@@ -196,7 +198,7 @@
             </div>
             <div class="col-md-3 col-sm-3 divhide">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Contact NO:</label>
+                    <label >Contact NO:</label>
                     <input type="text" id="txtcontactno" name="contact" value="@Model.BookingDetail.Tables[2].Rows[0]["Ph.No:"]" class="form-control" placeholder="Contact No">
                     <span class="text-danger" id="contactError" style="display: none;">Please type contact.</span>
                     <span class="text-danger" id="contactErrorvalidation" style="display: none;">Contact number is invalid. Please enter a 11-digit number like (XXXX-XXXXXXX).</span>
@@ -206,7 +208,7 @@
             </div>
 
             <div class="col-md-3 col-sm-3 divhide">
-                <label for="TicketTypeDropdown">Gender:</label>
+                <label >Gender:</label>
                 <select name="Gender" id="ddgender" class="form-control">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -217,7 +219,7 @@
             </div>
             <div class="col-md-3 col-sm-3 ">
                 <div class="form-group">
-                    <label for="TicketTypeDropdown">Remarks:</label>
+                    <label >Remarks:</label>
 
                     <input type="text" id="txtremarks" name="Remarks" class="form-control" placeholder="Enter Remarks">
                     <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>

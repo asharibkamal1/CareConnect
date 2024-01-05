@@ -2,18 +2,7 @@
 <!-- Render the dropdown list with TicketCatType data -->
 
 
- @*  
-    <div class="col-md-auto  col-sm-12">
 
-        <label for="TicketTypeDropdown">Region:</label>
-        <select class="form-control" id="RegionDropdown" name="region">
-            @foreach (System.Data.DataRow catRow in Model.RegionDS.Tables[0].Rows)
-            {
-                <option value="@catRow["region_id"]">@catRow["region_name"]</option>
-            }
-        </select>
-    </div>
- *@
 
 <div class="row">
     <div class="col-lg-1 col-md-1 col-sm-1">

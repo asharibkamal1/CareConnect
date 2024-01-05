@@ -1,0 +1,472 @@
+CV Not Found!
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /><meta name="description" /><meta name="author" /><title>
+	Daewoo Pakistan Express Bus Service - Job Portal
+</title>
+
+
+    
+
+
+    <!-- New -->
+
+    <!-- Favicon icon -->
+
+    <link rel="stylesheet" href="../AdminTemplate/vendor/owl-carousel/css/owl.carousel.min.css" /><link rel="stylesheet" href="../AdminTemplate/vendor/owl-carousel/css/owl.theme.default.min.css" /><link href="../AdminTemplate/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" /><link href="../AdminTemplate/css/style.css" rel="stylesheet" /><link href="../AdminTemplate/icons/font-awesome-old/css/font-awesome.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.0/sweetalert.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.0/sweetalert.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+    <style>
+        </style>
+
+</head>
+<body>
+    <form method="post" action="./ReportApplicantDetails" id="ctl01">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['ctl01'];
+if (!theForm) {
+    theForm = document.ctl01;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="291785BF" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="xFYcgs5xfJi95OdE1bWIAuxB/I+zoBA10ITRgxoDMIH+Xwzx5Tqm5gqRO3e7c6n8VBQSZj9nubTGR229xXLBv+LNF6yoREtzjgSTFVCPVvuxKvFJ/faMAu6BJljIC5tjcEyD7GabsgSsYRyD3L97Yn4oDTnb55Me5hlSODYms+38y5iyVDmVtsyD1M2Z8B9jCMf2dvf1ULWOaCsyCE1GZIS+NmDSFc7DPj76bB+riMnoJ9zQlYYVwK3vVTgvzrPD+9hTLJ9sqYHMLNAYgTpeSOzBQI4tcCsSdJyrBlD3De1UObDwxegDunPLsQNeh0bAqHNuiX/xDYP2452OmfkuT1wzTUbggWZbTq808YjyQ5nMixGvwYdjsWgpI1bAI6RWhax7u0RQbSKHIye5Msu3GfYnOrOYYyFJM6OCCZ76e7vInSRvCLHsxgLYDUsJ5yjGaT27A5txJENGqDQ2MF5IEiD1fWl5mC/JtRzVN/3zMuNBDpBdzle5i+Ug3E64syZEeY5LSepGhQJVu/ldV5S9aqsu3G5xCjA1yrFtZ+6lxok=" />
+</div>
+
+        <!--*******************
+        Preloader start
+    ********************-->
+        <div id="preloader">
+            <div class="sk-three-bounce">
+                <div class="sk-child sk-bounce1"></div>
+                <div class="sk-child sk-bounce2"></div>
+                <div class="sk-child sk-bounce3"></div>
+            </div>
+        </div>
+        <!--*******************
+        Preloader end
+    ********************-->
+
+
+        <!--**********************************
+        Main wrapper start
+    ***********************************-->
+        <div id="main-wrapper">
+
+            <!--**********************************
+            Nav header start
+        ***********************************-->
+            <div class="nav-header">
+                <a href="Dashboard.aspx" class="brand-logo">
+                    
+                Daewoo Recruitment Portal
+                </a>
+
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="line"></span><span class="line"></span><span class="line"></span>
+                    </div>
+                </div>
+            </div>
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <div class="header">
+                <div class="header-content">
+                    <nav class="navbar navbar-expand">
+                        <div class="collapse navbar-collapse justify-content-between">
+                            <div class="header-left">
+                                <div class="search_bar dropdown">
+                                    <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
+                                        <i class="mdi mdi-magnify"></i>
+                                    </span>
+                                    <div class="dropdown-menu p-0 m-0">
+                                        <form>
+                                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ul class="navbar-nav header-right">
+                                <li class="nav-item dropdown notification_dropdown">
+                                    <a class="nav-link" href="#" role="button" data-toggle="dropdown">
+                                        <i class="mdi mdi-bell"></i>
+                                        <div class="pulse-css"></div>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <div id="Panel_Status_history">
+	<ul class='nlist-unstyled'> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> HAMZA RAUF   <strong>Newly Applied</strong> For Position <strong>Power Builder</strong> </p></a></div> <span class='notify-time'>28/02/2023 12:25:26 am</span> </li> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> Abdullah wasem   <strong>Newly Applied</strong> For Position <strong>Power Builder</strong> </p></a></div> <span class='notify-time'>27/02/2023 11:02:15 pm</span> </li> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> Zahid Naveed   <strong>Newly Applied</strong> For Position <strong>Power Builder</strong> </p></a></div> <span class='notify-time'>26/02/2023 12:56:22 pm</span> </li> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> junaid hassan   <strong>Newly Applied</strong> For Position <strong>UI/UX Designer</strong> </p></a></div> <span class='notify-time'>25/02/2023 11:17:42 pm</span> </li> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> junaid hassan   <strong>Newly Applied</strong> For Position <strong>Power Builder</strong> </p></a></div> <span class='notify-time'>25/02/2023 11:16:06 pm</span> </li> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> Usman Saleem   <strong>Newly Applied</strong> For Position <strong>Power Builder</strong> </p></a></div> <span class='notify-time'>24/02/2023 11:22:55 pm</span> </li> <li class='media dropdown-item'> <span class='success''><i class='ti-user'></i></span> <div class='media-body'> <a href='#'><p style='max-width:2000px'> Muhammad Waseem   <strong>Newly Applied</strong> For Position <strong>Power Builder</strong> </p></a></div> <span class='notify-time'>23/02/2023 11:36:09 am</span> </li></ul>
+</div>
+                                        
+                                        <a class="all-notification" href="#">See all notifications <i
+                                            class="ti-arrow-right"></i></a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown header-profile">
+                                    <a class="nav-link" href="#" role="button" data-toggle="dropdown">
+                                        <i class="mdi mdi-account"></i>
+
+                                    </a>
+                                    <span id="lblLoginName">M.Kamran Aman</span>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="Dashboard.aspx" class="dropdown-item">
+                                            <i class="fa fa-tachometer"></i>
+                                            <span class="ml-2">Dashboard</span>
+                                        </a>
+                                        
+
+                                        <a href="../Login.aspx" class="dropdown-item">
+                                            <i class="icon-key"></i>
+                                            <span class="ml-2">Logout </span>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+            <!--**********************************
+            Sidebar start
+        ***********************************-->
+            <div class="quixnav">
+                <div class="quixnav-scroll">
+                    <ul class="metismenu" id="menu">
+                        <li class="nav-label first">Daewoo Recruitment Module</li>
+                        <!-- <li><a href="index.html"><i class="icon icon-single-04"></i><span class="nav-text">Dashboard</span></a>
+                    </li> -->
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                            class="icon icon-single-04"></i><span class="nav-text">Dashboard</span></a>
+                            <ul aria-expanded="false">
+                                <li><a href="MISDashboard.aspx">MIS Dashboard</a></li>
+                                <li><a href="Dashboard.aspx">Recruitment Dashboard</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li class="nav-label">HR Opeartions</li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                            class="icon icon-app-store"></i><span class="nav-text">Opeartions</span></a>
+                            <ul aria-expanded="false">
+                                <li><a href="AddJobPost.aspx">Advertising Vacant Position</a></li>
+                                <li><a href="JobApplicantApply.aspx">Managing Applications</a></li>
+                                <li><a href="Position_Overall_status.aspx" hidden>Position Overall status </a></li>
+                                <li><a href="ChangeJobStatus.aspx">Managing Positions</a></li>
+
+                            </ul>
+                        </li>
+                        <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                            class="icon icon-chart-bar-33"></i><span class="nav-text">Reports</span></a>
+                            <ul aria-expanded="false">
+                                <li><a href="ReportApplicantDetails.aspx">Applicant Report</a></li>
+
+
+
+                            </ul>
+                        </li>
+
+
+
+
+
+                    </ul>
+                </div>
+            </div>
+            <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+            <!--**********************************
+            Content body start
+        ***********************************-->
+            
+    <div class="content-body">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="row page-titles mx-0">
+                <div class="col-sm-6 p-md-0">
+                    <div class="welcome-text">
+                        <h4>Hi, welcome back!</h4>
+                        <p class="mb-0">Applicant Detail</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <ol class="breadcrumb">
+                        
+                    </ol>
+                </div>
+            </div>
+
+
+
+            
+            
+            <div class="row">
+                <div class="col-12 col-sm-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Applicant Detail</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div>
+	<table cellspacing="10" cellpadding="8" id="MainContent_gvdetails" style="color:#333333;width:100%;">
+		<tr style="color:White;background-color:#507CD1;font-weight:bold;">
+			<th scope="col">Sr. no</th><th scope="col">Applicant Name</th><th scope="col">CNIC</th><th scope="col">Gender</th><th scope="col">Experience </th><th scope="col">City</th><th scope="col">Contact</th><th scope="col">Gross Salary</th><th scope="col">
+                                                CV
+                                            </th>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                21
+                                            </td><td>BILAL RIAZ</td><td>3520184817595</td><td>Male</td><td>15</td><td>Lahore</td><td>03078859734 , </td><td>75000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_0" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl02$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                22
+                                            </td><td>Bilal Tayyab</td><td>3520260007125</td><td>Male</td><td>3</td><td>Lahore</td><td>03324234860 , </td><td>40000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_1" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl03$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                23
+                                            </td><td>ABDUL MAJID </td><td>3520233721317</td><td>Male</td><td>4</td><td>Lahore</td><td>03364156293 , 0</td><td>35000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_2" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl04$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                24
+                                            </td><td>Asharib Kamal</td><td>6110166791803</td><td>Male</td><td>3</td><td>Islamabad</td><td>03155896001 , </td><td>80000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_3" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl05$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                25
+                                            </td><td>Asharib Kamal new</td><td>61101-6679180</td><td>Male</td><td>3</td><td>Islamabad</td><td>0303-1558960 , </td><td>80000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_4" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl06$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                26
+                                            </td><td>Muhammad Waseem</td><td>3460179464285</td><td>Male</td><td>&nbsp;</td><td>Daska</td><td>03026647401 , </td><td>25000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_5" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl07$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                27
+                                            </td><td>Huzaifa Baig</td><td>4210177672225</td><td>Male</td><td>4</td><td>Kulachi</td><td>03362313060 , 0</td><td>50000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_6" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl08$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                28
+                                            </td><td>Salman Ahmed</td><td>3410287638213</td><td>Male</td><td>10</td><td>Kamoke</td><td>03037006560 , 0</td><td>65000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_7" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl09$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                29
+                                            </td><td>Usman Saleem</td><td>3520180525055</td><td>Male</td><td>3</td><td>Lahore</td><td>03358458368 , 0</td><td>45000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_8" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl10$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                30
+                                            </td><td>junaid hassan</td><td>31202-6078864</td><td>Male</td><td>&nbsp;</td><td>Bahawalpur</td><td>03066040544 , </td><td>30000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_9" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl11$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                31
+                                            </td><td>Zahid Naveed</td><td>3520299076113</td><td>Male</td><td>15</td><td>Lahore</td><td>03004112498 , 0</td><td>100000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_10" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl12$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                32
+                                            </td><td>Abdullah wasem</td><td>3520175890519</td><td>Male</td><td>2</td><td>Lahore</td><td>03313232552 , 0</td><td>95000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_11" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl13$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                33
+                                            </td><td>HAMZA RAUF</td><td>3310402905891</td><td>Male</td><td>1</td><td>Lahore</td><td>03037416707 , 0</td><td>60000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_12" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl14$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                34
+                                            </td><td>Asia Altaf</td><td>32304-8064622</td><td>Female</td><td>&nbsp;</td><td>Multan</td><td>00923066331832 </td><td>40000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_13" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl15$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                35
+                                            </td><td>AHMAD FAROOQ</td><td>3550201963727</td><td>Male</td><td>1</td><td>Sheikhupura</td><td>03034171853 , 0</td><td>30</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_14" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl16$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                36
+                                            </td><td>Muhammad Noman</td><td>3330306046307</td><td>Male</td><td>7</td><td>Toba Tek Singh</td><td>03024970644 , 0</td><td>26000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_15" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl17$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                37
+                                            </td><td>Muhammad Tayyab wahka</td><td>3310066994065</td><td>Male</td><td>&nbsp;</td><td>Faisalabad</td><td>03022563263 , 0</td><td>40000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_16" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl18$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                38
+                                            </td><td>DANISH MEHMOOD</td><td>3710327866243</td><td>Male</td><td>13</td><td>Attock</td><td>03225410309 , </td><td>80000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_17" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl19$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:#EFF3FB;">
+			<td>
+                                                39
+                                            </td><td>Abid Hussain</td><td>3120276238499</td><td>Male</td><td>&nbsp;</td><td>Bahawalpur</td><td>03334440181 , 0</td><td>50000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_18" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl20$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr style="background-color:White;">
+			<td>
+                                                40
+                                            </td><td>Qaisar iqbal</td><td>3610248709451</td><td>Male</td><td>13</td><td>Khanewal</td><td>03017606678 , 0</td><td>65000</td><td>
+                                                <a id="MainContent_gvdetails_LinkButton1_19" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails$ctl21$LinkButton1&#39;,&#39;&#39;)">Download</a>
+                                            </td>
+		</tr><tr align="center" style="color:White;background-color:#2461BF;">
+			<td colspan="9"><table>
+				<tr>
+					<td><a href="javascript:__doPostBack(&#39;ctl00$MainContent$gvdetails&#39;,&#39;Page$1&#39;)" style="color:White;">1</a></td><td><span>2</span></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table>
+</div>
+                            </div>
+
+
+
+
+                            <div class="col-12 col-sm-12">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+            <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+            <!--**********************************
+            Footer start © Daewoo Jobs, All Right Reserved. Designed By MIS TEAM
+        ***********************************-->
+            <div class="footer">
+                <div class="copyright">
+                    <p>© Daewoo Jobs, All Right Reserved. Designed By MIS TEAM</p>
+                </div>
+            </div>
+            <!--**********************************
+            Footer end
+        ***********************************-->
+
+            <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+            <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+        </div>
+        <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <!-- Required vendors -->
+        <script src="../AdminTemplate/vendor/global/global.min.js"></script>
+        <script src="../AdminTemplate/js/quixnav-init.js"></script>
+        <script src="../AdminTemplate/js/custom.min.js"></script>
+
+        <script src="./vendor/highlightjs/highlight.pack.min.js"></script>
+        <!-- Circle progress -->
+    
+
+<script type="text/javascript">
+//<![CDATA[
+swal('Oops!', 'CV Not Found!', 'error');//]]>
+</script>
+</form>
+</body>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        toastr.options = {
+            "closeButton": true,
+            "showDuration": "2500",
+            "hideDuration": "2500",
+            "timeOut": "2500",
+            "extendedTimeOut": "2500",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        //toastr.info('Page Loaded!');
+        //$('#linkButton').click(function () {
+        //    toastr.success('Click Button');
+        //});
+    });
+</script>
+</html>

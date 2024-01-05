@@ -6,7 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using System.IO;
 using PLIC_Web_Poratal.Models;
+using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Mvc;
+using Report.Models;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Humanizer.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,22 +44,48 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Razor.Language;
 using System.Data.Common;
+using System.Security.Claims;
+using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Hosting;
+using CareConnect.Views.Home;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Build.Framework;
+using System.Transactions;
 
 namespace PLIC_Web_Poratal.Controllers
 {
     public class HomeController : Controller
     {
-
+        static HomeController()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        }
         //private readonly ILogger<HomeController> _logger;
 
         db _db = new db();
         string sqlquery = "select top 1 LoginId,Password from CRM_SYS_Users where LoginId=@LoginId and password=@Password";
 
+        private readonly IWebHostEnvironment _iwebHostEnvironment;
+        private string _connectionString = "DefaultConnection";
+        private readonly IConfiguration _configuration;
+
+
+        public HomeController(IWebHostEnvironment iwebhostenvironment, IConfiguration configuration)
+        {
+            this._iwebHostEnvironment = iwebhostenvironment;
+            this._configuration = configuration;
+            //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            //this._connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            _connectionString = _configuration.GetConnectionString("DefaultConnection");
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            _configuration = configuration;
+        }
+
         //public HomeController(ILogger<HomeController> logger)
         //{
         //    _logger = logger;
         //}
-
 
 
 
@@ -1014,7 +1053,8 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command7 = new SqlCommand("sp_Claim_Check_Org_Dstn", conn1))
 
                     {
-
+                        var userId = HttpContext.Session.GetString("LoginId"); // Change this to your actual session key
+                        var userRoleId = HttpContext.Session.GetString("RoleID"); // Change this to your actual session key
                         command3.CommandType = CommandType.StoredProcedure;
                         command3.Parameters.AddWithValue("@ClaimID", claimid);
 
@@ -1032,6 +1072,13 @@ namespace PLIC_Web_Poratal.Controllers
                         command6.CommandType = CommandType.StoredProcedure;
                         command7.CommandType = CommandType.StoredProcedure;
 
+                        command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                        command1.Parameters.AddWithValue("@ClaimID", claimid);
+                        command2.Parameters.AddWithValue("@ClaimID", claimid);
+                        command6.Parameters.AddWithValue("@ClaimID", claimid);
+                        command7.Parameters.AddWithValue("@ClaimID", claimid);
+                        command7.Parameters.AddWithValue("@UserId", userId);
+
                         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                         SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
                         SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
@@ -1039,12 +1086,7 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlDataAdapter dataAdapter5 = new SqlDataAdapter(command5);
                         SqlDataAdapter dataAdapter6 = new SqlDataAdapter(command6);
                         SqlDataAdapter dataAdapter7 = new SqlDataAdapter(command7);
-                        command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
-                        command1.Parameters.AddWithValue("@ClaimID", claimid);
-                        command2.Parameters.AddWithValue("@ClaimID", claimid);
-                        command6.Parameters.AddWithValue("@ClaimID", claimid);
-                        command7.Parameters.AddWithValue("@ClaimID", claimid);
-                        command7.Parameters.AddWithValue("@UserId", LoginId);
+
 
 
                         //dataAdapter.Fill(dataSet3);
@@ -1064,8 +1106,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         });
 
-                        var userId = HttpContext.Session.GetString("LoginId"); // Change this to your actual session key
-                        var userRoleId = HttpContext.Session.GetString("RoleID"); // Change this to your actual session key
+
 
                         TicketDetailsViewModel model = new TicketDetailsViewModel
                         {
@@ -1111,9 +1152,14 @@ namespace PLIC_Web_Poratal.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
+
+
+
+
+
 
 
 
@@ -2196,7 +2242,44 @@ namespace PLIC_Web_Poratal.Controllers
 
         }
 
+        public async Task<IActionResult> BulkSMS()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
 
+                    using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+
+                    {
+
+                        return View("~/Views/Home/BulkSMS.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
+
+
+
+
+
+            //return View("~/Views/Home/SearchTicket.cshtml", model);
+
+            // return View("~/Views/Home/SearchTicket.cshtml");
+
+
+        }
 
         public IActionResult SearchClaim()
         {
@@ -2317,6 +2400,62 @@ namespace PLIC_Web_Poratal.Controllers
                 throw ex;
             }
         }
+
+
+        [HttpGet]
+        public IActionResult Report(int id)
+        {
+            DataTable dataTable = new DataTable(); // DataTable to store the result
+
+            using (SqlConnection connection = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("sp_Get_Claim_Form_By_ClaimID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@ClaimID", id);
+
+                    using (SqlDataAdapter dataAdapter = new SqlDataAdapter(command))
+                    {
+                        dataAdapter.Fill(dataTable); // Fill the DataTable with the result of the stored procedure
+                    }
+                }
+            }
+
+            if (dataTable.Rows.Count == 0)
+            {
+                // Handle the case where no data is returned
+                return NotFound();
+            }
+
+            string mimtype = "";
+            int extension = 1;
+            var path = $"{this._iwebHostEnvironment.WebRootPath}\\Reports\\ClaimReport.rdlc";
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("ClaimForm", "Claim Form");
+
+            // Add parameters dynamically based on the columns in the DataTable
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                parameters.Add(column.ColumnName, dataTable.Rows[0][column].ToString());
+            }
+
+            LocalReport localReport = new LocalReport(path);
+            var result = localReport.Execute(RenderType.Pdf, extension, parameters, mimtype);
+
+            // Convert the PDF content to base64
+            var pdfBase64 = Convert.ToBase64String(result.MainStream.ToArray());
+
+            // Return the base64-encoded PDF content as JSON
+            return Json(pdfBase64);
+        }
+
+
+
+
+
+
 
         public IActionResult ReportClaim()
         {
@@ -2959,9 +3098,10 @@ namespace PLIC_Web_Poratal.Controllers
                                 string complainerCellno = complainerCell; // Replace with the actual recipient's phone number
                                 string complainer = Complainer; // Replace with the actual complainer's name
                                 string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
+                                string ConsignmentNo = createTicketModel.cgnno; // Replace with the actual complaint
                                 int ticketId = ticketID; // Replace with the actual ticket ID
 
-                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
+                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} for ConsignmentNo {ConsignmentNo} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
 
                                 strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
 
@@ -3246,9 +3386,9 @@ namespace PLIC_Web_Poratal.Controllers
                             cmd.Parameters.AddWithValue("@SMSAllow", createTicketModel.issendsms);
                         }
                         cmd.Parameters.AddWithValue("@Priority", createTicketModel.priority);
-                        cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
-                        cmd.Parameters.AddWithValue("@Location", createTicketModel.locationname);
-                        cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
+                        //cmd.Parameters.AddWithValue("@CityId", createTicketModel.city);
+                        //cmd.Parameters.AddWithValue("@Location", createTicketModel.locationname);
+                        //cmd.Parameters.AddWithValue("@RegionId", createTicketModel.region);
                         cmd.Parameters.AddWithValue("@CnsgNo", createTicketModel.cgnno);
                         cmd.Parameters.AddWithValue("@Product", createTicketModel.Product);
                         cmd.Parameters.AddWithValue("@AccountNo", createTicketModel.accountno);
@@ -3281,6 +3421,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@InsuranceRate", createTicketModel.InsuranceRate);
                         cmd.Parameters.AddWithValue("@InsuranceAmount", createTicketModel.InsuranceAmount);
                         cmd.Parameters.AddWithValue("@ClaimAmount", createTicketModel.ClaimAmount);
+                        cmd.Parameters.AddWithValue("@ClaimAmountNew", createTicketModel.ClaimAmountNew);
                         cmd.Parameters.AddWithValue("@NegotiatedAmount", createTicketModel.NegotiatedAmount);
                         cmd.Parameters.AddWithValue("@ImagePath", null);
                         cmd.Parameters.AddWithValue("@content", createTicketModel.content);
@@ -3297,20 +3438,13 @@ namespace PLIC_Web_Poratal.Controllers
                         SqlParameter ticketIDParam = new SqlParameter("@ClaimID", SqlDbType.Int);
                         ticketIDParam.Direction = ParameterDirection.Output;
                         cmd.Parameters.Add(ticketIDParam);
-                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
-                        //ticketExistsParam.Direction = ParameterDirection.Output;
-                        //cmd.Parameters.Add(ticketExistsParam);
-                        // conn.Close();
-                        //conn.Open();
+
 
 
                         await cmd.ExecuteNonQueryAsync();
 
 
 
-
-                        // Check if the ticket already exists in your database
-                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
 
 
 
@@ -3363,6 +3497,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             insertImageCmd.CommandType = CommandType.StoredProcedure;
                                             insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
                                             insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                            insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
                                             await insertImageCmd.ExecuteNonQueryAsync();
                                         }
                                     }
@@ -3415,6 +3550,7 @@ namespace PLIC_Web_Poratal.Controllers
                                         insertImageCmd.Transaction = transaction;
                                         insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
                                         insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                        insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
                                         await insertImageCmd.ExecuteNonQueryAsync();
                                     }
                                 }
@@ -3433,7 +3569,8 @@ namespace PLIC_Web_Poratal.Controllers
                                 string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
                                 int ticketId = ticketID; // Replace with the actual ticket ID
 
-                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Claim ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
+                                string SMSmessage = $"Dear {complainer},\nYour {complaint} with Claim ID {ticketId} against CN# {createTicketModel.cgnno} has been registered. Track your shipment https://fastex.pk or contact with Business management";
+
 
                                 strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
 
@@ -3502,21 +3639,21 @@ namespace PLIC_Web_Poratal.Controllers
                                            " </table>";
 
 
-                                    if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
-                                    {
-                                        // Call your send email function
-                                        // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
-                                        await SendEmailClaimAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody, Images);
-                                    }
-                                    else
-                                    {
-                                        // Show an alert indicating that one or both email addresses are not valid
-                                        // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
-                                        //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
+                                    //if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
+                                    //{
+                                    //    // Call your send email function
+                                    //    // SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
+                                    //    await SendEmailClaimAsync(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody, Images);
+                                    //}
+                                    //else
+                                    //{
+                                    //    // Show an alert indicating that one or both email addresses are not valid
+                                    //    // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
+                                    //    //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
 
 
-                                        return Json(new { success = false, message = "Email Address is Not Valid." });
-                                    }
+                                    //    return Json(new { success = false, message = "Email Address is Not Valid." });
+                                    //}
 
 
 
@@ -3585,16 +3722,22 @@ namespace PLIC_Web_Poratal.Controllers
 
                                                 SqlCommand cmd3 = new SqlCommand("sp_Insert_SMS", conn);
                                                 cmd3.CommandType = CommandType.StoredProcedure;
-
+                                                cmd3.Transaction = transaction;
                                                 cmd3.Parameters.AddWithValue("@issendsms", issendsms);
                                                 cmd3.Parameters.AddWithValue("@TicketId", ticketID);
                                                 cmd3.Parameters.AddWithValue("@Message", message);
                                                 cmd3.Parameters.AddWithValue("@MobileNo", complainerCell);
                                                 cmd3.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
                                                 cmd3.Parameters.AddWithValue("@ErrorCode", statusCode);
+
                                                 await cmd3.ExecuteNonQueryAsync();
                                                 int ticketupdateno = ticketID; // Replace with your tracking number variable or value
                                                 ViewData["TicketUpdateNo"] = ticketupdateno;
+
+
+
+                                                transaction.Commit();
+
 
                                                 // Ticket inserted successfully
                                                 return Json(new { success = false, data = ticketupdateno, message = $"Claim Created Successfully!! SMS not sent. Error: {message}" });
@@ -3757,250 +3900,6 @@ namespace PLIC_Web_Poratal.Controllers
                                 //ViewData["TicketNo"] = ticketno1;
                                 return Json(new { success = true, data = ticketupdateno, message = "Service Request Created Successfully." });
                             }
-
-
-                            //string result = "";
-                            //string pattern = @"^92\d{10}$";
-
-                            //string complainerCell = ComplainerCell;
-
-                            //if (Regex.IsMatch(complainerCell, pattern))
-                            //{
-                            //    string strPost = "";
-                            //    // strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + complainerCell + "&Mask=Daewoo-Exp&Message=Test SMS!!! SMS&UniCode=0&ShortCodePrefered=n";
-
-
-                            //    string loginId = "923114814965";
-                            //    string loginPassword = "Zong@123";
-                            //    string complainerCellno = complainerCell; // Replace with the actual recipient's phone number
-                            //    string complainer = Complainer; // Replace with the actual complainer's name
-                            //    string complaint = createTicketModel.ticketcatagoryName; // Replace with the actual complaint
-                            //    int ticketId = ticketID; // Replace with the actual ticket ID
-
-                            //    string SMSmessage = $"Dear {complainer},\nYour {complaint} with Ticket ID {ticketId} has been registered. Track your shipment https://fastex.pk or Dial 042111007009";
-
-                            //    strPost = $"loginId={loginId}&loginPassword={loginPassword}&Destination={complainerCellno}&Mask=Daewoo-Exp&Message={SMSmessage}&UniCode=0&ShortCodePrefered=n";
-
-                            //    // Valid contact number
-
-
-                            //    // Testing API
-
-
-                            //    //strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + complainerCell + "&Mask=Daewoo-Exp&Message=Test &UniCode=0&ShortCodePrefered=n";
-
-                            //    StreamWriter myWriter = null;
-                            //    ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
-                            //    HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
-                            //    objRequest.Method = "POST";
-                            //    objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
-                            //    objRequest.ContentType = "application/x-www-form-urlencoded";
-                            //    try
-                            //    {
-                            //        myWriter = new StreamWriter(objRequest.GetRequestStream());
-                            //        myWriter.Write(strPost);
-                            //    }
-                            //    catch (Exception e)
-                            //    {
-                            //    }
-                            //    finally
-                            //    {
-                            //        myWriter.Close();
-                            //    }
-
-
-
-                            //    try
-                            //    {
-
-                            //        string dataSetJson = HttpContext.Session.GetString("Data1");
-
-                            //        //DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(dataSetJson);
-
-                            //        string myValue = ViewBag.TrackingData;
-
-
-                            //        //DataTable table = dataSet.Tables["Table"];
-                            //        //DataRow row = table.Rows[0];
-
-                            //        //// Retrieve values from the row and store them in variables
-                            //        //int ticketId1 = Convert.ToInt32(row["TicketId"]);
-                            //        //long ConsignmentNo = Convert.ToInt32(row["CnsgNo"]);
-                            //        //string category = row["Category"].ToString();
-                            //        //string issueType = row["IssueType"].ToString();
-                            //        //string Origin = row["Origin"].ToString();
-                            //        //string Destination = row["Destination"].ToString();
-
-
-
-                            //        string subject;
-                            //        subject = "  Care Connect: Ticket: " + ticketID + " - Consignment #: " + createTicketModel.cgnno + " - Category: " + createTicketModel.ticketcatagoryName + " Issue Type: " + createTicketModel.ticketsubcatagoryName + " - Origin: " + createTicketModel.Origin + " - Destination: " + createTicketModel.Destination + " ";
-                            //        //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
-
-                            //        //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
-
-
-                            //        string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Ticked ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td>  </tr>";
-
-                            //        textBody += "<tr><td>" + ticketID + "</td><td> " + createTicketModel.cgnno + "</td> <td> " + createTicketModel.ticketcatagoryName + "</td>  <td> " + createTicketModel.ticketsubcatagoryName + "</td>  <td> " + createTicketModel.Origin + "</td>  <td> " + createTicketModel.Destination + "</td> </tr>";
-                            //        textBody += "</table> ";
-
-
-                            //        textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + createTicketModel.Remarks + "<tr><td> </table> \n" +
-                            //                "</br><table> <tr><td>\n" +
-                            //                "Kindly Login Care Connect Portal URL. https://localhost:44371/ </br></br></td></tr>\n" +
-
-                            //               "<tr><td>\n" +
-                            //               "Best regards,</br> </td></tr>\n" +
-                            //               "<tr><td>\n" +
-                            //               "MIS Department</br> </td></tr>\n" +
-
-                            //               "<tr style=font-size:10px><td>\n" +
-                            //               "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
-                            //               " </table>";
-
-                            //        if (IsValidEmail(createTicketModel.UserEmail) && IsValidEmail(createTicketModel.UserEmail))
-                            //        {
-                            //            // Call your send email function
-                            //            SendEmail(createTicketModel.UserEmail, createTicketModel.UserEmail, subject, textBody);
-                            //        }
-                            //        else
-                            //        {
-                            //            // Show an alert indicating that one or both email addresses are not valid
-                            //            // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
-                            //            //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
-
-
-                            //            return Json(new { success = false, message = "Email Address is Not Valid." });
-                            //        }
-
-
-
-                            //        //  SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, "Email From Care Connect", EmailTicketModel.remarks);
-
-
-
-
-                            //        //SqlTransaction transaction1 = conn.BeginTransaction();
-                            //        SqlCommand cmd1 = new SqlCommand("sp_Ticket_Email", conn);
-                            //        cmd1.CommandType = CommandType.StoredProcedure;
-                            //        cmd1.Transaction = transaction;
-                            //        cmd1.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                            //        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
-                            //        cmd1.Parameters.AddWithValue("@Comment", createTicketModel.Remarks);
-                            //        cmd1.Parameters.AddWithValue("@TicketId", ticketID);
-
-                            //        cmd1.Parameters.AddWithValue("@Activity", "Auto-Email");
-
-                            //        // conn1.Close();
-                            //        //conn1.Open();
-                            //        cmd1.ExecuteNonQuery();
-
-
-
-
-
-                            //        // Make the HTTP request to the SMS API
-                            //        //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("your_sms_api_url_here");
-                            //        //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                            //        HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
-
-                            //        // Check the HTTP status code to determine the result
-                            //        if (objResponse.StatusCode == HttpStatusCode.OK)
-                            //        {
-                            //            using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
-                            //            {
-                            //                string result1 = sr.ReadToEnd();
-                            //                string[] responseParts = result1.Split('|');
-
-
-                            //                string statusCode = responseParts[0];
-                            //                string message = responseParts[1];
-
-                            //                // Show appropriate message based on the response
-                            //                if (statusCode == "200" || statusCode == "0")
-                            //                {
-                            //                    int ticketno1 = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketNo"] = ticketno1;
-                            //                    string issendsms = "1";
-
-
-                            //                    SqlCommand cmd2 = new SqlCommand("sp_Insert_SMS", conn);
-                            //                    cmd2.CommandType = CommandType.StoredProcedure;
-                            //                    cmd2.Transaction = transaction;
-                            //                    cmd2.Parameters.AddWithValue("@issendsms", issendsms);
-                            //                    cmd2.Parameters.AddWithValue("@TicketId", ticketID);
-                            //                    cmd2.Parameters.AddWithValue("@Remarks", SMSmessage);
-                            //                    cmd2.Parameters.AddWithValue("@Message", message);
-                            //                    cmd2.Parameters.AddWithValue("@MobileNo", complainerCell);
-                            //                    cmd2.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                            //                    cmd2.Parameters.AddWithValue("@ErrorCode", statusCode);
-                            //                    //conn1.Close();
-                            //                    //conn1.Open();
-                            //                    cmd2.ExecuteNonQuery();
-
-
-
-
-                            //                    int ticketupdateno = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketUpdateNo"] = ticketupdateno;
-                            //                    transaction.Commit();
-
-                            //                    // Ticket inserted successfully
-                            //                    return Json(new { success = true, data = ticketupdateno, message = "Ticket has been Created Successfully." });
-
-
-
-                            //                }
-                            //                else
-                            //                {
-
-                            //                    int ticketno1 = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketNo"] = ticketno1;
-                            //                    string issendsms = "0";
-
-                            //                    SqlCommand cmd3 = new SqlCommand("sp_Insert_SMS", conn);
-                            //                    cmd1.CommandType = CommandType.StoredProcedure;
-
-                            //                    cmd3.Parameters.AddWithValue("@issendsms", issendsms);
-                            //                    cmd3.Parameters.AddWithValue("@TicketId", ticketID);
-                            //                    cmd3.Parameters.AddWithValue("@Message", message);
-                            //                    cmd3.Parameters.AddWithValue("@MobileNo", complainerCell);
-                            //                    cmd3.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
-                            //                    cmd3.Parameters.AddWithValue("@ErrorCode", statusCode);
-                            //                    cmd3.ExecuteNonQuery();
-                            //                    int ticketupdateno = ticketID; // Replace with your tracking number variable or value
-                            //                    ViewData["TicketUpdateNo"] = ticketupdateno;
-
-                            //                    // Ticket inserted successfully
-                            //                    return Json(new { success = false, data = ticketupdateno, message = $"Ticket Created Successfully!! SMS not sent. Error: {message}" });
-
-                            //                }
-                            //            }
-                            //        }
-
-                            //        else
-                            //        {
-
-
-                            //        }
-                            //        objResponse.Close();
-                            //    }
-                            //    catch (WebException ex)
-                            //    {
-                            //        transaction.Rollback();
-                            //        Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
-                            //        return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
-                            //    }
-                            //    finally
-                            //    {
-                            //        conn.Close();
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    return Json(new { success = false, message = "Invalid Mobile No." });
-                            //}
                             int ticketno = ticketID; // Replace with your tracking number variable or value
                             ViewData["TicketNo"] = ticketno;
                             return Json(new { success = true, data = ticketno, message = "Ticket created successfully." });
@@ -4331,7 +4230,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         }
 
-                       await conn.CloseAsync();
+                        await conn.CloseAsync();
 
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
@@ -4355,7 +4254,7 @@ namespace PLIC_Web_Poratal.Controllers
                 // Handle the exception and return an error response
                 return Json(new { success = false, message = "Error creating ticket.", error = ex.Message });
             }
-           
+
         }
 
         public ActionResult GetClaimReport(CreateTicketModel createTicketModel)
@@ -5051,7 +4950,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpPost]
-        public ActionResult UpdateFinalRemarks(UpdateTicketModel updateTicketModel)
+        public ActionResult UpdateClaim(UpdateTicketModel updateTicketModel)
         {
             try
             {
@@ -5059,14 +4958,12 @@ namespace PLIC_Web_Poratal.Controllers
                 {
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
-                        SqlCommand cmd = new SqlCommand("sp_Update_Claim_FinalRemarks", conn);
+                        SqlCommand cmd = new SqlCommand("sp_Update_Claim", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
                         //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
                         cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
-                        cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
-                        cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
-                        cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+                        cmd.Parameters.AddWithValue("@TicketId", updateTicketModel.ticketdid);
 
                         cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
 
@@ -5100,7 +4997,7 @@ namespace PLIC_Web_Poratal.Controllers
                         {
 
                             // Ticket already exists
-                            return Json(new { success = false, message = "claim already Updated." });
+                            return Json(new { success = false, message = "Claim already Updated." });
                         }
                         else
                         {
@@ -5133,6 +5030,211 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateRemarks(UpdateTicketModel updateTicketModel, List<IFormFile> Images)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+
+
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                        using (SqlCommand cmd = new SqlCommand("sp_Update_Claim_Remarks", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                            cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                            cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
+                            cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
+                            cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+
+                            cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+
+
+
+                            // Add the @ticketExists output parameter
+                            SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                            ticketExistsParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketExistsParam);
+
+                            // Add the @TicketID output parameter
+                            SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                            ticketIDParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketIDParam);
+                            //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                            //ticketExistsParam.Direction = ParameterDirection.Output;
+                            //cmd.Parameters.Add(ticketExistsParam);
+
+                            await cmd.ExecuteNonQueryAsync();
+
+                            // Check if the ticket already exists in your database
+                            //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                            bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                            int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                            // Display the appropriate message based on the ticket existence
+                            if (ticketupdateExists)
+                            {
+
+                                // Ticket already exists
+                                return Json(new { success = false, message = "claim already Updated." });
+                            }
+                            else
+                            {
+                                // Process uploaded images
+                                foreach (var image in Images)
+                                {
+                                    if (image != null && image.Length > 0)
+                                    {
+                                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                                        var filePath = Path.Combine("wwwroot/images/Claim", fileName);
+
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            image.CopyTo(stream);
+                                        }
+
+                                        // Save the image path to the database
+                                        var imageModel = new ClaimImage
+                                        {
+                                            ClaimId = Convert.ToInt32(updateTicketModel.ticketdid), // Use the ClaimID from the output parameter
+                                            ImageUrl = "/images/Claim/" + fileName
+                                        };
+
+                                        // Insert image record into ClaimImages table using the stored procedure
+                                        using (SqlCommand insertImageCmd = new SqlCommand("InsertClaimImages", conn))
+                                        {
+                                            insertImageCmd.CommandType = CommandType.StoredProcedure;
+                                            insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
+                                            insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                            insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
+                                            // insertImageCmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+                                            await insertImageCmd.ExecuteNonQueryAsync();
+                                        }
+                                    }
+                                }
+
+
+                                int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                                // Ticket inserted successfully
+                                return Json(new { success = true, data = ticketupdateno, message = "Claim Updated successfully." });
+                            }
+                        }
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Updating ticket.", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateFinalRemarks(UpdateTicketModel updateTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                        using (SqlCommand cmd = new SqlCommand("sp_Update_Claim_FinalRemarks", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                            cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                            cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
+                            cmd.Parameters.AddWithValue("@origin", updateTicketModel.origin);
+                            cmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
+
+                            cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+
+
+
+                            // Add the @ticketExists output parameter
+                            SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                            ticketExistsParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketExistsParam);
+
+                            // Add the @TicketID output parameter
+                            SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                            ticketIDParam.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(ticketIDParam);
+                            //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                            //ticketExistsParam.Direction = ParameterDirection.Output;
+                            //cmd.Parameters.Add(ticketExistsParam);
+
+                            await cmd.ExecuteNonQueryAsync();
+
+                            // Check if the ticket already exists in your database
+                            //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                            bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                            int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                            // Display the appropriate message based on the ticket existence
+                            if (ticketupdateExists)
+                            {
+
+                                // Ticket already exists
+                                return Json(new { success = false, message = "Claim already Updated." });
+                            }
+                            else
+                            {
+
+
+                                int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                                // Ticket inserted successfully
+                                return Json(new { success = true, data = ticketupdateno, message = "Claim Updated successfully." });
+                            }
+                        }
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Updating Claim.", error = ex.Message });
+            }
+        }
 
         [HttpPost]
         public ActionResult TickedClosed(UpdateTicketModel updateTicketModel)
@@ -5872,6 +5974,164 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
+
+        public async Task<ActionResult> UpdateClaimEmail(EmailTicketModel EmailTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    if (string.IsNullOrEmpty(EmailTicketModel.remarks))
+                    {
+                        // Call your send email function
+                        return Json(new { success = false, message = "Remarks field is Empty." });
+                    }
+                    string dataSetJson = HttpContext.Session.GetString("Data1");
+
+                    DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(dataSetJson);
+
+                    string myValue = ViewBag.TrackingData;
+
+
+                    DataTable table = dataSet.Tables["Table"];
+                    DataRow row = table.Rows[0];
+
+                    // Retrieve values from the row and store them in variables
+                    int ticketId = Convert.ToInt32(row["claimId"]);
+                    long ConsignmentNo = Convert.ToInt32(row["CnsgNo"]);
+                    string category = row["Category"].ToString();
+                    string issueType = row["IssueType"].ToString();
+                    string Origin = row["Origin"].ToString();
+                    string Destination = row["Destination"].ToString();
+
+
+
+                    string subject;
+                    subject = "  Care Connect: Claim ID: " + ticketId + " - Consignment #: " + ConsignmentNo + " - Category: " + category + " - Issue Type: " + issueType + " - Origin: " + Origin + " - Destination: " + Destination + "  - Priority: " + "" + "";
+                    //string EmailBody = "<html><body><h1>Email Content</h1><p>This is the content of my email.</p></body></html>";
+
+                    //Ticket: -Consignment NO: -Category:      Issue Type:       -Origin:      -Destination:   
+
+
+                    string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 400 + "><tr bgcolor='#4da6ff'><td><b>Claim ID</b></td> <td> <b> Consignment #</b> </td><td> <b> Category </b> </td> <td> <b> Issue Type</b> </td> <td> <b> Origin</b> </td>  <td> <b> Destination</b> </td> <td> <b> Agent</b> </td>  </tr>";
+
+                    textBody += "<tr><td>" + ticketId + "</td><td> " + ConsignmentNo + "</td> <td> " + category + "</td>  <td> " + issueType + "</td>  <td> " + Origin + "</td>  <td> " + Destination + "</td>  <td> " + HttpContext.Session.GetString("UserName") + "</td> </tr>";
+                    textBody += "</table> ";
+
+
+                    textBody += "</br><table><tr><td> <b> Agent Remarks:  </b>" + EmailTicketModel.remarks + "<tr><td> </table> \n" +
+                            "</br><table> <tr><td>\n" +
+                            "Kindly Login Care Connect Portal URL. http://careconnect.daewoo.net.pk/ </br></br></td></tr>\n" +
+
+                           "<tr><td>\n" +
+                           "Best regards,</br> </td></tr>\n" +
+                           "<tr><td>\n" +
+                           "MIS Department</br> </td></tr>\n" +
+
+                           "<tr style=font-size:10px><td>\n" +
+                           "<b>Note:This is system generated Email.</b></br> </td></tr>\n" +
+                           " </table>";
+
+
+                    if (IsValidEmail(EmailTicketModel.emailto) && IsValidEmail(EmailTicketModel.emailcc))
+                    {
+                        // Call your send email function
+                        await SendEmailAsync(EmailTicketModel.emailto, EmailTicketModel.emailcc, subject, textBody);
+                    }
+                    else
+                    {
+                        // Show an alert indicating that one or both email addresses are not valid
+                        // You can use your preferred method to display the alert (e.g., SweetAlert, JavaScript alert, etc.)
+                        //  return Content("<script>alert('One or both email addresses are not valid.');</script>");
+
+
+                        return Json(new { success = false, message = "Email Address is Not Valid." });
+                    }
+
+
+
+                    //  SendEmail(EmailTicketModel.emailto, EmailTicketModel.emailcc, "Email From Care Connect", EmailTicketModel.remarks);
+
+
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_Update_Claim", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                        //cmd.Parameters.AddWithValue("@UserRole", HttpContext.Session.GetString("RoleID"));
+                        cmd.Parameters.AddWithValue("@Comment", EmailTicketModel.remarks);
+                        cmd.Parameters.AddWithValue("@TicketId", EmailTicketModel.ticketdid);
+
+                        cmd.Parameters.AddWithValue("@Activity", EmailTicketModel.activity);
+
+
+
+                        // Add the @ticketExists output parameter
+                        SqlParameter ticketExistsParam = new SqlParameter("@ticketUpdateExists", SqlDbType.Bit);
+                        ticketExistsParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketExistsParam);
+
+                        // Add the @TicketID output parameter
+                        SqlParameter ticketIDParam = new SqlParameter("@TicketUpdateID", SqlDbType.Int);
+                        ticketIDParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(ticketIDParam);
+                        //SqlParameter ticketExistsParam = new SqlParameter("@ticketExists", SqlDbType.Bit);
+                        //ticketExistsParam.Direction = ParameterDirection.Output;
+                        //cmd.Parameters.Add(ticketExistsParam);
+                        conn.Close();
+                        conn.Open();
+                        await cmd.ExecuteNonQueryAsync();
+
+                        // Check if the ticket already exists in your database
+                        //bool ticketExists = (bool)cmd.Parameters["@ticketExists"].Value;
+
+                        bool ticketupdateExists = (bool)cmd.Parameters["@ticketUpdateExists"].Value;
+                        int ticketID = (int)cmd.Parameters["@TicketUpdateID"].Value;
+
+
+                        // Display the appropriate message based on the ticket existence
+                        if (ticketupdateExists)
+                        {
+
+                            // Ticket already exists
+                            return Json(new { success = false, message = "Email Already Sent." });
+                        }
+                        else
+                        {
+
+
+                            int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                            ViewData["TicketUpdateNo"] = ticketupdateno;
+
+                            // Ticket inserted successfully
+                            return Json(new { success = true, data = ticketupdateno, message = "Email Send successfully." });
+                        }
+
+                        // string trackingNumbernew = name; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        // return View("~/Views/Home/TicketGenerate.cshtml");
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+                // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                // Optionally, you can return a success response to the client
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new
+                {
+                    success = false,
+                    message = "Error Updating ticket.",
+                    error = ex.Message
+                });
+            }
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> UpdateTicketSMSAsync(EmailTicketModel EmailTicketModel)
         {
@@ -6116,6 +6376,321 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> SendBulkSMS(List<BulkSMS> smsDataList)
+        {
+            try
+            {
+
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+                    using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+
+                    {
+                        if (conn1.State != ConnectionState.Open)
+                            await conn1.OpenAsync();
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Bulk_SMS_Send_Numbers", conn1))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                            using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command))
+                            {
+
+                                await Task.Run(() => dataAdapter1.Fill(dataSet1));
+                            }
+                        }
+                        BulkSMS model = new BulkSMS
+                        {
+
+                            bulksms = dataSet1,
+
+                        };
+
+                        int issendsms = 0;
+                        foreach (DataRow row in dataSet1.Tables[0].Rows)
+                        {
+
+                            string phoneNumber = row["mobile_no"].ToString();
+                            string smsMessage = row["sms_message"].ToString();
+
+                            string strPost = "";
+                            strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + phoneNumber + "&Mask=Fastex.PK&Message=" + smsMessage + " &SMS&UniCode=0&ShortCodePrefered=n";
+
+                            StreamWriter myWriter = null;
+                            ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
+                            HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
+                            objRequest.Method = "POST";
+                            objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
+                            objRequest.ContentType = "application/x-www-form-urlencoded";
+                            try
+                            {
+                                myWriter = new StreamWriter(objRequest.GetRequestStream());
+                                myWriter.Write(strPost);
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                            finally
+                            {
+                                myWriter.Close();
+                            }
+
+                            try
+                            {
+
+
+                                HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
+
+                                // Check the HTTP status code to determine the result
+                                if (objResponse.StatusCode == HttpStatusCode.OK)
+                                {
+                                    using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+                                    {
+                                        string result1 = sr.ReadToEnd();
+                                        string[] responseParts = result1.Split('|');
+
+
+                                        string statusCode = responseParts[0];
+                                        string message = responseParts[1];
+
+                                        // Show appropriate message based on the response
+                                        if (statusCode == "200" || statusCode == "0")
+                                        {
+                                            //string ticketno1 = ; // Replace with your tracking number variable or value
+                                            //ViewData["TicketNo"] = ticketno1;
+                                            issendsms = issendsms + 1;
+
+                                            // return Json(new { success = true, data = message, message = "SMS Send successfully." });
+                                        }
+                                        else
+                                        {
+
+                                            return Json(new { success = false, message = $"Error occurred while sending SMS:" });
+                                        }
+
+                                    }
+
+                                }
+                                else
+                                {
+
+
+                                }
+
+                                // Don't forget to close the response
+                                objResponse.Close();
+                            }
+                            catch (WebException ex)
+                            {
+                                // Handle any exceptions that occurred during the HTTP request
+                                Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
+                                return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
+                            }
+                        }
+                        return Json(new { success = true, data = "done", message = "SMS Send successfully." });
+                    }
+                    return Json(new { success = true, data = "done", message = "SMS Send successfully." });
+                    // Insert the record into the database using your preferred data access method (e.g., ADO.NET, Entity Framework, etc.)
+
+                    // Optionally, you can return a success response to the client
+
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new
+                {
+                    success = false,
+                    message = "Error Sending SMS.",
+                    error = ex.Message
+                });
+            }
+        }
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> UploadFile(IFormFile file)
+        {
+            try
+            {
+
+
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        await conn.OpenAsync();
+                        var error = "";
+                        var results = new List<SmsResult>(); // Store SMS sending results
+
+                        if (file != null && file.Length > 0)
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                file.CopyTo(stream);
+                                stream.Position = 0;
+
+                                using (var package = new ExcelPackage(stream))
+                                {
+                                    var worksheet = package.Workbook.Worksheets[0];
+
+                                    // Loop through the rows and read mobile numbers
+                                    for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                                    {
+                                        try
+                                        {
+                                            string mobileNumber = worksheet.Cells[row, 1].Value.ToString();
+                                            string message = worksheet.Cells[row, 2].Value.ToString();
+                                            // Send SMS using the mobileNumber and smsMessage
+                                            // (You can call your SMS sending method here)
+                                            string strPost = "";
+                                            strPost = "loginId=923114814965&loginPassword=Zong@123&Destination=" + mobileNumber + "&Mask=Fastex.PK&Message=" + message + " &SMS&UniCode=0&ShortCodePrefered=n";
+
+                                            StreamWriter myWriter = null;
+                                            ServicePointManager.SecurityProtocol = ((SecurityProtocolType)(3072));
+                                            HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create("https://cbs.zong.com.pk/reachrestapi/home/SendQuickSMS?");
+                                            objRequest.Method = "POST";
+                                            objRequest.ContentLength = Encoding.UTF8.GetByteCount(strPost);
+                                            objRequest.ContentType = "application/x-www-form-urlencoded";
+                                            try
+                                            {
+                                                myWriter = new StreamWriter(objRequest.GetRequestStream());
+                                                myWriter.Write(strPost);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                            }
+                                            finally
+                                            {
+                                                myWriter.Close();
+                                            }
+                                            try
+                                            {
+                                                HttpWebResponse objResponse = (HttpWebResponse)objRequest.GetResponse();
+                                                if (objResponse.StatusCode == HttpStatusCode.OK)
+                                                {
+                                                    using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+                                                    {
+                                                        string result1 = sr.ReadToEnd();
+                                                        string[] responseParts = result1.Split('|');
+
+
+                                                        string statusCode = responseParts[0];
+                                                        string messages = responseParts[1];
+
+
+                                                        if (statusCode == "200" || statusCode == "0")
+                                                        {
+
+                                                            //int ticketno1 = ticketID; // Replace with your tracking number variable or value
+                                                            //ViewData["TicketNo"] = ticketno1;
+                                                            string issendsms = "1";
+
+
+                                                            SqlCommand cmd2 = new SqlCommand("sp_Insert_Bulk_SMS", conn);
+                                                            cmd2.CommandType = CommandType.StoredProcedure;
+                                                            //cmd2.Transaction = transaction;
+                                                            cmd2.Parameters.AddWithValue("@issendsms", issendsms);
+                                                            //cmd2.Parameters.AddWithValue("@TicketId", ticketID);
+                                                            //cmd2.Parameters.AddWithValue("@Remarks", SMSmessage);
+                                                            cmd2.Parameters.AddWithValue("@Message", message);
+                                                            cmd2.Parameters.AddWithValue("@MobileNo", mobileNumber);
+                                                            cmd2.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                                                            cmd2.Parameters.AddWithValue("@ErrorCode", statusCode);
+                                                            //conn1.Close();
+                                                            //conn1.Open();
+                                                            await cmd2.ExecuteNonQueryAsync();
+
+
+
+
+                                                            //int ticketupdateno = ticketID; // Replace with your tracking number variable or value
+                                                            //ViewData["TicketUpdateNo"] = ticketupdateno;
+                                                            //transaction.Commit();
+
+
+
+                                                            results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Sent", statusCode = statusCode, messages = messages });
+
+                                                        }
+                                                        else
+                                                        {
+                                                            results.Add(new SmsResult { MobileNumber = mobileNumber, Status = "Not Sent", statusCode = statusCode, messages = messages });
+
+                                                            //results.Add(new SmsResult { messages = "Invalid mobile no" });
+                                                        }
+
+                                                    }
+
+                                                }
+                                                else
+                                                {
+
+
+                                                }
+
+
+                                                objResponse.Close();
+                                            }
+                                            catch (WebException ex)
+                                            {
+                                                ViewBag.error = "";
+                                                results.Add(new SmsResult { MobileNumber = mobileNumber, Status = $"Error: {ex.Message}" });
+                                                // Handle any exceptions that occurred during the HTTP request
+                                                Console.WriteLine($"Error occurred while sending SMS: {ex.Message}");
+                                                return Json(new { success = false, message = $"Error occurred while sending SMS: {ex.Message}" });
+                                            }
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // If an error occurs, add an error result
+                                            ViewBag.error = $"Error: {ex.Message}";
+                                            results.Add(new SmsResult { messages = $"Error: {ex.Message}" });
+                                        }
+
+                                    }
+                                    //ViewBag.SmsResults = results;
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessage = "No File Selected";
+                            //results.Add(new SmsResult { messages = "No File Selected" });
+                            return View("BulkSMS");
+                        }
+                        ViewBag.SmsResults = results;
+                        return View("~/Views/Home/BulkSMS.cshtml");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.ErrorMessage = "error.'" + ex.Message + "'";
+                return View("BulkSMS");
+
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult> UpdateTicketClosingAsync(EmailTicketModel EmailTicketModel)
