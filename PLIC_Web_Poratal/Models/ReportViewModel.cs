@@ -16,5 +16,6 @@ namespace CareConnect.Models
         public DataSet Report_rpt_Customer_Ledger {  get; set; }
         public DataSet Report_rpt_Account_Open { get; set; }
         public DataSet Report_rpt_COD_Invoice_Services { get; set; }
+        public DataSet Report_rpt_Tariff_Activity { get; set; }
     }
 }

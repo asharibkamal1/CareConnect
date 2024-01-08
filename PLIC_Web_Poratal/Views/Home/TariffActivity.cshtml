@@ -1,0 +1,583 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+@Html.ValidationSummary(true)
+@{
+    ViewData["Title"] = "Tariff Activity";
+}
+<h1 id="reportTitle">Tariff Calculator</h1>
+<br />
+<div class="row">
+    <!-- left column -->
+
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <!-- jquery validation -->
+
+        <form id="trackingForm">
+
+
+            <div class="form-group">
+
+                <div class="row">
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="cboSourceTerminal" class="text-secondary font-weight-bold">Source Temrinal:</label>
+
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <select class="form-control" id="cboSourceTerminal" name="ticketcatagory ">
+                            <option value="">Select Category</option>
+                            @foreach (System.Data.DataRow catRow in Model.TariffDetails.Tables[0].Rows)
+                            {
+                                <option value="@catRow["terminal_id"]">@catRow["terminal_name"]</option>
+                            }
+                        </select>
+                        <span class="text-danger" id="cboSourceTerminalError" style="display: none;">Please select Category.</span>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="cboSourceTerminal" class="text-secondary font-weight-bold">Source CCP:</label>
+                    </div>
+
+                    <div id="subcategoryContainer">
+                    </div>
+
+                    @*  <div class="col-lg-2 col-md-2 col-sm-2 ml-3">
+                    <button class="btn btn-success float-left" id="btnClose">Close</button>
+                    </div>*@
+                </div>
+                <div><br /></div>
+
+                <div class="row">
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="cboDestinationTerminal" class="text-secondary font-weight-bold">Destination Temrinal:</label>
+
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <select class="form-control" id="cboDestinationTerminal" name="ticketcatagory ">
+                            <option value="">Select Category</option>
+                            @foreach (System.Data.DataRow catRow in Model.TariffDetails.Tables[0].Rows)
+                            {
+                                <option value="@catRow["terminal_id"]">@catRow["terminal_name"]</option>
+                            }
+                        </select>
+                        <span class="text-danger" id="cboDestinationTerminalError" style="display: none;">Please select Category.</span>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="cboDestinationTerminal" class="text-secondary font-weight-bold">Destination CCP:</label>
+
+                    </div>
+                    <div id="subcategoryContainerDestination">
+                    </div>
+
+                </div>
+
+                <div><br /></div>
+
+                <div class="row">
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="cboTariffType" class="text-secondary font-weight-bold">Tariff Type:</label>
+
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <select class="form-control" id="cboTariffType" name="ticketcatagory ">
+                            <option value="">Select Category</option>
+                            @foreach (System.Data.DataRow catRow in Model.TariffDetailsCustomer.Tables[0].Rows)
+                            {
+                                <option value="@catRow["customer_id"]">@catRow["customer_Name"]</option>
+                            }
+                        </select>
+                        <span class="text-danger" id="cboTariffTypeError" style="display: none;">Select Valid Category.</span>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label for="cboTariffType" class="text-secondary font-weight-bold">Category:</label>
+                    </div>
+
+                    <div id="subcategoryContainerTariff">
+                    </div>
+
+                </div>
+
+                <div><br /></div>
+
+                <div class="row">
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Quantity:</label>
+
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Unit/Quantity:</label>
+
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Unit Weight:</label>
+
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Total Weight:</label>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="txtqty" name="quantity" onkeypress="return onlyNumberKey(event)" placeholder="Enter Quantity" class="form-control" autofocus />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="txtUnit" name="UnitQuantity" onkeypress="return onlyNumberKey(event)" placeholder="Enter Unit Quantity" class="form-control" value="1" readonly autofocus />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="txtweight" name="UnitWeight" onkeypress="return onlyNumberKey(event)" placeholder="Enter Unit Weight" class="form-control" autofocus />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="txttotalweight" name="TotalWeight" onkeypress="return onlyNumberKey(event)" placeholder="Enter Total Weight" class="form-control" autofocus />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <button class="btn btn-success float-left" id="cmdAdd">Add Item</button>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <button class="btn btn-success float-left" id="btnCancel">Cancel</button>
+                    </div>
+
+                </div>
+                <div><br /></div>
+
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Total Weight k.G:</label>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Total Quantity:</label>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Amount Rs:</label>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Tax Amount Rs:</label>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <label class="text-secondary font-weight-bold">Receiveable Amount:</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="lblWeight" name="TotalWeightkG" placeholder="Total Weight in k.G" class="form-control" autofocus disabled />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="lblQty" name="TotalQuantity" placeholder="Total Quantity" class="form-control" autofocus disabled />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="txtAmount" name="AmountRs" placeholder="Amount" class="form-control" autofocus disabled />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="txtTaxAmount" name="TaxAmountRs" placeholder="Tax Amount" class="form-control" autofocus disabled />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <input id="lblAmount" name="ReceiveableAmount" placeholder="Receiveable Amount" class="form-control" autofocus disabled />
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <button class="btn btn-success float-left" id="cmdCalRate">Calculate Rate</button>
+                    </div>
+
+                </div>
+                <div><br /></div>
+                <span class="text-danger"></span>
+            </div>
+        </form>
+        <div class="card">
+
+            <div class="card-header" style="background-color: #0565B7;color:white">
+                <h3 class="card-title">Calculate Rate</h3>
+
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered" id="dgvDet">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Qty.</th>
+                                    <th>Unit</th>
+                                    <th>Weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Grid view data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid ">
+    <div class="row">
+        <br />
+    </div>
+    <div id="TariffDetailsContainer">
+    </div>
+</div>
+
+@* <div class="loader"></div> *@
+
+
+<script>
+    function onlyNumberKey(evt) {
+        // Check for valid input (numeric characters or special keys)
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+            evt.preventDefault();
+        }
+    }
+
+    $(document).ready(function () {
+        debugger
+        // Event listeners for dropdown changes
+        $('#cboSourceTerminal').change(function () {
+            // Your code for category dropdown change
+            var selectedCategory = $(this).val();
+            $('#subcategoryContainer').html('');
+
+            debugger
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetSubcategoriesforSource',
+                type: 'POST',
+                data: {
+                    terminal_id: selectedCategory,
+
+                },
+                success: function (result) {
+                    debugger
+                    // var subcatagoryid = '@ViewBag.SubCatagory';
+                    // Render the subcategory dropdown
+                    $('#subcategoryContainer').html(result);
+                    // Set the first option as selected by default
+
+                    debugger
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        });
+
+
+
+        $('#cboDestinationTerminal').change(function () {
+            debugger
+            var selectedCategory = $(this).val();
+            // Clear the subcategory container
+            $('#subcategoryContainerDestination').html('');
+
+            debugger
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetSubcategoriesforDestination',
+                type: 'POST',
+                data: {
+                    terminal_id: selectedCategory,
+
+                },
+                success: function (result) {
+                    debugger
+                    // var subcatagoryid = '@ViewBag.SubCatagory';
+                    // Render the subcategory dropdown
+                    $('#subcategoryContainerDestination').html(result);
+                    // Set the first option as selected by default
+
+                    debugger
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        });
+
+
+        $('#cboTariffType').change(function () {
+            debugger
+            var selectedCategory = $(this).val();
+            // Clear the subcategory container
+            $('#subcategoryContainerTariff').html('');
+
+            debugger
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/GetSubcategoriesTariffCustomer',
+                type: 'POST',
+                data: {
+                    CustomerId: selectedCategory,
+
+                },
+                success: function (result) {
+                    debugger
+                    // var subcatagoryid = '@ViewBag.SubCatagory';
+                    // Render the subcategory dropdown
+                    $('#subcategoryContainerTariff').html(result);
+                    // Set the first option as selected by default
+
+                    debugger
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        });
+
+        $('#cmdAdd').click(function (event) {
+            event.preventDefault();
+            debugger
+            // Your code for adding an item
+            var sourceTerminal = $('#cboSourceTerminal').val();
+            var destinationTerminal = $('#cboDestinationTerminal').val();
+            var tariffType = $('#cboTariffType').val();
+            var CategoryofTariff = $('#cmbCategory').val();
+
+            // Validate Source Terminal
+            if (!sourceTerminal) {
+                displayError('Please Select Source Terminal.');
+                return;
+            }
+
+            // Validate Destination Terminal
+            if (!destinationTerminal) {
+                displayError('Please Select Destination Terminal.');
+                return;
+            }
+
+            // Validate Tariff Type
+            if (!tariffType) {
+                displayError('Please Select Tariff Type.');
+                return;
+            }
+
+            if (!CategoryofTariff) {
+                displayError('Please Select any Category.');
+                return;
+            }
+
+            var selectedCategoryName = $('#cmbCategory option:selected').text();
+            var quantity = parseFloat($('#txtqty').val()) || 0;
+            var unitQuantity = parseFloat($('#txtUnit').val()) || 0;
+            var unitWeight = parseFloat($('#txtweight').val()) || 0;
+            var totalweight = parseFloat($('#txttotalweight').val()) || 0;
+
+            if (quantity <= 0) {
+                displayError('Quantity should be greater than zero.');
+                return;
+            }
+
+            // if (unitWeight <= 0) {
+            //     displayError('Negative value is not allowed!');
+            //     return;
+            // }
+
+            if (totalweight <= 0) {
+                displayError('Negative value is not allowed!');
+                return;
+            }
+
+            if (totalweight < 0) {
+                alert("Negative value is not allowed in Total Weight.");
+                return;
+            }
+
+            if (unitQuantity <= 0) {
+                alert("Unit/Quantity should be greater than zero.");
+                return;
+            }
+
+            if (unitQuantity === 0) {
+                alert("Zero is not allowed in Unit/Quantity.");
+                return;
+            }
+
+            if (unitQuantity < 0) {
+                alert("Negative value is not allowed in Unit/Quantity.");
+                return;
+            }
+
+            // Calculate weight per quantity
+            var weightPerQuantity = (quantity > 0) ? (totalweight / quantity).toFixed(2) : 0;
+
+            // Repeat the row creation based on the quantity
+            for (var i = 0; i < quantity; i++) {
+
+       
+                var newRow = `<tr>
+                                                                  <td>${selectedCategoryName}</td>
+                                                                  <td>${unitQuantity.toFixed(2)}</td>
+                                                                  <td>${unitQuantity.toFixed(2)}</td>
+                                                                  <td>${weightPerQuantity}</td>
+                                                                </tr>`;
+
+                // Append the new row to the grid
+                $('#dgvDet tbody').append(newRow);
+            }
+
+            // Clear values in input fields
+            //$('#Qty, #Unitweight, #Totalweight').val('');
+        });
+        function displayError(message) {
+            Swal.fire('Error', message, 'error');
+        }
+    });
+</script>
+
+<script>
+    debugger
+    // Event listener for the "Clear" button
+    $('#btnCancel').click(function () {
+        // Clear values in disabled input fields
+        $('#lblWeight, #lblQty, #txtAmount, #txtTaxAmount, #lblAmount').val('');
+
+        // Clear values in input fields
+        $('#txtqty, #txtweight, #txttotalweight').val('');
+
+        //Clear the Dropdown Categories of Tarrif
+        $('#cmbCategory').val('');
+
+        // Clear the grid
+        $('#dgvDet tbody').empty();
+
+        // Prevent the form from submitting
+        return false;
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Event listener for the "Calculate Rate" button
+        $('#cmdCalRate').click(function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+            debugger
+            // Flag to track validation errors
+            var hasValidationError = false;
+
+            // Validation for empty Source Terminal
+            if ($('#cboSourceTerminal').val() === "") {
+                displayError('Empty Source is Not Allowed...');
+                $('#cboSourceTerminal').focus();
+                hasValidationError = true;
+            }
+
+            // Validation for empty Destination Terminal
+            if ($('#cboDestinationTerminal').val() === "") {
+                displayError('Empty Destination is Not Allowed...');
+                $('#cboDestinationTerminal').focus();
+                hasValidationError = true;
+            }
+
+            // Validation for empty Customer Type
+            if ($('#cboTariffType').val() === "") {
+                displayError('Empty Customer Type is not Allowed...');
+                $('#cboTariffType').focus();
+                hasValidationError = true;
+            }
+
+            // Validation for missing Booking Detail in the grid
+            var dgvDetRows = $('#dgvDet tbody tr');
+            if (dgvDetRows.length === 0) {
+                displayError('Booking Detail is Missing...');
+                hasValidationError = true;
+            }
+
+
+            // If there are validation errors, return without making the AJAX call
+            if (hasValidationError) {
+                return;
+            }
+
+            // Continue with calculations if all conditions are met
+            debugger
+            // Collect data from each row in the grid
+            var formData = new FormData();
+            var ticketData = {
+                // your ticket data properties...
+                Source: $('#cboSourceTerminal').val(),
+                SourceCCP: $('#cboSourceCCP').val(),
+                Destination: $('#cboDestinationTerminal').val(),
+                DestinationCCP: $('#cboDestinationCCP').val(),
+                TariffType: $('#cboTariffType').val(),
+                CategoryCCP: $('#cmbCategory').val(),
+                TxtQuantity: $('#txtqty').val(),
+                TxtUnit: $('#txtUnit').val(),
+                TxtWeight: $('#txtweight').val(),
+                TxtTotalweight: $('#txttotalweight').val(),
+                LblWeight: $('#lblWeight').val(),
+                LblQty: $('#lblQty').val(),
+                TxtAmount: $('#txtAmount').val(),
+                TxtTaxAmount: $('#txtTaxAmount').val(),
+                LblAmount: $('#lblAmount').val(),
+
+            };
+
+            // Iterate over the properties of ticketData
+            for (var key in ticketData) {
+                if (ticketData.hasOwnProperty(key)) {
+                    // Append each key-value pair to the FormData
+                    formData.append(key, ticketData[key]);
+                }
+            }
+
+            // Now you can append the files
+            var Items = $("#dgvDet")[0];
+            for (var i = 0; i < Items.length; i++) {
+                formData.append("Category", "Qty", "Unit", "Weight", Items[i]);
+            }
+
+            debugger
+            $.ajax({
+                url: '/Home/CalculateRate',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+
+                    // Retrieve values from enabled input fields and perform calculations
+                    // ...
+
+                    // Update the corresponding disabled input fields
+                    // ...
+
+                    // Add a new row to the grid view
+
+                },
+                error: function (error) {
+                    // Handle the error case
+                    console.error(error);
+                }
+            });
+        });
+        function displayError(message) {
+            Swal.fire('Error', message, 'error');
+        }
+    });
+</script>
+
+
+
+
+
+

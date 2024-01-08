@@ -37,10 +37,14 @@ namespace CareConnect.Models
         public DataSet ClaimIssueTypeDescription { get; set; }
         public DataSet ClaimDetails { get; set; }
 
+        public DataSet TariffDetails { get; set; }
+        public DataSet TariffDetailsTerminals { get; set; }
+        public DataSet TariffDetailsCustomer { get; set; }
 
 
 
-        
+
+
 
     }
 }

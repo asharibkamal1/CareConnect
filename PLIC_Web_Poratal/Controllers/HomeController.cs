@@ -7400,8 +7400,424 @@ namespace PLIC_Web_Poratal.Controllers
             }
 
         }
-    }
 
+        ///// ahsan wangro code
+
+
+        public IActionResult ReportTariffActivity()
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
+                    string UserName = HttpContext.Session.GetString("UserName");
+                    ViewData["RoleID"] = RoleID;
+                    ViewBag.UserName = UserName;
+                    DataSet dataSet = new DataSet();
+                    DataSet dataSet1 = new DataSet();
+                    DataSet dataSet2 = new DataSet();
+
+                    SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection"));
+                    {
+                        conn1.Open();
+                        SqlCommand command1 = new SqlCommand("sp_careconnect_Get_ALL_Terminal_Tariff", conn1);
+                        SqlCommand command2 = new SqlCommand("sp_careconnect_Get_ALL_Tariff_TYPE", conn1);
+                        SqlCommand command = new SqlCommand("sp_careconnect_Get_ALL_Category_Tariff", conn1);
+
+                        command1.CommandType = CommandType.StoredProcedure;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command2.CommandType = CommandType.StoredProcedure;
+                        SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                        SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2);
+                        dataAdapter1.Fill(dataSet1);
+                        dataAdapter.Fill(dataSet);
+                        dataAdapter2.Fill(dataSet2);
+                        TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                        {
+                            TariffDetails = dataSet1,
+                            TariffDetailsTerminals = dataSet,
+                            TariffDetailsCustomer = dataSet2
+                        };
+                        //ViewBag.TrackingData = model;
+                        //string trackingNumbernew = tracking; // Replace with your tracking number variable or value
+                        //ViewData["TrackingNumber"] = trackingNumbernew;
+
+                        return View("~/Views/Home/TariffActivity.cshtml", model);
+                    }
+                }
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+        public ActionResult GetSubcategoriesforSource(int terminal_id)
+        {
+
+            try
+            {
+                //DataSet dataSet = new DataSet();
+
+                DataSet dataSet1 = new DataSet();
+
+
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                {
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_ALL_CCP_Tariff", conn1);
+                    //SqlCommand command = new SqlCommand("sp_careconnect_Get_ALL_CCP_Tariff", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+                    // command.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    // SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
+                    command1.Parameters.AddWithValue("@terminal_id", terminal_id);
+                    //command.Parameters.AddWithValue("@terminal_id", terminal_id);
+                    dataAdapter1.Fill(dataSet1);
+                    //dataAdapter.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        TariffDetails = dataSet1,
+                        //TariffDetailsCustomer = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_TariffActivitySource", model);
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public ActionResult GetSubcategoriesforDestination(int terminal_id)
+        {
+
+            try
+            {
+                //DataSet dataSet = new DataSet();
+
+                DataSet dataSet1 = new DataSet();
+
+
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                {
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_ALL_CCP_Tariff", conn1);
+                    //SqlCommand command = new SqlCommand("sp_careconnect_Get_ALL_CCP_Tariff", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+                    // command.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    // SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
+                    command1.Parameters.AddWithValue("@terminal_id", terminal_id);
+                    //command.Parameters.AddWithValue("@terminal_id", terminal_id);
+                    dataAdapter1.Fill(dataSet1);
+                    //dataAdapter.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        TariffDetails = dataSet1,
+                        //TariffDetailsCustomer = dataSet
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_TariffActivityDestination", model);
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CalculateRate(List<TarrifGridModel> data)
+        {
+            //if (!(objDet.Rows.Count > 0))
+            //{
+            //    return;
+            //}
+
+            // New code by tanver start
+            double VAS_charges = 0;
+            double Handling_charges = 0;
+            double Handling2_charges = 0;
+            double HD_charges = 0;
+            // New code by tanver end
+
+            double Rate;
+            // Calculation Fields Variables.
+            long TotalQty = 0;
+            double TotalWeight = 0;
+            long TotalAmount = 0;
+            long FinalAmnt = 0;
+            double AmountWoTax = 0;
+
+            return Json(new { result = "success" });
+        }
+
+        //string Category = "";
+        //int CurrentCatgory = Convert.ToInt32(objDet.Rows[0]["cat_id"]);
+        //int SumQty = 0;
+        //int SumofUnitQty = 0;
+        //double SumofWeight = 0;
+        //TotalAmount = 0;
+        //Rate = 0;
+        //    BlankDet();
+        //    // Change Rate Bit to 0 for All Categories.
+        //    foreach (DataRow row in objDet.Rows)
+        //    {
+        //        row["RateBinded"] = 0;
+        //        objDet.AcceptChanges();
+        //    }
+
+        //    foreach (DataRow row in objDet.Rows)
+        //    {
+        //        Category = row["cat_id"].ToString();
+        //        foreach (DataRow Internalrow in objDet.Rows)
+        //        {
+        //            if (Category == Internalrow["cat_id"].ToString() && Convert.ToInt32(Internalrow["RateBinded"]) == 0)
+        //            {
+        //                SumQty += Convert.ToInt32(Internalrow["qty"]);
+        //                SumofUnitQty += Convert.ToInt32(Internalrow["unit"]);
+        //                SumofWeight += Convert.ToDouble(Internalrow["weight"]);
+        //                Internalrow["RateBinded"] = 1;
+        //                objDet.AcceptChanges();
+        //            }
+        //        }
+
+        //        if (SumQty != 0)
+        //        {
+        //            string[] inSqlParaVariable = { "CustomerID", "SourceTerminalID", "SourceCCPID", "DestinationTerminalID", "DestinationCCPID", "CategoryID", "QtyTotal", "UnitTotal", "WeightTotal" };
+        //            string[] inSqlParaValue = { cboTariffType.SelectedValue.ToString(), cboSourceTerminal.SelectedValue.ToString(), cboSourceCCP.SelectedValue.ToString(), cboDestinationTerminal.SelectedValue.ToString(), cboDestinationCCP.SelectedValue.ToString(), Category, SumQty.ToString(), SumofUnitQty.ToString(), SumofWeight.ToString() };
+        //            Rate = MainExecuteNonQuryTrans("Get_Booking_Rate_Group_New", inSqlParaVariable, inSqlParaValue, "UnitTotalRate");
+
+        //            TotalAmount += (long)Rate;
+
+        //            // New code added by tanveer start
+        //            string StrVAS = " EXEC Get_VAS_Charges_06 " + cboTariffType.SelectedValue + "," + gs_User_LocationID + "," + gs_User_CCPLocationID + "," + cboDestinationTerminal.SelectedValue + "," + cboDestinationCCP.SelectedValue + "," + Category + "," + SumQty + "," + SumofUnitQty + "," + SumofWeight + "," + TotalAmount + "," + DiscountRatio;
+        //            dtTaxDetail = GetDataTable(StrVAS);
+        //            VAS_charges += Convert.ToDouble(dtTaxDetail.Rows[0]["VAS"]);
+        //            Handling_charges += Convert.ToDouble(dtTaxDetail.Rows[0]["HANDLING"]);
+        //            Handling2_charges += Convert.ToDouble(dtTaxDetail.Rows[0]["HANDLING2"]);
+        //            HD_charges += Convert.ToDouble(dtTaxDetail.Rows[0]["HD"]);
+        //            // New code added by tanveer end
+
+        //            SumQty = 0;
+        //            SumofUnitQty = 0;
+        //            SumofWeight = 0;
+        //            Category = "";
+        //        }
+        //    }
+
+        //    // New code added by tanveer start
+        //    string Str = " EXEC Get_Tax_Rate_04 " + gs_User_LocationID + "," + gs_User_CCPLocationID + "," + cboDestinationTerminal.SelectedValue + "," + cboTariffType.SelectedValue + "," + get_pament_mode_id(cboTariffType.SelectedValue);
+        //    dtTaxDetail = GetDataTable(Str);
+        //    NewTaxRate = Convert.ToDouble(dtTaxDetail.Rows[0]["tax_rate"]);
+        //    iTaxProvince = Convert.ToInt32(dtTaxDetail.Rows[0]["tax_province"]);
+        //    diesel_rate = Convert.ToDouble(dtTaxDetail.Rows[0]["diesel_rate"]);
+        //    petrol_rate = Convert.ToDouble(dtTaxDetail.Rows[0]["petrol_rate"]);
+        //    mix_rate = Convert.ToDouble(dtTaxDetail.Rows[0]["mix_rate"]);
+        //    // New code added by tanveer end
+
+        //    // Ralte Calculation For whole consignment.
+        //    for (int rownm = 0; rownm < dgvDet.RowCount; rownm++)
+        //    {
+        //        TotalQty += Convert.ToInt64(dgvDet.Rows[rownm].Cells["Qty"].Value);
+        //        TotalWeight += Convert.ToDouble(dgvDet.Rows[rownm].Cells["Weight"].Value);
+        //    }
+
+        //    // New code by tanveer start
+        //    if (cboTariffType.SelectedValue == 616)
+        //    {
+        //        FSRatio = mix_rate;
+        //        //txtFS.Text = Math.Round(TotalAmount * mix_rate / 100, 2);
+        //    }
+        //    else if (product_id == 1) // TERMINAL TO TERMINAL
+        //    {
+        //        FSRatio = diesel_rate;
+        //        //txtFS.Text = Math.Round((TotalAmount + txtShuttleA.Text) * diesel_rate / 100, 2);
+        //    }
+        //    else if (product_id == 2 || get_product_id(cboTariffType.SelectedValue) == 3 || product_id == 5 || product_id == 6) // HOME DELIVERY - GREETINGS - COD T2T - COD HD
+        //    {
+        //        if (cboDestinationTerminal.SelectedValue == gs_User_LocationID)
+        //        {
+        //            FSRatio = petrol_rate;
+        //            //txtFS.Text = Math.Round((TotalAmount + txtShuttleA.Text) * petrol_rate / 100, 2);
+        //        }
+        //        else
+        //        {
+        //            FSRatio = mix_rate;
+        //            //txtFS.Text = Math.Round((TotalAmount + txtShuttleA.Text) * mix_rate / 100, 2);
+        //        }
+        //    }
+        //    // New code by tanveer end
+
+        //    long Temp;
+        //    if (TariffWithTax != 0) // IF TARIFF IS WITH-TAX THEN CALCULATE AMOUNT
+        //    {
+        //        Temp = (long)(TotalAmount * 100);
+        //        TotalAmount = (long)Math.Round(Temp / (100 + NewTaxRate), 2);
+        //    }
+        //    // New code by tanveer end
+
+        //    txtAmount.Text = TotalAmount;
+
+        //    TotalAmount = (long)Math.Round(TotalAmount, 2) - (long)(Val(Handling_charges));
+        //    TotalAmount = (long)Math.Round(TotalAmount, 2) - (long)(Val(Handling2_charges));
+        //    //TotalAmount = (long)Math.Round(TotalAmount, 2) - (long)(Val(txtHD.Text));
+
+        //    txtAmount.Text = TotalAmount;
+
+        //    if (product_id != 4)
+        //    {
+        //        Temp = (long)(VAS_charges * 100);
+        //        VAS_charges = (double)Math.Round(Temp / (100 + NewTaxRate), 0);
+        //    }
+
+        //    //txtBoxAmount.Text = Val(txtBoxQty.Text) * 100;
+        //    //txtDiscount.Text = Math.Truncate(TotalAmount * Val(txtDiscountRatio.Text) / 100);
+
+        //    txtAmount.Text = TotalAmount;
+
+        //    // New code by tanveer start
+        //    TotalAmount = (long)(TotalAmount + Val(Handling_charges) + Val(Handling2_charges) + Val(HD_charges) + Val(VAS_charges));
+        //    double txtFS = Math.Round(TotalAmount * FSRatio / 100, 2);
+
+        //    TotalAmount = (long)(TotalAmount + Val(txtFS));
+
+        //    double txtTaxRate = NewTaxRate;
+        //    txtTaxAmount.Text = Math.Round(((NewTaxRate * TotalAmount) / 100), 2);
+
+        //    TotalAmount = (long)(TotalAmount + Val(txtTaxAmount.Text) + Val(txtFS));
+
+        //    long CalTotalAmnt = TotalAmount % 10;
+
+        //    FinalAmnt = (long)Math.Round(TotalAmount, 0);
+
+        //    if (CalTotalAmnt > 0 && CalTotalAmnt < 5)
+        //    {
+        //        FinalAmnt = TotalAmount - CalTotalAmnt;
+        //    }
+        //    else if (CalTotalAmnt >= 5 && CalTotalAmnt < 10)
+        //    {
+        //        FinalAmnt = TotalAmount + (10 - CalTotalAmnt);
+        //    }
+        //    // New code by tanveer end
+
+        //    lblWeight.Text = TotalWeight.ToString();
+        //    lblQty.Text = TotalQty.ToString();
+
+        //    // 1:Cash-2:TOPAY-3:Credit-4:FOC-5:Advance
+        //    if (cboTariffType.SelectedValue.Equals(1) || cboTariffType.SelectedValue.Equals(2))
+        //    {
+        //        lblAmount.Text = FinalAmnt.ToString();
+        //    }
+        //    else
+        //    {
+        //        lblAmount.Text = TotalAmount.ToString();
+        //    }
+        //}
+
+        //public void BlankDet()
+        //{
+        //    txtqty.Text = 0;
+        //    txtUnit.Text = 1;
+        //    txtweight.Text = 0;
+        //    txttotalweight.Text = 0;
+        //    lblAmount.Text = 0;
+        //    lblQty.Text = 0;
+        //    lblWeight.Text = 0;
+        //    txtAmount.Text = 0;
+        //    txtTaxAmount.Text = 0;
+        //}
+
+        public ActionResult GetSubcategoriesTariffCustomer(int CustomerId)
+        {
+
+            try
+            {
+                DataSet dataSet1 = new DataSet();
+
+
+
+
+                using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("CARGOConnection")))
+                {
+                    if (conn1.State != ConnectionState.Open)
+                        conn1.Open();
+
+
+                    SqlCommand command1 = new SqlCommand("sp_careconnect_Get_ALL_Tariff_TYPE_By_Cust", conn1);
+                    //SqlCommand command = new SqlCommand("sp_careconnect_Get_ALL_Tariff_TYPE_By_Cust", conn1);
+
+                    command1.CommandType = CommandType.StoredProcedure;
+                    //command.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1);
+                    //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
+                    command1.Parameters.AddWithValue("@CustomerId", CustomerId);
+
+                    dataAdapter1.Fill(dataSet1);
+                    //dataAdapter.Fill(dataSet);
+
+                    TrackingGenerateViewModel model = new TrackingGenerateViewModel
+                    {
+                        //TariffDetails = dataSet1,
+                        TariffDetailsCustomer = dataSet1
+                    };
+
+                    //ViewData["SubCatagory"] = dataSet;
+                    //ViewBag["SubCatagory"] = dataSet;
+                    return PartialView("_TariffActivityDescriptionCustomer", model);
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        //////  end  //
+
+
+    }
     internal class UserModel
     {
         public int? UserId { get; set; }
