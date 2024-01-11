@@ -854,77 +854,7 @@ namespace PLIC_Web_Poratal.Controllers
                         }
                     }
                 }
-
-
-
-                //string connectionString = db.GetConfiguration().GetConnectionString("DefaultConnection");
-                //string sqlquery = "select top 1 userid,LoginId,Password,role_id from CRM_SYS_Users where LoginId='" + acc.UserName + "'";
-
-                //using (SqlConnection conn = new SqlConnection(connectionString))
-                //{
-                //    if (conn.State != ConnectionState.Open)
-                //        conn.Open();
-
-                //    using (SqlCommand comm = new SqlCommand(sqlquery, conn))
-                //    {
-                //        using (SqlDataReader sdr = comm.ExecuteReader())
-                //        {
-                //            while (sdr.Read())
-                //            {
-                //                LoginId = sdr.GetValue(0).ToString();
-                //                UserName = sdr.GetValue(1).ToString();
-                //                password = sdr.GetValue(2).ToString();
-                //                RoleID = sdr.GetValue(3).ToString();
-
-                //                if (password == acc.Password)
-                //                {
-                //                    HttpContext.Session.SetString("LoginId", LoginId);
-                //                    HttpContext.Session.SetString("UserName", acc.UserName);
-                //                    HttpContext.Session.SetString("Password", acc.Password);
-                //                    HttpContext.Session.SetString("RoleID", RoleID);
-
-                //                    if (!sdr.HasRows)
-                //                    {
-                //                        return "LoginId";
-                //                    }
-                //                    else
-                //                    {
-                //                        if (password == acc.Password)
-                //                        {
-                //                            HttpContext.Session.SetString("LoginId", HttpContext.Session.GetString("LoginId"));
-                //                            LoginId = HttpContext.Session.GetString("LoginId");
-                //                            UserName = HttpContext.Session.GetString("UserName");
-                //                            password = HttpContext.Session.GetString("Password");
-                //                            RoleID = HttpContext.Session.GetString("RoleID");
-                //                            ViewData["RoleID"] = RoleID;
-                //                            ViewBag.Role = RoleID;
-
-                //                            var viewModel = new CareConnect.Models.UserViewModel
-                //                            {
-                //                                LoginId = LoginId,
-                //                                UserName = UserName,
-                //                                Password = password,
-                //                                RoleID = RoleID
-                //                            };
-
-                //                            // TempData["UserViewModel"] = viewModel;
-                //                             ViewBag.RoleID = HttpContext.Session.GetString("RoleID");
-                //                            LoggingHistory(LoginId, RoleID, password);
-                //                            return "/Home/Menu";
-                //                        }
-                //                        return "Password";
-                //                    }
-
-                //                }
-
-                //            }
-                //            return "Password";
-                //        }
-
-                //    }
-
-                //}
-
+               
             }
             else
             {
