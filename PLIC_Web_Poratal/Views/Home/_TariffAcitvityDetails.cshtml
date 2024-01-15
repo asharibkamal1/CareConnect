@@ -1,0 +1,101 @@
+﻿@model CareConnect.Models.ReportViewModel
+
+
+
+<div class="card">
+
+    <div class="card-header" style="background-color: #0565B7;color:white">
+        <h3 class="card-title">Calculate Rate</h3>
+
+    </div>
+    <div class="card-body">
+        @if (Model.Report_rpt_COD_Invoice_Services != null && Model.Report_rpt_COD_Invoice_Services.Tables.Count > 0)
+        {
+            <div class="dt-buttons"></div>
+            <table id="ReportaDataTable" class="display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                      @*   @foreach (System.Data.DataColumn column in Model.Report_rpt_COD_Invoice_Services.Tables[0].Columns)
+                        {
+                            <th>@column.ColumnName</th>
+                        } *@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.Report_rpt_COD_Invoice_Services.Tables[0].Rows)
+                    {
+                        <tr>
+                            @foreach (var item in row.ItemArray)
+                            {
+                                <td>
+                                    @*     @if (row.Table.Columns.IndexOf("TicketId") == Array.IndexOf(row.ItemArray, item))
+                        {
+                        <a class="ticketLink" href="/Home/GetTicketDetails?ticketno=@item.ToString()" target="_blank">@item.ToString()</a>
+                        }
+                        else *@
+
+                                    @item.ToString()
+
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Records Found.</p>
+        }
+    </div>
+
+
+
+
+
+</div>
+<br />
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var table = $('#ReportaDataTable').DataTable({
+            scrollX: '400px',
+            scrollY: '400',
+            scrollCollapse: true,
+            language: {
+                paginate: {
+                    first: 'First',
+                    previous: 'Previous',
+                    next: 'Next',
+                    last: 'Last'
+                }
+            },
+
+        });
+    @*    $('#entriesSelect').on('change', function () {
+            // Update the DataTable with the selected entries value
+            table.page.len($(this).val()).draw();
+            }); *@
+            });
+
+
+
+
+</script>
+
+
+
+
+
+
+

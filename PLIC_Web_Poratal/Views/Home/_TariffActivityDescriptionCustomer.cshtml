@@ -1,0 +1,39 @@
+﻿@model CareConnect.Models.TrackingGenerateViewModel
+            <!-- Render the dropdown list with TicketCatType data -->
+
+@* <label for="TicketTypeDropdown">Claim Description:</label> *@
+@* <select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory" onchange="handleDropdownChange(this)">
+    @foreach (System.Data.DataRow catRow in Model.TariffDetails.Tables[0].Rows)
+    {
+        <option value="@catRow["ccp_id"]">@catRow["ccp_name"]</option>
+    }
+</select>
+<span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Sub Category.</span>
+<br /> *@
+
+<select class="form-control" id="cmbCategory" name="ticketsubcatagory">
+    @foreach (System.Data.DataRow catRow in Model.TariffDetailsCustomer.Tables[0].Rows)
+    {
+        <option value="@catRow["cat_id"]">@catRow["cat_name"]</option>
+    }
+</select>
+<span class="text-danger" id="cmbCategoryError" style="display: none;">Please select Sub Category.</span>
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

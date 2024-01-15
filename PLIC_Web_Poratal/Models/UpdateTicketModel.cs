@@ -19,6 +19,11 @@ namespace CareConnect.Models
         public string region { get; set; }
         public int TicketTypeDropdownid { get; set; }
         public int issuetypeid { get; set; }
+        public int cityid { get; set; }
+        public int viaCityid { get; set; }
+        public bool isDestination_Checked { get; set; }
+        public bool isOrigin_Checked { get; set; }
+        public bool is_Reject { get; set; }
         public string complainercell { get; set; }
         public List<IFormFile> images { get; set; }
         public string claimid { get; set; }
