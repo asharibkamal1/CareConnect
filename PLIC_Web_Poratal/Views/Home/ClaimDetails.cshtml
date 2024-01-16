@@ -28,13 +28,13 @@
             <li class="nav-item">
                 <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" style="width: 100%" href="#secondTableTabContent">Historys Detail</a>
             </li>
-            <li class="nav-item">
+         @*    <li class="nav-item">
                 <a class="nav-link" id="updateTableTabButton" data-toggle="pill" href="#updateTableTabContent">Update Detail</a>
-            </li>
-            <li class="nav-item">
+            </li> *@
+       @*      <li class="nav-item">
                 <a class="nav-link" id="emailTableTabButton" data-toggle="pill" href="#emailTableTabContent">Email</a>
-            </li>
-            @{
+            </li> *@
+   @*          @{
                 try
                 {
                     //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
@@ -54,8 +54,8 @@
                     // Handle the exception here
                     throw ex;
                 }
-            }
-            @{
+            } *@
+  @*           @{
                 try
                 {
 
@@ -73,9 +73,9 @@
                 {
                     throw ex;
                 }
-            }
+            } *@
 
-            @{
+   @*          @{
                 try
                 {
 
@@ -94,15 +94,15 @@
                     throw ex;
                 }
 
-            }
+            } *@
 
 
-            <li class="nav-item">
+       @*      <li class="nav-item">
                 <a class="nav-link" id="trackingTableTabButton" data-toggle="pill" href="#trackingTableTabContent">Tracking Detail</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="hdTableTabButton" data-toggle="pill" href="#hdTableTabContent">HD Status Detail</a>
-            </li>
+            </li> *@
             <li class="nav-item">
                 <a class="nav-link" id="claimimagesTableTabButton" data-toggle="pill" href="#claimimagesTableTabContent">Claim Images</a>
             </li>
@@ -151,7 +151,7 @@
 
             @*----------------- Update table -----------*@
 
-            <div id="updateTableTabContent" class="tab-pane fade show">
+         @*    <div id="updateTableTabContent" class="tab-pane fade show">
 
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12">
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
 
 
@@ -190,7 +190,7 @@
 
             @*----------------- Email table -----------*@
 
-            <div id="emailTableTabContent" class="tab-pane fade show">
+       @*      <div id="emailTableTabContent" class="tab-pane fade show">
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12">
                         <div class="form-group">
@@ -242,7 +242,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
 
 
@@ -250,7 +250,7 @@
 
             @*----------------- SMS table -----------*@
 
-            <div id="smsTableTabContent" class="tab-pane fade show">
+@*             <div id="smsTableTabContent" class="tab-pane fade show">
 
                 <div class="card">
                     <div class="card-header" style="background-color: #0565B7;color:white">
@@ -379,7 +379,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             @*----------------- END SMS table -----------*@
 
@@ -389,7 +389,7 @@
 
             @*----------------- close table -----------*@
 
-            <div id="closeTableTabContent" class="tab-pane fade show">
+@*             <div id="closeTableTabContent" class="tab-pane fade show">
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12">
                         <div class="form-group">
@@ -454,14 +454,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             @*----------------- END close table -----------*@
 
 
             @*----------------- Reopen table -----------*@
 
-            <div id="reopenTableTabContent" class="tab-pane fade show">
+   @*          <div id="reopenTableTabContent" class="tab-pane fade show">
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12">
                         <div class="form-group">
@@ -517,7 +517,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             @*----------------- END Reopen table -----------*@
 
@@ -528,7 +528,7 @@
 
             @*----------------- tracking detail----------*@
 
-            <div id="trackingTableTabContent" class="tab-pane show ">
+    @*         <div id="trackingTableTabContent" class="tab-pane show ">
                 <table id="TrackingTable" class="display" style="width:100%">
                     <thead style="width:100%">
                         <tr>
@@ -550,14 +550,14 @@
                         }
                     </tbody>
                 </table>
-            </div>
+            </div> *@
 
             @*-----------------END Tracking table -----------*@
 
 
             @*------------------ hd detail-----------------*@
 
-            <div id="hdTableTabContent" class="tab-pane fade show" style="width:100%">
+@*             <div id="hdTableTabContent" class="tab-pane fade show" style="width:100%">
                 <table id="HDTable" class="display">
                     <thead>
                         <tr>
@@ -579,7 +579,7 @@
                         }
                     </tbody>
                 </table>
-            </div>
+            </div> *@
 
             @*-----------------END hd table -----------*@
 
@@ -853,8 +853,20 @@
 
 
                                                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <button class="btn btn-success float-left" id="btnupdatefinalremarksRMS">Proceed</button>
-                                                                <button class="btn btn-danger float-left" id="btnreject">Reject</button>
+                                                                @{
+                                                                    if (Model.roleid == "19" || Model.roleid == "1015")
+                                                                    {
+                                                                        <button class="btn btn-success float-left" id="btnupdatefinalremarksRMS">Proceed</button>
+                                                                        <button class="btn btn-danger float-left" id="btnreject">Reject</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <button class="btn btn-success float-left" id="btnupdatefinalremarksRMS">Proceed</button>
+
+
+                                                                    }
+                                                                }
+
                                                             </div>
 
                                                         </div>
@@ -1285,7 +1297,7 @@
 
 
         $('#btnupdatefinalremarksRMS').click(function () {
-           
+
             debugger
             var activity;
             var ticketData = {
@@ -1302,9 +1314,9 @@
                 data: ticketData,
                 success: function (response) {
                     debugger
-                  
+
                     if (response.success) {
-                      
+
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
                         $('#txtremarks').val('');
