@@ -208,7 +208,7 @@
                 <div radio-group>
 
                     <label>
-                        <input type="checkbox" id="chksendsms" checked name="SMS" />
+                        <input type="checkbox" id="chksendsms"  name="SMS" />
                         <span></span>Send SMS
                     </label>
 
@@ -396,7 +396,39 @@
 
     });
 </script>
+<script>
+    debugger
+    function handleDropdownChange(selectElement) {
+        debugger
+        $('#2subcategoryContainer').html('');
+        // Get the selected value
+        var selectedValue = selectElement.value;
 
+        // Do something with the selected value
+        console.log("Selected value: " + selectedValue);
+
+        if (selectedValue === '48') {
+            $('#2subcategoryContainer').html('');
+
+            debugger
+            // Make AJAX call to fetch subcategories based on the selected category
+            $.ajax({
+                url: '/Home/Get2SubcategoriesInfo',
+                type: 'POST',
+                data: { subcategory: selectedValue },
+                success: function (result) {
+                    debugger
+                    // Render the subcategory dropdown
+                    $('#2subcategoryContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Error', 'Please Select Valid Category: ' + error, 'error');
+                }
+            });
+        }
+        // You can perform any additional actions here based on the selected value
+    }
+</script>
 <script>
     $(document).ready(function () {
         // Set initial values based on the checked radio button
@@ -459,6 +491,7 @@
             var receivercompany = @Html.Raw(Json.Serialize(Model.BookingDetail.Tables[3].Rows[0]["Name:"]));
             var receiverphone = @Html.Raw(Json.Serialize(Model.BookingDetail.Tables[3].Rows[0]["Ph.No:"]));
             var receiveraddress = @Html.Raw(Json.Serialize(Model.BookingDetail.Tables[3].Rows[0]["Address:"]));
+            var customername = @Html.Raw(Json.Serialize(Model.BookingDetail.Tables[0].Rows[0]["CustomerName"]));
 
             var name = $('#txtname').val();
             var contact = $('#txtcontactno').val();
@@ -637,6 +670,7 @@
                 receivercompany: receivercompany,
                 receiverphone: receiverphone,
                 receiveraddress: receiveraddress,
+                customername: customername,
                 Destination: $('#Destination').val(),
                 Destination_Desc: $('#Destination_Desc').val(),
                 Payment_Mode: $('#Payment_Mode').val(),

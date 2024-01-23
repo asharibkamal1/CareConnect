@@ -26,89 +26,108 @@
 
 
             <li class="nav-item">
-                <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" style="width: 100%" href="#secondTableTabContent">Historys Detail</a>
+                <a class="nav-link active" id="secondTableTabButton" data-toggle="pill" style="width: 100%" href="#secondTableTabContent">History Detail</a>
             </li>
-         @*    <li class="nav-item">
-                <a class="nav-link" id="updateTableTabButton" data-toggle="pill" href="#updateTableTabContent">Update Detail</a>
+            @*    <li class="nav-item">
+            <a class="nav-link" id="updateTableTabButton" data-toggle="pill" href="#updateTableTabContent">Update Detail</a>
             </li> *@
-       @*      <li class="nav-item">
-                <a class="nav-link" id="emailTableTabButton" data-toggle="pill" href="#emailTableTabContent">Email</a>
+            @*      <li class="nav-item">
+            <a class="nav-link" id="emailTableTabButton" data-toggle="pill" href="#emailTableTabContent">Email</a>
             </li> *@
-   @*          @{
-                try
-                {
-                    //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
-                    if (Model.roleid == "2")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
-                        </li>
-                    }
-                    else
-                    {
+            @*          @{
+            try
+            {
+            //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
+            if (Model.roleid == "2")
+            {
+            <li class="nav-item">
+            <a class="nav-link" id="smsTableTabButton" data-toggle="pill" href="#smsTableTabContent">SMS/Close</a>
+            </li>
+            }
+            else
+            {
 
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Handle the exception here
-                    throw ex;
-                }
+            }
+            }
+            catch (Exception ex)
+            {
+            // Handle the exception here
+            throw ex;
+            }
             } *@
-  @*           @{
-                try
-                {
+            @*           @{
+            try
+            {
 
 
 
 
-                    if (Model.roleid == "4" || Model.roleid == "2")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
-                        </li>
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            } *@
-
-   @*          @{
-                try
-                {
-
-
-
-                    @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
-                        </li>
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-
+            if (Model.roleid == "4" || Model.roleid == "2")
+            {
+            <li class="nav-item">
+            <a class="nav-link" id="closeTableTabButton" data-toggle="pill" href="#closeTableTabContent">Closed</a>
+            </li>
+            }
+            }
+            catch (Exception ex)
+            {
+            throw ex;
+            }
             } *@
 
+            @*          @{
+            try
+            {
 
-       @*      <li class="nav-item">
-                <a class="nav-link" id="trackingTableTabButton" data-toggle="pill" href="#trackingTableTabContent">Tracking Detail</a>
+
+
+            @if (Model.roleid != "4" && Model.roleid != "10" && Model.roleid != "11" && Model.roleid != "12")
+            {
+            <li class="nav-item">
+            <a class="nav-link" id="reopenTableTabButton" data-toggle="pill" href="#reopenTableTabContent">Reopen</a>
+            </li>
+            }
+            }
+            catch (Exception ex)
+            {
+
+            throw ex;
+            }
+
+            } *@
+
+
+            @*      <li class="nav-item">
+            <a class="nav-link" id="trackingTableTabButton" data-toggle="pill" href="#trackingTableTabContent">Tracking Detail</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="hdTableTabButton" data-toggle="pill" href="#hdTableTabContent">HD Status Detail</a>
+            <a class="nav-link" id="hdTableTabButton" data-toggle="pill" href="#hdTableTabContent">HD Status Detail</a>
             </li> *@
             <li class="nav-item">
                 <a class="nav-link" id="claimimagesTableTabButton" data-toggle="pill" href="#claimimagesTableTabContent">Claim Images</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="finalremarksTableTabButton" data-toggle="pill" href="#finalremarksTableTabContent">Final Remarks</a>
-            </li>
+
+            @{
+
+                object isRMOObject = Model.TicketDetails.Tables[0].Rows[0]["Is_RMO"];
+
+                bool isrmo;
+
+                if (isRMOObject != DBNull.Value && Model.roleid == "19")
+                {
+                    isrmo = Convert.ToBoolean(isRMOObject);
+                    <li class="nav-item">
+                        <a class="nav-link" id="finalremarksTableTabButton" data-toggle="pill" href="#finalremarksTableTabContentApproved">Final Remarks Approved</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" id="finalremarksTableTabButton" data-toggle="pill" href="#finalremarksTableTabContent">Final Remarks</a>
+                    </li>
+                }
+            }
+
         </ul>
 
 
@@ -151,33 +170,33 @@
 
             @*----------------- Update table -----------*@
 
-         @*    <div id="updateTableTabContent" class="tab-pane fade show">
+            @*    <div id="updateTableTabContent" class="tab-pane fade show">
 
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Remarks:</label>
 
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
 
-                                    <input type="text" id="txtremarks" placeholder="Please Type Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
-                                    <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
-                                </div>
-
-
+            <input type="text" id="txtremarks" placeholder="Please Type Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
+            <span class="text-danger" id="RemarksError" style="display: none;">Please Enter Remarks.</span>
+            </div>
 
 
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <button class="btn btn-success float-left" id="btnupdate">Update</button>
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnupdate">Update</button>
+            </div>
+
+            </div>
+            </div>
+            </div>
+            </div>
             </div> *@
 
 
@@ -190,58 +209,58 @@
 
             @*----------------- Email table -----------*@
 
-       @*      <div id="emailTableTabContent" class="tab-pane fade show">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">To Email:</label>
+            @*      <div id="emailTableTabContent" class="tab-pane fade show">
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">To Email:</label>
 
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
 
-                                    <input type="text" id="autocompletetoemail" placeholder="Please Type Email Address" class="form-control float-left" autofocus name="email" />
-                                    <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address.</span>
-                                </div>
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">CC Email:</label>
+            <input type="text" id="autocompletetoemail" placeholder="Please Type Email Address" class="form-control float-left" autofocus name="email" />
+            <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address.</span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">CC Email:</label>
 
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
 
-                                    <input type="text" id="autocompletefromemail" placeholder="Please Type from Email Address" class="form-control float-left" />
-                                    <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address</span>
-                                </div>
+            <input type="text" id="autocompletefromemail" placeholder="Please Type from Email Address" class="form-control float-left" />
+            <span class="text-danger" id="EmailError" style="display: none;">Please Type Email Address</span>
+            </div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            </div>
+            </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">Remarks:</label>
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Remarks:</label>
 
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
 
-                                    <input type="text" id="txtremarksemail" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+            <input type="text" id="txtremarksemail" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
 
-                                </div>
+            </div>
 
 
 
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <button class="btn btn-success float-left" id="btnemail">Send Email</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnemail">Send Email</button>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
             </div> *@
 
 
@@ -250,135 +269,135 @@
 
             @*----------------- SMS table -----------*@
 
-@*             <div id="smsTableTabContent" class="tab-pane fade show">
+            @*             <div id="smsTableTabContent" class="tab-pane fade show">
 
-                <div class="card">
-                    <div class="card-header" style="background-color: #0565B7;color:white">
-                        <h3 class="card-title">Send SMS</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 col-sm-12">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-md-1 col-sm-1">
-                                            <label class="text-secondary font-weight-bold">Complainer Cell:</label>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            @if (Model.TicketDetails.Tables[0].Rows.Count > 0)
-                                            {
-                                                <input type="text" id="txtcomplainercell" class="form-control" value="@Model.TicketDetails.Tables[0].Rows[0]["ComplainerCell"]" readonly />
-                                            }
-                                        </div>
-                                    </div>
+            <div class="card">
+            <div class="card-header" style="background-color: #0565B7;color:white">
+            <h3 class="card-title">Send SMS</h3>
+            </div>
+            <div class="card-body">
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Complainer Cell:</label>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+            @if (Model.TicketDetails.Tables[0].Rows.Count > 0)
+            {
+            <input type="text" id="txtcomplainercell" class="form-control" value="@Model.TicketDetails.Tables[0].Rows[0]["ComplainerCell"]" readonly />
+            }
+            </div>
+            </div>
 
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 col-sm-12">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-md-1 col-sm-1">
-                                            <label class="text-secondary font-weight-bold">SMS Remarks:</label>
-
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-
-                                            <input type="text" id="txtremarkssms" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
-
-                                        </div>
+            </div>
+            </div>
+            </div>
 
 
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <button class="btn btn-success float-left" id="btnsms">Send SMS</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">SMS Remarks:</label>
 
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
 
+            <input type="text" id="txtremarkssms" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
 
-                <div class="card">
-                    <div class="card-header" style="background-color: #0565B7;color:white">
-                        <h3 class="card-title">Closing</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 col-sm-12">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-md-1 col-sm-1">
-                                            <label class="text-secondary font-weight-bold">Closing Remarks:</label>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-
-                                            <input type="text" id="txtremarksclosing" placeholder="Please Enter Closing Remarks" class="form-control float-left" style="height: 100px" />
-                                            <span class="text-danger" id="RemarksErrorclosing" style="display: none;">Please Enter Closing Remarks</span>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <button class="btn btn-success float-left" id="btnclosing">Closing</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
 
-                <div class="card">
-                    <div class="card-header" style="background-color: #0565B7;color:white">
-                        <h3 class="card-title">Issue Type Change</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 col-sm-12">
-                                <div class="form-group">
-                                    <div class="row">
 
-                                        <div class="col-lg-1 col-md-1 col-sm-1">
-                                            <label class="text-secondary font-weight-bold">Claim Description:</label>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnsms">Send SMS</button>
+            </div>
+            </div>
+            </div>
+            </div>
 
-                                        </div>
-                                        <div class="col-md-3 col-sm-3">
-                                            <select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory ">
-                                                @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[4].Rows)
-                                                {
-                                                    <option value="@catRow["IssueTypeId"]">@catRow["IssueTypeDescription"]</option>
-                                                }
-                                            </select>
-                                            <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Issue Type</span>
-                                            <br />
-                                        </div>
+            </div>
+            </div>
+            </div>
 
 
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-1 col-md-1 col-sm-1">
-                                            <label class="text-secondary font-weight-bold">Remarks:</label>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card">
+            <div class="card-header" style="background-color: #0565B7;color:white">
+            <h3 class="card-title">Closing</h3>
+            </div>
+            <div class="card-body">
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Closing Remarks:</label>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
 
-                                            <input type="text" id="txtremarksupdateissuetype" placeholder="Please Enter  Remarks" class="form-control float-left" style="height: 100px" />
-                                            <span class="text-danger" id="RemarksErrorupdateissuetype" style="display: none;">Please Enter Remarks</span>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <button class="btn btn-success float-left" id="btnupdateissuetype">Update</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <input type="text" id="txtremarksclosing" placeholder="Please Enter Closing Remarks" class="form-control float-left" style="height: 100px" />
+            <span class="text-danger" id="RemarksErrorclosing" style="display: none;">Please Enter Closing Remarks</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnclosing">Closing</button>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+
+            <div class="card">
+            <div class="card-header" style="background-color: #0565B7;color:white">
+            <h3 class="card-title">Issue Type Change</h3>
+            </div>
+            <div class="card-body">
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Claim Description:</label>
+
+            </div>
+            <div class="col-md-3 col-sm-3">
+            <select class="form-control" id="SubcategoryDropdown" name="ticketsubcatagory ">
+            @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[4].Rows)
+            {
+            <option value="@catRow["IssueTypeId"]">@catRow["IssueTypeDescription"]</option>
+            }
+            </select>
+            <span class="text-danger" id="categoryDropdownError" style="display: none;">Please select Issue Type</span>
+            <br />
+            </div>
+
+
+            </div>
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Remarks:</label>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+
+            <input type="text" id="txtremarksupdateissuetype" placeholder="Please Enter  Remarks" class="form-control float-left" style="height: 100px" />
+            <span class="text-danger" id="RemarksErrorupdateissuetype" style="display: none;">Please Enter Remarks</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnupdateissuetype">Update</button>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
             </div> *@
 
             @*----------------- END SMS table -----------*@
@@ -389,71 +408,71 @@
 
             @*----------------- close table -----------*@
 
-@*             <div id="closeTableTabContent" class="tab-pane fade show">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">Status:</label>
-                                </div>
+            @*             <div id="closeTableTabContent" class="tab-pane fade show">
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Status:</label>
+            </div>
 
-                                <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3">
 
-                                    <select class="form-control" id="TicketStatusDropdown" name="TicketType ">
+            <select class="form-control" id="TicketStatusDropdown" name="TicketType ">
 
-                                        <option value="0">Select Ticket Status</option>
-                                        @foreach (System.Data.DataRow catRow in Model.TicketStatus.Tables[0].Rows)
-                                        {
-                                            <option value="@catRow["Status_ID"]">@catRow["ticket_status"]</option>
-                                        }
-                                    </select>
-                                    <span class="text-danger" id="ticketstatuserror" style="display: none;">Please select Ticket Status.</span>
-                                </div>
+            <option value="0">Select Ticket Status</option>
+            @foreach (System.Data.DataRow catRow in Model.TicketStatus.Tables[0].Rows)
+            {
+            <option value="@catRow["Status_ID"]">@catRow["ticket_status"]</option>
+            }
+            </select>
+            <span class="text-danger" id="ticketstatuserror" style="display: none;">Please select Ticket Status.</span>
+            </div>
 
-                            </div>
-
-
-                            <div id="citydropdown">
-                            </div>
-                            <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
+            </div>
 
 
-
-                            <div id="regionContainer">
-                            </div>
-                            <span class="text-danger" id="regionerror" style="display: none;">Please select Region.</span>
+            <div id="citydropdown">
+            </div>
+            <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
 
 
 
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">Remarks:</label>
-
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
-
-                                    <input type="text" id="txtremarksclosed" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
-                                    <span class="text-danger" id="RemarksErrorclosed" style="display: none;">Please Enter Remarks.</span>
-                                </div>
+            <div id="regionContainer">
+            </div>
+            <span class="text-danger" id="regionerror" style="display: none;">Please select Region.</span>
 
 
 
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <button class="btn btn-success float-left" id="btnclosed">Closed</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            </div>
+            </div>
+
+
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Remarks:</label>
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+
+            <input type="text" id="txtremarksclosed" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+            <span class="text-danger" id="RemarksErrorclosed" style="display: none;">Please Enter Remarks.</span>
+            </div>
+
+
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnclosed">Closed</button>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
             </div> *@
 
             @*----------------- END close table -----------*@
@@ -461,62 +480,62 @@
 
             @*----------------- Reopen table -----------*@
 
-   @*          <div id="reopenTableTabContent" class="tab-pane fade show">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">Ticket Type:</label>
-                                </div>
+            @*          <div id="reopenTableTabContent" class="tab-pane fade show">
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Ticket Type:</label>
+            </div>
 
-                                <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3">
 
-                                    <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
+            <select class="form-control" id="TicketTypeDropdown" name="TicketType ">
 
-                                        <option value="">Select Ticket Type</option>
-                                        @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
-                                        {
-                                            <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
-                                        }
-                                    </select>
-                                    <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
-                                </div>
+            <option value="">Select Ticket Type</option>
+            @foreach (System.Data.DataRow catRow in Model.TicketType.Tables[0].Rows)
+            {
+            <option value="@catRow["ticket_type_id"]">@catRow["Ticket_type"]</option>
+            }
+            </select>
+            <span class="text-danger" id="TicketTypeDropdownError" style="display: none;">Please select Ticket Type.</span>
+            </div>
 
-                            </div>
-
-
-                            <div id="citydropdown">
-                            </div>
-                            <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
 
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <label class="text-secondary font-weight-bold">Remarks:</label>
-
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4">
-
-                                    <input type="text" id="txtremarksreopen" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
-                                    <span class="text-danger" id="RemarksErrorreopen" style="display: none;">Please Enter Remarks.</span>
-                                </div>
+            <div id="citydropdown">
+            </div>
+            <span class="text-danger" id="citydropdownerror" style="display: none;">Please select City</span>
+            </div>
+            </div>
+            </div>
 
 
+            <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="form-group">
+            <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">
+            <label class="text-secondary font-weight-bold">Remarks:</label>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <button class="btn btn-success float-left" id="btnreopen">Reopen</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+
+            <input type="text" id="txtremarksreopen" placeholder="Please Type Remarks" class="form-control float-left" style="height: 100px" />
+            <span class="text-danger" id="RemarksErrorreopen" style="display: none;">Please Enter Remarks.</span>
+            </div>
+
+
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+            <button class="btn btn-success float-left" id="btnreopen">Reopen</button>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
             </div> *@
 
             @*----------------- END Reopen table -----------*@
@@ -528,28 +547,28 @@
 
             @*----------------- tracking detail----------*@
 
-    @*         <div id="trackingTableTabContent" class="tab-pane show ">
-                <table id="TrackingTable" class="display" style="width:100%">
-                    <thead style="width:100%">
-                        <tr>
-                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[6].Columns)
-                            {
-                                <th>@column.ColumnName</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[6].Rows)
-                        {
-                            <tr>
-                                @foreach (var item in row.ItemArray)
-                                {
-                                    <td>@item.ToString()</td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            @*         <div id="trackingTableTabContent" class="tab-pane show ">
+            <table id="TrackingTable" class="display" style="width:100%">
+            <thead style="width:100%">
+            <tr>
+            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[6].Columns)
+            {
+            <th>@column.ColumnName</th>
+            }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[6].Rows)
+            {
+            <tr>
+            @foreach (var item in row.ItemArray)
+            {
+            <td>@item.ToString()</td>
+            }
+            </tr>
+            }
+            </tbody>
+            </table>
             </div> *@
 
             @*-----------------END Tracking table -----------*@
@@ -557,28 +576,28 @@
 
             @*------------------ hd detail-----------------*@
 
-@*             <div id="hdTableTabContent" class="tab-pane fade show" style="width:100%">
-                <table id="HDTable" class="display">
-                    <thead>
-                        <tr>
-                            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[7].Columns)
-                            {
-                                <th>@column.ColumnName</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[7].Rows)
-                        {
-                            <tr>
-                                @foreach (var item in row.ItemArray)
-                                {
-                                    <td>@item.ToString()</td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            @*             <div id="hdTableTabContent" class="tab-pane fade show" style="width:100%">
+            <table id="HDTable" class="display">
+            <thead>
+            <tr>
+            @foreach (System.Data.DataColumn column in Model.BookingDetail.Tables[7].Columns)
+            {
+            <th>@column.ColumnName</th>
+            }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (System.Data.DataRow row in Model.BookingDetail.Tables[7].Rows)
+            {
+            <tr>
+            @foreach (var item in row.ItemArray)
+            {
+            <td>@item.ToString()</td>
+            }
+            </tr>
+            }
+            </tbody>
+            </table>
             </div> *@
 
             @*-----------------END hd table -----------*@
@@ -630,7 +649,6 @@
                 @{
                     try
                     {
-
                         if (Model.roleid == "4" || Model.roleid == "2" || Model.roleid == "3" || Model.roleid == "7")
                         {
 
@@ -894,6 +912,53 @@
 
 
 
+
+            @*------------------ final remarks Approved-----------------*@
+
+            <div id="finalremarksTableTabContentApproved" class="tab-pane fade show">
+
+
+                <div class="card hidecardclaim">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="form-group">
+
+
+                                    <span class="text-danger" id="checkboxError" style="display: none;"></span>
+                                    <br />
+
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                            <label class="text-secondary font-weight-bold">Final Remarks:</label>
+
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+
+                                            <input type="text" id="txtfinalremarksApproved" placeholder="Please Type Final Remarks" style="height: 100px" class="form-control float-left" autofocus name="remarks" />
+                                            <span class="text-danger" id="RemarksErrorfinal" style="display: none;">Please Enter Final Remarks.</span>
+                                        </div>
+
+
+
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+
+
+                                            <button class="btn btn-success float-left" id="btnupdatefinalremarksApproved">Proceed for Printing</button>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -1303,6 +1368,44 @@
             var ticketData = {
 
                 remarks: $('#txtfinalremarks').val(),
+                ticketdid: @ViewData["TicketNo"],
+                activity: activity,
+                userid: "",
+
+            };
+            $.ajax({
+                url: '/Home/UpdateFinalRemarks',
+                type: 'POST',
+                data: ticketData,
+                success: function (response) {
+                    debugger
+
+                    if (response.success) {
+
+                        Swal.fire('Success', response.message, 'success');
+                        var ticketno = response.data;
+                        $('#txtremarks').val('');
+                    }
+                    else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+                }
+            });
+
+        });
+
+
+        $('#btnupdatefinalremarksApproved').click(function () {
+
+            debugger
+            var activity;
+            var ticketData = {
+
+                remarks: $('#txtfinalremarksApproved').val(),
                 ticketdid: @ViewData["TicketNo"],
                 activity: activity,
                 userid: "",

@@ -778,6 +778,8 @@ namespace PLIC_Web_Poratal.Controllers
             string UserName;
             string password;
             string RoleID;
+            bool Dashboard, Tracking, SearchTicket, SearchClaim, ServiceRequest, FRNAddress, AgentsActivity, AccountOpening, Reports, BulkSMS;
+
             string[] dataID = ID.Split('ǁ');
             //return "/Account/OTP";
 
@@ -796,7 +798,7 @@ namespace PLIC_Web_Poratal.Controllers
             if (acc.Password.Length >= 3 && acc.UserName.Length > 3)
             {
                 string connectionString = db.GetConfiguration().GetConnectionString("DefaultConnection");
-                string storedProcedureName = "GetUserByLoginId";
+                string storedProcedureName = "GetUserByLoginIdNew";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -819,6 +821,16 @@ namespace PLIC_Web_Poratal.Controllers
                                 UserName = sdr["LoginId"].ToString();
                                 password = sdr["Password"].ToString();
                                 RoleID = sdr["role_id"].ToString();
+                                Dashboard = Convert.ToBoolean(sdr["Dashboard"]);
+                                Tracking = Convert.ToBoolean(sdr["Tracking"]);
+                                SearchTicket = Convert.ToBoolean(sdr["SearchTicket"]);
+                                SearchClaim = Convert.ToBoolean(sdr["SearchClaim"]);
+                                ServiceRequest = Convert.ToBoolean(sdr["ServiceRequest"]);
+                                FRNAddress = Convert.ToBoolean(sdr["FRNAddress"]);
+                                AgentsActivity = Convert.ToBoolean(sdr["AgentsActivity"]);
+                                AccountOpening = Convert.ToBoolean(sdr["AccountOpening"]);
+                                Reports = Convert.ToBoolean(sdr["Reports"]);
+                                BulkSMS = Convert.ToBoolean(sdr["BulkSMS"]);
 
                                 if (password == acc.Password)
                                 {
@@ -826,9 +838,22 @@ namespace PLIC_Web_Poratal.Controllers
                                     HttpContext.Session.SetString("UserName", UserName);
                                     HttpContext.Session.SetString("Password", acc.Password);
                                     HttpContext.Session.SetString("RoleID", RoleID);
+                                    HttpContext.Session.SetString("Dashboard", Convert.ToBoolean(Dashboard).ToString());
+                                    HttpContext.Session.SetString("Tracking", Convert.ToBoolean(Tracking).ToString());
+                                    HttpContext.Session.SetString("SearchTicket", Convert.ToBoolean(SearchTicket).ToString());
+                                    HttpContext.Session.SetString("SearchClaim", Convert.ToBoolean(SearchClaim).ToString());
+                                    HttpContext.Session.SetString("ServiceRequest", Convert.ToBoolean(ServiceRequest).ToString());
+                                    HttpContext.Session.SetString("FRNAddress", Convert.ToBoolean(FRNAddress).ToString());
+                                    HttpContext.Session.SetString("AgentsActivity", Convert.ToBoolean(AgentsActivity).ToString());
+                                    HttpContext.Session.SetString("AccountOpening", Convert.ToBoolean(AccountOpening).ToString());
+                                    HttpContext.Session.SetString("Reports", Convert.ToBoolean(Reports).ToString());
+                                    HttpContext.Session.SetString("BulkSMS", Convert.ToBoolean(BulkSMS).ToString());
 
                                     ViewData["RoleID"] = RoleID;
+                              
                                     ViewBag.Role = RoleID;
+                         
+                                
 
                                     var viewModel = new CareConnect.Models.UserViewModel
                                     {
@@ -836,10 +861,14 @@ namespace PLIC_Web_Poratal.Controllers
                                         UserName = UserName,
                                         Password = password,
                                         RoleID = RoleID
+                                        //dashboard = Dashboard
+                                        
                                     };
 
                                     ViewBag.RoleID = HttpContext.Session.GetString("RoleID");
-                                    LoggingHistory(LoginId, RoleID, password);
+                                    ViewBag.Dashboard = HttpContext.Session.GetString("Dashboard");
+                              
+                                    //LoggingHistory(LoginId, RoleID, password);
                                     return "/Home/Menu";
                                 }
                                 else

@@ -1,4 +1,5 @@
-﻿<html lang="en" style="height: auto;">
+﻿@using Microsoft.AspNetCore.Http
+<html lang="en" style="height: auto;">
 <head>
 
 
@@ -62,7 +63,7 @@
 
         .main {
             /*            margin-left: 10%;
-                                                                                */ border: 1px solid;
+                                                                                                                                                                                                                                                        */ border: 1px solid;
             /*min-height: stretch;*/
             /*padding: 10px;*/
             width: 80%;
@@ -255,6 +256,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
+
+@{
+    var dashboard = (Context.Session.GetString("Dashboard"));
+    var Tracking = (Context.Session.GetString("Tracking"));
+    var SearchTicket = (Context.Session.GetString("SearchTicket"));
+    var SearchClaim = (Context.Session.GetString("SearchClaim"));
+    var ServiceRequest = (Context.Session.GetString("ServiceRequest"));
+    var FRNAddress = (Context.Session.GetString("FRNAddress"));
+    var AgentsActivity = (Context.Session.GetString("AgentsActivity"));
+    var AccountOpening = (Context.Session.GetString("AccountOpening"));
+    var Reports = (Context.Session.GetString("Reports"));
+    var BulkSMS = (Context.Session.GetString("BulkSMS"));
+
+}
+
 <body class="sidebar-mini layout-fixed" style="height: auto;">
     <div class="wrapper">
 
@@ -312,219 +328,289 @@
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                     <!-- Add icons to the links using the .nav-icon class
                                     with font-awesome or any other icon font library -->
+                                
 
-                                    <li class="nav-item">
-                                        <a asp-action="Menu" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "#0565B7" : "default");">
+                                    @{
+                                        if (dashboard == "True")
+                                        {
+                                            <li class="nav-item">
+                                                <a asp-action="Menu" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Menu" ? "#0565B7" : "default");">
 
 
-                                            <i class="nav-icon fas fa-home"></i>
-                                            <p>
-                                                Dashboard
-                                            </p>
-                                        </a>
-                                    </li>
-                                    @*<li class="nav-item">
-                                    <a href="@Url.Action("Index","Home")" class="nav-link">
-                                    <i class="nav-icon far "></i>
-                                    <p>
-                                    Vouchers
-                                    </p>
-                                    </a>
-                                    </li>
-                                    <li class="nav-item">
-                                    <a asp-action="Policy" asp-controller="Home" class="nav-link">
-                                    <i class="nav-icon fas fa-columns"></i>
-                                    <p>
-                                    Policy
-                                    </p>
-                                    </a>
-                                    </li>*@
+                                                    <i class="nav-icon fas fa-home"></i>
+                                                    <p>
+                                                        Dashboard
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
 
+                                        }
+                                    }
+                          
                                     <!-- Nav link code -->
-                                    <!-- Nav link code -->
-                                    <li class="nav-item">
-                                        <a asp-action="Tracking" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fas fa-dot-circle"></i>
-                                            <p>Tracking</p>
-                                        </a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a asp-action="SearchTicket" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-search"></i>
-                                            <p>Search Ticket</p>
-                                        </a>
-                                    </li>
-                                    @{
-                                        var userRoleId = ViewData["RoleID"] as string; // Example for ASP.NET Core
-                                    }
-                                    @{
-                                        try
-                                        {
-                                            //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
-                                            if (userRoleId != "1")
-                                            {
-
-                                                <li class="nav-item">
-                                                    <a asp-action="SearchClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#0565B7" : "default");">
-                                                        <i class="nav-icon fa fa-fw fa-search"></i>
-                                                        <p>Search Claim</p>
-                                                    </a>
-                                                </li>
-                                            }
-                                            else
-                                            {
-
-                                            }
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            // Handle the exception here
-                                            throw ex;
-                                        }
-                                    }
-
-                                    <li class="nav-item">
-                                        <a asp-action="ServiceRequest" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-info"></i>
-                                            <p>Service Request/Info</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-action="ReportTerminalAddress" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-address-book"></i>
-                                            <p>FRN/Agent Address</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-action="ReportAgents" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-box-open"></i>
-                                            <p>Agents Activity</p>
-                                        </a>
-                                    </li>
-
-                                @*     <li class="nav-item">
-                                        <a asp-action="ReportTariffActivity" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTariffActivity" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTariffActivity" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTariffActivity" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-box-open"></i>
-                                            <p>Tariff Activity</p>
-                                        </a>
-                                    </li> *@
-
-
-                                    <li class="nav-item">
-                                        <a asp-action="AccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-book-reader"></i>
-                                            <p>Account Opening</p>
-                                        </a>
-                                    </li>
-
-                                    @*    <li class="nav-item">
-                                    <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
-                                    <i class="nav-icon fa fa-fw fa-search"></i>
-                                    <p>Bulk SMS</p>
-                                    </a>
-                                    </li> *@
-
+                                
+                                 
 
                                     @{
-                                        try
+                                        if (Tracking == "True")
                                         {
-                                            //if ( Model.userid == Model.TicketHistory.Tables[2].Rows[0]["UserId"].ToString() && Model.roleid == Model.TicketHistory.Tables[2].Rows[0]["role_id"].ToString())
-                                            if (userRoleId != "1")
-                                            {
-
-                                                <li class="nav-item">
-                                                    <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
-                                                        <i class="nav-icon fa fa-fw fa-search"></i>
-                                                        <p>Bulk SMS</p>
-                                                    </a>
-                                                </li>
-                                            }
-                                            else
-                                            {
-
-                                            }
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            // Handle the exception here
-                                            throw ex;
-                                        }
-                                    }
-
-                                </ul>
-                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                                    <li class="nav-item">
-                                        <a id="toggleSubMenu" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
-                                            <i class="nav-icon fa fa-fw fa-book-open"></i>
-                                            <p>Reports</p>
-                                        </a>
-                                        <ul class="submenu" nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-                                            <li class="no-marker">
-                                                <a asp-action="ReportCRM" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#0565B7" : "default");">
-
-                                                    <i class="nav-icon fas fa-dot-circle"></i>CRM
-                                                </a>
-                                            </li>
-
-                                            <li class="no-marker">
-                                                <a asp-action="ReportClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "#0565B7" : "default");">
-
-                                                    <i class="nav-icon fas fa-dot-circle"></i>Claim Report
-                                                </a>
-                                            </li>
-
-                                            <li class="no-marker">
-                                                <a asp-action="ReportCODLedger" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "#0565B7" : "default");">
-
-                                                    <i class="nav-icon fas fa-dot-circle"></i>COD Ledger Report
-                                                </a>
-                                            </li>
-
-                                            <li class="no-marker">
-                                                <a asp-action="ReportCODInvoiceServices" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODInvoiceServices" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODInvoiceServices" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODInvoiceServices" ? "#0565B7" : "default");">
-
-                                                    <i class="nav-icon fas fa-dot-circle"></i>COD Invoice Report
-                                                </a>
-                                            </li>
-
-                                            <li class="no-marker">
-                                                <a asp-action="ReportAccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#0565B7" : "default");">
-
+                                            <li class="nav-item">
+                                                <a asp-action="Tracking" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Tracking" ? "#0565B7" : "default");">
                                                     <i class="nav-icon fas fa-dot-circle"></i>
+                                                    <p>Tracking</p>
+                                                </a>
+                                            </li>
 
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+                                
+
+                                    @{
+
+                                        if (SearchTicket == "True")
+                                        {
+                                            <li class="nav-item">
+                                                <a asp-action="SearchTicket" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchTicket" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-search"></i>
+                                                    <p>Search Ticket</p>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+                              
+
+                                    @{
+
+                                        if (SearchClaim == "True")
+                                        {
+
+                                            <li class="nav-item">
+                                                <a asp-action="SearchClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "SearchClaim" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-search"></i>
+                                                    <p>Search Claim</p>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+
+                             
+                                    @{
+
+                                        if (ServiceRequest == "True")
+                                        {
+                                            <li class="nav-item">
+                                                <a asp-action="ServiceRequest" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ServiceRequest" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-info"></i>
+                                                    <p>Service Request/Info</p>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+                             
+
+                                    @{
+
+                                        if (FRNAddress == "True")
+                                        {
+                                            <li class="nav-item">
+                                                <a asp-action="ReportTerminalAddress" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTerminalAddress" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-address-book"></i>
+                                                    <p>FRN/Agent Address</p>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+
+                                        {
+
+                                        }
+                                    }
+
+                               
+
+                                    @{
+
+                                        if (AgentsActivity == "True")
+                                        {
+                                            <li class="nav-item">
+                                                <a asp-action="ReportAgents" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAgents" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-box-open"></i>
+                                                    <p>Agents Activity</p>
+                                                </a>
+                                            </li>
+
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+                                    @*     <li class="nav-item">
+                                    <a asp-action="ReportTariffActivity" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTariffActivity" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTariffActivity" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportTariffActivity" ? "#0565B7" : "default");">
+                                    <i class="nav-icon fa fa-fw fa-box-open"></i>
+                                    <p>Tariff Activity</p>
+                                    </a>
+                                    </li> *@
+                               
+
+                                    @{
+
+                                        if (AccountOpening == "True")
+                                        {
+
+                                            <li class="nav-item">
+                                                <a asp-action="AccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "AccountOpening" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-book-reader"></i>
                                                     <p>Account Opening</p>
                                                 </a>
                                             </li>
 
-                                            <li class="no-marker">
-                                                <a asp-action="Report" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
-                                                    <i class="nav-icon fas fa-dot-circle"></i>Track Detail
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+                           
+
+
+                            
+
+                                    @{
+
+                                        if (BulkSMS == "True")
+                                        {
+
+                                            <li class="nav-item">
+                                                <a asp-action="BulkSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "BulkSMS" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-search"></i>
+                                                    <p>Bulk SMS</p>
                                                 </a>
                                             </li>
-                                            <li class="no-marker">
-                                                <a asp-action="ReportSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "#0565B7" : "default");">
+                                        }
+                                        else
+                                        {
 
-                                                    <i class="nav-icon fas fa-dot-circle"></i>Ticket SMS
-                                                </a>
-                                            </li>
-                                            <li class="no-marker">
-                                                <a asp-action="ReportClose" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "#0565B7" : "default");">
+                                        }
+                                    }
 
-                                                    <i class="nav-icon fas fa-dot-circle"></i>Ticket Close
-                                                </a>
-                                            </li>
 
-                                        </ul>
-                                    </li>
                                 </ul>
+                        
+
+                                @{
+
+                                    if (Reports == "True")
+                                    {
+
+                                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                            <li class="nav-item">
+                                                <a id="toggleSubMenu" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
+                                                    <i class="nav-icon fa fa-fw fa-book-open"></i>
+                                                    <p>Reports</p>
+                                                </a>
+                                                <ul class="submenu" nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportCRM" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCRM" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>CRM
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportClaim" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClaim" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>Claim Report
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportCODLedger" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODLedger" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>COD Ledger Report
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportCODInvoiceServices" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODInvoiceServices" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODInvoiceServices" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportCODInvoiceServices" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>COD Invoice Report
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportAccountOpening" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportAccountOpening" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>
+
+                                                            <p>Account Opening</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="no-marker">
+                                                        <a asp-action="Report" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "Report" ? "#0565B7" : "default");">
+                                                            <i class="nav-icon fas fa-dot-circle"></i>Track Detail
+                                                        </a>
+                                                    </li>
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportSMS" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportSMS" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>Ticket SMS
+                                                        </a>
+                                                    </li>
+                                                    <li class="no-marker">
+                                                        <a asp-action="ReportClose" asp-controller="Home" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "active" : "")" style="background-color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "#f4f6f9" : "transparent"); color: @(ViewContext.RouteData.Values["Action"].ToString() == "ReportClose" ? "#0565B7" : "default");">
+
+                                                            <i class="nav-icon fas fa-dot-circle"></i>Ticket Close
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
 
                             </nav>
                             <!-- /.sidebar-menu -->
                         </div>
                     </div>
-                </div><div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="height: 44.1501%; transform: translate(0px, 0px);"></div></div></div><div class="os-scrollbar-corner"></div>
+                </div>
+
+                <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div></div></div>
+
+                <div class="os-scrollbar os-scrollbar-vertical os-scrollbar-auto-hidden"><div class="os-scrollbar-track"><div class="os-scrollbar-handle" style="height: 44.1501%; transform: translate(0px, 0px);"></div></div></div>
+
+                <div class="os-scrollbar-corner"></div>
             </div>
             <!-- /.sidebar -->
         </aside>

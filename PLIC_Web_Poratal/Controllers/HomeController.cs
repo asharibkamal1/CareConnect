@@ -95,7 +95,13 @@ namespace PLIC_Web_Poratal.Controllers
             {
                 string RoleID = HttpContext.Session.GetString("RoleID");
                 string UserName = HttpContext.Session.GetString("UserName");
+         
+
+
                 ViewData["RoleID"] = RoleID;
+
+             
+
                 ViewBag.RoleID = RoleID;
                 ViewBag.UserName = UserName;
 
@@ -1022,7 +1028,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
                     using (SqlCommand command5 = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1))
-                    using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
+                  //  using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Tracking", conn))
                     using (SqlCommand command1 = new SqlCommand("sp_GetClaimRequestDetails", conn1))
                     using (SqlCommand command2 = new SqlCommand("sp_GetClaimHistory", conn1))
                     using (SqlCommand command4 = new SqlCommand("sp_careconnect_Get_Ticket_Status", conn1))
@@ -1042,7 +1048,7 @@ namespace PLIC_Web_Poratal.Controllers
                         object result = await command3.ExecuteScalarAsync();
                         consignmentNumber = result.ToString(); // Replace 'int' with the appropriate data type
 
-                        command.CommandType = CommandType.StoredProcedure;
+                        //command.CommandType = CommandType.StoredProcedure;
                         command1.CommandType = CommandType.StoredProcedure;
                         command2.CommandType = CommandType.StoredProcedure;
                         command4.CommandType = CommandType.StoredProcedure;
@@ -1050,14 +1056,14 @@ namespace PLIC_Web_Poratal.Controllers
                         command6.CommandType = CommandType.StoredProcedure;
                         command7.CommandType = CommandType.StoredProcedure;
 
-                        command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
+                      //  command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
                         command1.Parameters.AddWithValue("@ClaimID", claimid);
                         command2.Parameters.AddWithValue("@ClaimID", claimid);
                         command6.Parameters.AddWithValue("@ClaimID", claimid);
                         command7.Parameters.AddWithValue("@ClaimID", claimid);
                         command7.Parameters.AddWithValue("@UserId", userId);
 
-                        using (SqlDataAdapter dataAdapter = new SqlDataAdapter(command))
+                        //using (SqlDataAdapter dataAdapter = new SqlDataAdapter(command))
                         using (SqlDataAdapter dataAdapter1 = new SqlDataAdapter(command1))
                         using (SqlDataAdapter dataAdapter2 = new SqlDataAdapter(command2))
                         using (SqlDataAdapter dataAdapter4 = new SqlDataAdapter(command4))
@@ -1070,7 +1076,7 @@ namespace PLIC_Web_Poratal.Controllers
                                 dataAdapter5.Fill(dataSet5);
                                 dataAdapter1.Fill(dataSet1);
                                 dataAdapter2.Fill(dataSet2);
-                                dataAdapter.Fill(dataSet3);
+                            //    dataAdapter.Fill(dataSet3);
                                 dataAdapter4.Fill(dataSet4);
                                 dataAdapter6.Fill(dataSet6);
                                 dataAdapter7.Fill(dataSet7);
@@ -1081,7 +1087,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                         TicketDetailsViewModel model = new TicketDetailsViewModel
                         {
-                            BookingDetail = dataSet3,
+                           // BookingDetail = dataSet3,
                             TicketDetails = dataSet1,
                             TicketHistory = dataSet2,
                             TicketStatus = dataSet4,
@@ -1753,7 +1759,7 @@ namespace PLIC_Web_Poratal.Controllers
         }
 
 
-        public ActionResult GetSubcategoriesServiceRequest(string category)
+        public IActionResult GetSubcategoriesServiceRequest(string category)
         {
 
             try
@@ -3339,6 +3345,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@ReceiverCompany", null);
                         cmd.Parameters.AddWithValue("@ReceiverPhone", null);
                         cmd.Parameters.AddWithValue("@ReceiverAddress", null);
+                        cmd.Parameters.AddWithValue("@CustomerName", createTicketModel.customername);
                         cmd.Parameters.AddWithValue("@Destination", createTicketModel.Destination);
                         cmd.Parameters.AddWithValue("@Destination_Desc", createTicketModel.Destination_Desc);
                         cmd.Parameters.AddWithValue("@PaymentMode", createTicketModel.Payment_Mode);
@@ -3427,6 +3434,7 @@ namespace PLIC_Web_Poratal.Controllers
                                         using (SqlCommand insertImageCmd = new SqlCommand("InsertClaimImages", conn))
                                         {
                                             insertImageCmd.CommandType = CommandType.StoredProcedure;
+                                            insertImageCmd.Transaction = transaction;
                                             insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
                                             insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
                                             insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
