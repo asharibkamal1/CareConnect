@@ -3284,7 +3284,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> CreateClaim(CreateTicketModel createTicketModel, List<IFormFile> Images)
+        public async Task<ActionResult> CreateClaimAsync(CreateTicketModel createTicketModel, List<IFormFile> Images)
         {
             SqlTransaction _Transaction = null;
             try

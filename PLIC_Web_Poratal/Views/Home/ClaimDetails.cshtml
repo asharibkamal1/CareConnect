@@ -1245,6 +1245,7 @@
                     debugger
                     // Check if the ticket was created successfully
                     if (response.success) {
+                        $('#txtremarks').val('');
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
@@ -1256,7 +1257,7 @@
 
                         // Open the new view in a new window/tab
                         // window.open(url, '_blank');
-                        $('#txtremarks').val('');
+                        
 
                     }
                     else {
@@ -1277,34 +1278,34 @@
             //console.log("button is clisked");
             debugger
 
-            var activity;
-            var origin = $('#txtorigin').val();
-            var destination = $('#txtdestination').val();
+            // var activity;
+            // var origin = $('#txtorigin').val();
+            // var destination = $('#txtdestination').val();
             var imagefile = $('#imageUpload').val();
 
-            if (origin === '' || origin === undefined) {
-                //$('#RemarksError').show();
-                origin = 0; // Prevent form submission if origin is not selected
-            } else {
-                origin = 1;
-                activity = "Origin Remarks"
-            }
+            // if (origin === '' || origin === undefined) {
+            //     //$('#RemarksError').show();
+            //     origin = 0; // Prevent form submission if origin is not selected
+            // } else {
+            //     origin = 1;
+            //     activity = "Origin Remarks"
+            // }
 
-            if (destination === '' || destination === undefined) {
-                destination = 0;
-                // Prevent form submission if destination is not selected
-            } else {
-                destination = 1;
-                activity = "Destination Remarks"
-            }
+            // if (destination === '' || destination === undefined) {
+            //     destination = 0;
+            //     // Prevent form submission if destination is not selected
+            // } else {
+            //     destination = 1;
+            //     activity = "Destination Remarks"
+            // }
             var formData = new FormData();
             var ticketData = {
 
                 remarks: $('#txtUpdateremarks').val(),
                 ticketdid: @ViewData["TicketNo"],
-                activity: activity,
-                origin: origin,
-                destination: destination,
+                activity: "Update",
+                origin: "",
+                destination: "",
                 userid: "",
 
             };
@@ -1333,6 +1334,8 @@
                     debugger
                     // Check if the ticket was created successfully
                     if (response.success) {
+                        $('#txtUpdateremarks').val('');
+                        debugger 
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
@@ -1344,7 +1347,7 @@
 
                         // Open the new view in a new window/tab
                         // window.open(url, '_blank');
-                        $('#txtupdateremarks').val('');
+                      
 
                     }
                     else {
@@ -1381,10 +1384,10 @@
                     debugger
 
                     if (response.success) {
-
+                        $('#txtfinalremarks').val('');
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
-                        $('#txtremarks').val('');
+                    
                     }
                     else {
                         Swal.fire('Error', response.message, 'error');
@@ -1419,10 +1422,10 @@
                     debugger
 
                     if (response.success) {
-
+                        $('#txtfinalremarksApproved').val('');
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
-                        $('#txtremarks').val('');
+                    
                     }
                     else {
                         Swal.fire('Error', response.message, 'error');
@@ -1497,12 +1500,13 @@
                     debugger
                     // Check if the ticket was created successfully
                     if (response.success) {
+                        $('#txtfinalremarks').val('');
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
 
 
-                        $('#txtremarks').val('');
+                     
 
                     }
                     else {
@@ -1547,6 +1551,7 @@
                     debugger
                     // Check if the ticket was created successfully
                     if (response.success) {
+                        $('#txtfinalremarks').val('');
                         // Show a success message using SweetAlert
                         Swal.fire('Success', response.message, 'success');
                         var ticketno = response.data;
@@ -1558,7 +1563,7 @@
 
                             // Open the new view in a new window/tab
                             // window.open(url, '_blank');
-                            $('#txtremarks').val('');
+              
 
                     }
                     else {
