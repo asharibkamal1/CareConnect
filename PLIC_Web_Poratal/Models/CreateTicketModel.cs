@@ -51,6 +51,7 @@ namespace CareConnect.Models
         public string receivercompany { get; set; }
         public string receiverphone { get; set; }
         public string receiveraddress { get; set; }
+        public string customername { get; set; }
         public string Destination { get; set; }
         public string Destination_Desc { get; set; }
         public string Weight { get; set; }
