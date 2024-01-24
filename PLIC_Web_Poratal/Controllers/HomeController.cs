@@ -1055,7 +1055,7 @@ namespace PLIC_Web_Poratal.Controllers
                         command5.CommandType = CommandType.StoredProcedure;
                         command6.CommandType = CommandType.StoredProcedure;
                         command7.CommandType = CommandType.StoredProcedure;
-
+                         //test
                       //  command.Parameters.AddWithValue("@bookingNumber", consignmentNumber);
                         command1.Parameters.AddWithValue("@ClaimID", claimid);
                         command2.Parameters.AddWithValue("@ClaimID", claimid);
