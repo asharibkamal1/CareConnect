@@ -1,5 +1,13 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
-
+<style>
+    .status-label {
+        display: inline-block;
+        width: 30px; /* Adjust the width as needed */
+        height: 15px; /* Adjust the height as needed */
+        margin-right: 5px; /* Add some spacing between labels */
+        border: 1px solid #000; /* Add a border for better visibility */
+    }
+</style>
 
 <!-- Your HTML structure -->
 <div id="pdfContainer">
@@ -12,6 +20,24 @@
 
     </div>
     <div class="card-body">
+        <div>
+            <span class="status-label" style="background-color: Coral;"></span> Initiate
+            <span class="status-label" style="background-color: LightSalmon;"></span> In Process
+            <span class="status-label" style="background-color: #CD6155;"></span> Decline   @* Red *@
+            <span class="status-label" style="background-color: #F8C471;"></span> Approved By RMS   @* light Orange *@
+            <span class="status-label" style="background-color: #E67E22;"></span> Decline By RMS    @* Dark Orange *@
+            <span class="status-label" style="background-color: #AED6F1;"></span> Proceed By HOO    @* Light Blue *@
+        </div>
+        <br />
+        <div>
+            <span class="status-label" style="background-color: #5DADE2;"></span> Proceed By HCX    @* Dark Blue *@
+            <span class="status-label" style="background-color: #D7BDE2;"></span> Decline By HOO    @* Light Purple *@
+            <span class="status-label" style="background-color: #AF7AC5;"></span> Decline By HCX    @* Dark Purple *@
+            <span class="status-label" style="background-color: #F7DC6F;"></span> Under Investigation    @* Light yellow *@
+            <span class="status-label" style="background-color: #F1C40F;"></span> Proceed by RMO    @* Dark Yellow *@
+            <span class="status-label" style="background-color: lightgreen;"></span> Approved
+        </div>
+        <br />
         @if (Model.SearchClaimDetail != null && Model.SearchClaimDetail.Tables.Count > 0 && Model.SearchClaimDetail.Tables[0].Rows.Count > 0)
         {
             <table id="bookingstatusTable" width="100%" class="display">
@@ -29,31 +55,67 @@
                 <tbody>
                     @foreach (System.Data.DataRow row in Model.SearchClaimDetail.Tables[0].Rows)
                     {
-                        var originResponse = row["Origin_Response"].ToString().Trim();
-                        var destinationResponse = row["Destination_Response"].ToString().Trim();
-                        var rmsResponse = row["RMS_Response"].ToString().Trim();
-                        var dgmResponse = row["DGM_Response"].ToString().Trim();
+                        var statusID = row["Claim_Status_Id"].ToString().Trim();
                         var bgColor = "";
 
-                        // Set background color based on conditions
-                        if (originResponse == "Yes")
+                        if (statusID == "1")
                         {
                             bgColor = "Coral";
                         }
 
-                        if (originResponse == "Yes" && destinationResponse == "Yes")
+                        if (statusID == "2")
                         {
-                            bgColor = "#6495ED";
+                            bgColor = "	LightSalmon";
                         }
 
-                        if (originResponse == "Yes" && destinationResponse == "Yes" && rmsResponse == "Yes")
+                        if (statusID == "3")
                         {
-                            bgColor = "#f39c12";
+                            bgColor = "#CD6155";//Red
                         }
 
-                        if (originResponse == "Yes" && destinationResponse == "Yes" && rmsResponse == "Yes" && dgmResponse == "Yes")
+                        if (statusID == "4")
                         {
-                            bgColor = "LightGreen";
+                            bgColor = "#F8C471";//light Orange
+                        }
+
+                        if (statusID == "5")
+                        {
+                            bgColor = "#E67E22 ";//Dark Orange
+                        }
+
+                        if (statusID == "6")
+                        {
+                            bgColor = "#AED6F1  ";//Light Blue
+                        }
+
+                        if (statusID == "7")
+                        {
+                            bgColor = "#5DADE2 ";//Dark Blue
+                        }
+
+                        if (statusID == "8")
+                        {
+                            bgColor = "#D7BDE2 ";//Light Purple
+                        }
+
+                        if (statusID == "9")
+                        {
+                            bgColor = "#AF7AC5 ";//Dark Purple
+                        }
+
+                        if (statusID == "10")
+                        {
+                            bgColor = "#F7DC6F";//Light yellow
+                        }
+
+                        if (statusID == "11")
+                        {
+                            bgColor = "#F1C40F";//Dark Yellow
+                        }
+
+                        if (statusID == "12")
+                        {
+                            bgColor = "lightgreen";
                         }
 
                         <tr style="background-color: @bgColor;">
@@ -72,7 +134,7 @@
                                 </td>
                             }
                             <td>
-                            @*    <a class="ticketLink" href="/Home/GetClaimDetailsbyClaimid?ticketno=" target="_blank">claimform</a> *@
+                                @*    <a class="ticketLink" href="/Home/GetClaimDetailsbyClaimid?ticketno=" target="_blank">claimform</a> *@
 
 
                                 <a href="@Url.Action("Report", "Home")" class="report-link" data-id="@row["ClaimID"]">Claim Form Download</a>
@@ -141,14 +203,14 @@
 
         });
     });
-    //$(document).on('click', '.detailButton', function () {
-    //    debugger
-    //    var ticketId = $(this).data('ticketid');
-    //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
+            //$(document).on('click', '.detailButton', function () {
+            //    debugger
+            //    var ticketId = $(this).data('ticketid');
+            //    var url = '/Home/GetTicketDetails?ticketno=' + ticketId;
 
-    //    window.open(url, '_blank');
+            //    window.open(url, '_blank');
 
-    //});
+            //});
 </script>
 
 
