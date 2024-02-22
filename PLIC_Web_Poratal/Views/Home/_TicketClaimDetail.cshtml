@@ -1,4 +1,7 @@
 ﻿@model CareConnect.Models.TrackingGenerateViewModel
+@{
+    bool isParseSuccess = int.TryParse(Convert.ToString(ViewBag.RoleID), out int userRoleId);
+}
 <style>
     .status-label {
         display: inline-block;
@@ -8,6 +11,7 @@
         border: 1px solid #000; /* Add a border for better visibility */
     }
 </style>
+
 
 <!-- Your HTML structure -->
 <div id="pdfContainer">
@@ -124,6 +128,10 @@
                                 <td>
                                     @if (row.Table.Columns.IndexOf("ClaimID") == Array.IndexOf(row.ItemArray, item))
                                     {
+                                        if (userRoleId == 1016)
+                                        {
+                                            <input type="checkbox" class="row-checkbox" />
+                                        }                                        
                                         <a class="ticketLink" href="/Home/GetClaimDetailsbyClaimid?ticketno=@item.ToString()" target="_blank">@item.ToString()</a>
 
                                     }
@@ -143,12 +151,22 @@
                     }
                 </tbody>
             </table>
+            @if (userRoleId == 1016)
+            {
+                <button id="changeStatusBtn">VP Approve</button>
+            }
+            
+                      
         }
         else
         {
             <p>No Records Found.</p>
         }
+       
     </div>
+</div>
+
+<div id="loader" class="loader" style="display: none;">
 </div>
 <br />
 
@@ -211,6 +229,80 @@
             //    window.open(url, '_blank');
 
             //});
+    
+</script>
+
+<script>
+    $('#changeStatusBtn').click(function () {
+        var selectedRows = [];
+        $('.row-checkbox:checked').each(function () {
+            var row = $(this).closest('tr');
+            var claimId = row.find('.ticketLink').text();
+            selectedRows.push(claimId);
+        });
+
+        // Check if no rows are selected
+        if (selectedRows.length === 0) {
+            Swal.fire('Error', 'Please select at least one row.', 'error');
+            return; // Stop further execution
+        }
+
+        // Dynamically create and style the loader
+        var $loader = $('<div>', { id: 'loader', class: 'loader' }).css({
+            position: 'fixed', // or 'absolute'
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 9999,
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }).append($('<img>', {
+            src: '//images/icons/loading.gif',
+            alt: 'Loading...'
+        }));
+
+        $('body').append($loader); // Append loader to body
+
+        // Make an AJAX request to change the status of selected rows
+        $.ajax({
+            url: '/Home/VPApprove', // Replace with the appropriate endpoint
+            type: 'POST',
+            data: { selectedRows: selectedRows },
+            beforeSend: function () {
+                $loader.show(); // Show loader before request
+            },
+            success: function (response) {
+                // Hide and remove the loader
+                $loader.hide().remove(); // Hide and remove loader after request
+
+                // Handle success response
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.message,
+                        icon: 'success',
+                        willClose: () => {
+                            location.reload(); // Reload the page
+                        }
+                    });
+                } else {
+                    // Show error message
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Hide and remove the loader
+                $loader.hide().remove(); // Ensure loader is removed even if the request fails
+
+                // Show error message
+                Swal.fire('Error', 'Error: ' + error, 'error');
+            }
+        });
+    });
+
 </script>
 
 

@@ -41,6 +41,8 @@ namespace CareConnect.Models
         public DataSet TariffDetailsTerminals { get; set; }
         public DataSet TariffDetailsCustomer { get; set; }
 
+        public DataSet ClaimStatus { get; set; }
+
 
 
 

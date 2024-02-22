@@ -21,6 +21,7 @@ namespace CareConnect.Models
         public int tickettype { get; set; }
         public int Opening_Type_Id { get; set; }
         public int ticketcatagory { get; set; }
+        public int ticketstatus { get; set; }
         public string ticketcatagoryName { get; set; }
         public int ticketsubcatagory { get; set; }
         public int infosubcatagoryid { get; set; }

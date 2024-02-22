@@ -694,8 +694,7 @@ namespace PLIC_Web_Poratal.Controllers
 
                     string LoginId = HttpContext.Session.GetString("LoginId");
                     string RoleID = HttpContext.Session.GetString("RoleID");
-                    string trackingid = tracking;
-
+                    string trackingid = tracking;  
                     if (isCheckboxChecked)
                     {
                         if (conn1.State != ConnectionState.Open)
@@ -1033,7 +1032,7 @@ namespace PLIC_Web_Poratal.Controllers
                     using (SqlCommand command2 = new SqlCommand("sp_GetClaimHistory", conn1))
                     using (SqlCommand command4 = new SqlCommand("sp_careconnect_Get_Ticket_Status", conn1))
                     using (SqlCommand command3 = new SqlCommand("SP_Get_ConsignmentNo_By_ClaimNo", conn1))
-                    using (SqlCommand command6 = new SqlCommand("sp_GetClaimimages", conn1))
+                    using (SqlCommand command6 = new SqlCommand("sp_GetClaimimages1", conn1))
                     using (SqlCommand command7 = new SqlCommand("sp_Claim_Check_Org_Dstn_new", conn1))
 
                     {
@@ -1758,7 +1757,7 @@ namespace PLIC_Web_Poratal.Controllers
             }
         }
 
-
+       
         public IActionResult GetSubcategoriesServiceRequest(string category)
         {
 
@@ -2248,6 +2247,7 @@ namespace PLIC_Web_Poratal.Controllers
                     DataSet dataSet = new DataSet();
                     DataSet dataSet1 = new DataSet();
                     DataSet dataSet2 = new DataSet();
+                    DataSet dataSet3 = new DataSet();
                     using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
                     {
                         if (conn1.State != ConnectionState.Open)
@@ -2260,11 +2260,17 @@ namespace PLIC_Web_Poratal.Controllers
                         {
                             dataAdapter1.Fill(dataSet1);
                         }
+                        using (SqlCommand command = new SqlCommand("sp_careconnect_Get_Ticket_DropDownData", conn1))
+                        using (SqlDataAdapter dataAdapter3 = new SqlDataAdapter(command))
+                        {
+                            dataAdapter3.Fill(dataSet3);
+                        }
 
                         TrackingGenerateViewModel model = new TrackingGenerateViewModel
                         {
                             TicketCatType = dataSet1,
                             ClaimCategoryDS = dataSet1,
+                            ClaimStatus = dataSet3,
                         };
 
                         return View("~/Views/Home/SearchClaim.cshtml", model);
@@ -2296,7 +2302,7 @@ namespace PLIC_Web_Poratal.Controllers
                     DataSet dataSet2 = new DataSet();
                     using (SqlConnection conn1 = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
-                    {
+                   {
                         if (conn1.State != ConnectionState.Open)
                             await conn1.OpenAsync();
 
@@ -4079,6 +4085,7 @@ namespace PLIC_Web_Poratal.Controllers
             {
                 if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
                 {
+                    string RoleID = HttpContext.Session.GetString("RoleID");
                     using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
 
                     using (SqlCommand cmd = new SqlCommand("sp_Search_Claim_Request", conn))
@@ -4089,6 +4096,7 @@ namespace PLIC_Web_Poratal.Controllers
                         cmd.Parameters.AddWithValue("@ClaimID", createTicketModel.claimid);
                         cmd.Parameters.AddWithValue("@Barcode", createTicketModel.barcode);
                         cmd.Parameters.AddWithValue("@CategoryID", createTicketModel.ticketcatagory);
+                        cmd.Parameters.AddWithValue("@ClaimStatusID", createTicketModel.ticketstatus);
 
                         cmd.Parameters.AddWithValue("@CityID", null);
                         cmd.Parameters.AddWithValue("@Origin", createTicketModel.Origin);
@@ -4115,6 +4123,7 @@ namespace PLIC_Web_Poratal.Controllers
                         };
 
                         ViewBag.TrackingData = ds;
+                        ViewBag.RoleID = RoleID;
                         return PartialView("_TicketClaimDetail", model);
                     }
                 }
@@ -5055,6 +5064,7 @@ namespace PLIC_Web_Poratal.Controllers
                                             insertImageCmd.CommandType = CommandType.StoredProcedure;
                                             insertImageCmd.Parameters.AddWithValue("@ClaimId", imageModel.ClaimId);
                                             insertImageCmd.Parameters.AddWithValue("@ImageUrl", imageModel.ImageUrl);
+                                            insertImageCmd.Parameters.AddWithValue("@Remarks", updateTicketModel.remarks);
                                             insertImageCmd.Parameters.AddWithValue("@userId", HttpContext.Session.GetString("LoginId"));
                                             // insertImageCmd.Parameters.AddWithValue("@destination", updateTicketModel.destination);
                                             await insertImageCmd.ExecuteNonQueryAsync();
@@ -5173,6 +5183,40 @@ namespace PLIC_Web_Poratal.Controllers
             {
                 // Handle the exception and return an error response
                 return Json(new { success = false, message = "Error Updating Claim.", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> FinalApprove(UpdateTicketModel updateTicketModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                        using (SqlCommand cmd = new SqlCommand("sp_FinalApprove", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@UserID", HttpContext.Session.GetString("LoginId"));
+                            cmd.Parameters.AddWithValue("@Comment", updateTicketModel.remarks);
+                            cmd.Parameters.AddWithValue("@claimId", updateTicketModel.ticketdid);
+                            cmd.Parameters.AddWithValue("@Activity", updateTicketModel.activity);
+
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+                return Json(new { success = true, message = "Claim Successfully Approved." });
+
+
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Approving Claim.", error = ex.Message });
             }
         }
 
@@ -6889,7 +6933,7 @@ namespace PLIC_Web_Poratal.Controllers
                     mail.From = new MailAddress("careconnect@daewoofastex.pk");
                     mail.To.Add(toEmail);
                     mail.CC.Add(ccEmail);
-                    mail.Bcc.Add("amir.saleem@daewoo.com.pk,asharib.kamal@daewoo.com.pk,imran.ali@daewoofastex.pk,amna.niazi@daewoofastex.pk");
+                    mail.Bcc.Add("amir.saleem@daewoo.com.pk,imran.ali@daewoofastex.pk");
                     mail.IsBodyHtml = true;
                     mail.Subject = subject;
                     mail.Body = EmailBody;
@@ -6920,7 +6964,7 @@ namespace PLIC_Web_Poratal.Controllers
 
 
                     mail.From = new MailAddress("careconnect@daewoofastex.pk");
-                    mail.To.Add("asharib.kamal@daewoo.com.pk");
+                    mail.To.Add("a@daewoo.com.pk");
                     mail.CC.Add("amir.saleem@daewoo.com.pk");
                     //mail.Bcc.Add("amir.saleem@daewoo.com.pk,asharib.kamal@daewoo.com.pk,imran.ali@daewoofastex.pk,amna.niazi@daewoofastex.pk");
                     mail.IsBodyHtml = true;
@@ -7500,6 +7544,68 @@ namespace PLIC_Web_Poratal.Controllers
             {
 
                 throw ex;
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteImage(int claimImageId)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+
+
+                    using (SqlConnection conn = new SqlConnection(_db.GetConfiguration().GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                        using (SqlCommand cmd = new SqlCommand("sp_DeleteImage", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@claimImageId", claimImageId);
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+                return Json(new { success = true, message = "Image Deleted." });
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Deleting Image.", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> VPApprove(List<string> selectedRows)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("LoginId") != "" && HttpContext.Session.GetString("LoginId") != null)
+                {
+                    using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                    {
+                        if (conn.State != ConnectionState.Open)
+                            await conn.OpenAsync();
+                       
+                        foreach (var claimId in selectedRows)
+                        {
+                            using (SqlCommand cmd = new SqlCommand("sp_VPApprove", conn))
+                            {
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@claimId", claimId);
+                                await cmd.ExecuteNonQueryAsync();
+                            }
+                        }
+                    }
+                }
+                return Json(new { success = true, message = "Status Updated." });
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error response
+                return Json(new { success = false, message = "Error Updating Claim Status.", error = ex.Message });
             }
         }
 

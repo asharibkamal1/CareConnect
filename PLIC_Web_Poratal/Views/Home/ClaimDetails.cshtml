@@ -1,8 +1,10 @@
-﻿@model CareConnect.Models.TicketDetailsViewModel
+﻿@using Microsoft.AspNetCore.Http
+@model CareConnect.Models.TicketDetailsViewModel
 @{
     ViewData["Title"] = "Claim Detail";
 
 }
+
 <style>
 
     .checkbox-container {
@@ -16,6 +18,13 @@
         margin-right: 5px; /* Adjust the spacing as needed */
     }
 
+   
+
+</style>
+<style>
+    .hidden-column {
+        display: none;
+    }
 </style>
 <div class="card">
     <div class="card-header" style="background-color: #0565B7;color:white">
@@ -605,13 +614,17 @@
 
             @*------------------ claim images detail-----------------*@
 
-            <div id="claimimagesTableTabContent" class="tab-pane fade show">
+            <div id="claimimagesTableTabContent" class="tab-pane fade show">.
                 <table id="claimimagesTable" class="display">
                     <thead>
                         <tr>
                             @foreach (System.Data.DataColumn column in Model.ClaimImages.Tables[0].Columns)
                             {
                                 <th>@column.ColumnName</th>
+                                @* if (column.ColumnName != "ClaimImageId") // Check if the column is not ClaimImageId
+                                {
+                                    <th>@column.ColumnName</th>
+                                } *@
                             }
                         </tr>
                     </thead>
@@ -619,12 +632,14 @@
                         @foreach (System.Data.DataRow row in Model.ClaimImages.Tables[0].Rows)
                         {
                             <tr>
+
                                 @foreach (var item in row.ItemArray.Select((value, index) => new { Value = value, Index = index }))
                                 {
                                     <td>
-                                        @if (item.Index == 1) // Assuming '1' is the index of the 'ImageUrl' column
+                                        @if (item.Index == 4) // Assuming '1' is the index of the 'ImageUrl' column
                                         {
                                             <a href="@item.Value.ToString()" target="_blank">View File</a>
+                                            <button class="btn btn-danger btn-delete">Delete</button>
                                         }
                                         else
                                         {
@@ -632,6 +647,7 @@
                                         }
                                     </td>
                                 }
+                                                                 
                             </tr>
                         }
                     </tbody>
@@ -831,8 +847,11 @@
                                                                 <span class="text-danger" id="RemarksErrorfinal" style="display: none;">Please Enter Final Remarks.</span>
                                                             </div>
                                                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <button class="btn btn-success float-left" id="btnupdatefinalremarks">Proceed</button>
+                                                                <button class="btn btn-success float-left" id="btnupdatefinalremarks">Proceed</button>                                          
                                                                 <button class="btn btn-danger float-left" id="btnreject">Reject</button>
+                                                                <button class="btn btn-success float-left" style="margin-left: 150px; margin-right: 10px;" id="btnfinalapprove">
+                                                                    Final Approve
+                                                                </button>
                                                             </div>
 
                                                         </div>
@@ -1039,7 +1058,6 @@
 
 
 </script>
-
 <script>
     $(document).ready(function () {
         debugger
@@ -1363,7 +1381,6 @@
 
         });
 
-
         $('#btnupdatefinalremarksRMS').click(function () {
 
             debugger
@@ -1507,6 +1524,49 @@
 
 
                      
+
+                    }
+                    else {
+                        // Show an error message using SweetAlert
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Show an error message using SweetAlert
+                    Swal.fire('Error', 'Error Updating ticket: ' + error, 'error');
+                }
+            });
+
+        });
+
+        $('#btnfinalapprove').click(function () {
+            //console.log("button is clisked");
+            debugger
+            var activity;
+            var ticketData = {
+
+                remarks: $('#txtfinalremarks').val(),
+                ticketdid: @ViewData["TicketNo"],
+                activity: activity,
+                userid: "",
+
+            };
+
+            $.ajax({
+                url: '/Home/FinalApprove',
+                type: 'POST',
+                data: ticketData,
+                success: function (response) {
+                    debugger
+                    // Check if the ticket was created successfully
+                    if (response.success) {
+                        $('#txtfinalremarks').val('');
+                        // Show a success message using SweetAlert
+                        Swal.fire('Success', response.message, 'success');
+                        var ticketno = response.data;
+
+
+
 
                     }
                     else {
@@ -2003,7 +2063,6 @@
 
         });
 
-
         // Event listener for category selection
         $('#TicketStatusDropdown').change(function () {
             debugger
@@ -2050,6 +2109,36 @@
                     Swal.fire('Error', 'Please Select Valid City: ' + error, 'error');
                 }
             });
+        });
+    });
+</script>
+<script>
+    $(document).on('click', '.btn-delete', function () {
+        debugger
+        var row = $(this).closest('tr');
+        var claimImageId = row.find('.claim-image-id').text(); // Assuming the class name for ClaimImageId is 'claim-image-id'
+
+        // AJAX call to delete the image
+        $.ajax({
+            url: '/Home/DeleteImage',
+            type: 'POST',
+            data: { claimImageId: claimImageId },
+            success: function (response) {
+                // Handle success response.
+                if (response.success) {
+                    // Remove the row from the table
+                    row.remove();
+                    // Show success message
+                    Swal.fire('Success', response.message, 'success');
+                } else {
+                    // Show error message
+                    Swal.fire('Error', response.message, 'error');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Show error message
+                Swal.fire('Error', 'Error deleting image: ' + error, 'error');
+            }
         });
     });
 </script>

@@ -82,6 +82,21 @@
                     <div class="col-lg-3 col-md-3 col-sm-3">
                         <input id="txtDestination" name="Destination" placeholder="Please Type Destination" class="form-control" autofocus />
                     </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <label class="text-secondary font-weight-bold">Claim Status:</label>
+
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <select class="form-control" id="statusDropdown" name="ticketStatus ">
+                            <option value="">Select Status</option>
+                            @foreach (System.Data.DataRow statusRow in Model.ClaimStatus.Tables[6].Rows)
+                            {
+                                <option value="@statusRow["Claim_Status_Id"]">@statusRow["Status"]</option>
+                            }
+                        </select>
+                        <span class="text-danger" id="statusDropdownError" style="display: none;">Please select Claim Status.</span>
+                    </div>
                 </div>
                 <span class="text-danger"></span>
             </div>
@@ -115,9 +130,10 @@
     </div>
 
     <div id="subcategoryContainer">
+
     </div>
 
-
+    
 </div>
 <div><br /></div>
 
@@ -201,6 +217,7 @@
     $('#btnSearch').click(function () {
         debugger
         var categoryValue = $('#categoryDropdown').val();
+        var statusValue = $('#statusDropdown').val();
         var subcategoryValue = $('#subcategoryContainer').find('#SubcategoryDropdown').val();
         var datefrom = $('#datefrom').val();
         var dateto = $('#dateto').val();
@@ -213,6 +230,10 @@
         debugger
         if (categoryValue == "") {
             categoryValue = null;
+
+        }
+        if (statusValue == "") {
+            statusValue = null;
 
         } if (subcategoryValue == "") {
             subcategoryValue = null;
@@ -253,6 +274,7 @@
 
             //tickettype: $('#TicketTypeDropdown').val(),
             ticketcatagory: $('#categoryDropdown').val(),
+            ticketstatus: $('#statusDropdown').val(),
             ticketsubcatagory: $('#subcategoryContainer').find('#SubcategoryDropdown').val(),
             datefrom: $('#datefrom').val(),
             dateto: $('#dateto').val(),
